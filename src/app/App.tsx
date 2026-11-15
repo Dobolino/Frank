@@ -55,7 +55,8 @@ export function App() {
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <aside className="border-b border-line bg-panel md:sticky md:top-0 md:h-screen md:w-60 md:shrink-0 md:border-r md:border-b-0">
+      <aside className="sticky top-[env(safe-area-inset-top)] z-20 border-b border-line bg-panel/95 backdrop-blur md:top-0 md:h-screen md:w-60 md:shrink-0 md:border-r md:border-b-0 md:bg-panel">
+
         <div className="flex items-center justify-between gap-3 px-5 py-4 md:block">
           <div>
             <div className="text-lg font-semibold tracking-tight">

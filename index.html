@@ -2,12 +2,30 @@
 <html lang="de-CH" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b0d12" />
+    <meta name="description" content="Budget, Lohn und Steuern – lokal auf dem Gerät." />
+
+    <!-- iPhone: als App auf dem Home-Bildschirm -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Frank" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="./icon-192.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+
     <title>Frank – Finanzen</title>
+    <style>
+      /* Hintergrund sofort setzen, damit beim Start kein weisser Blitz erscheint */
+      html, body { background: #0b0d12; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>Frank braucht JavaScript.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

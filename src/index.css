@@ -50,3 +50,24 @@ details > summary {
 details > summary::-webkit-details-marker {
   display: none;
 }
+
+/* ── iPhone / Home-Bildschirm ─────────────────────────── */
+
+/* Platz für Notch und Home-Indikator, wenn die App im Vollbild läuft */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+/* iOS zoomt bei Eingabefeldern unter 16px automatisch hinein – auf Handys verhindern */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}

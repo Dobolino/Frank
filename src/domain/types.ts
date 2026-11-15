@@ -1,0 +1,194 @@
+import type { Rappen } from './money';
+
+export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export const MONTHS: readonly Month[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+export const MONTH_NAMES = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'] as const;
+export const monthName = (m: Month): string => MONTH_NAMES[m - 1] ?? String(m);
+
+// ───────────────────────────── Konten ─────────────────────────────
+
+export type AccountType = 'checking' | 'savings' | 'investment' | 'pillar3a';
+
+export interface Account {
+  id: string;
+  name: string;
+  type: AccountType;
+}
+
+// ───────────────────────────── Lohn ─────────────────────────────
+
+/** Sozialabzüge als Anteil (0.053 = 5.3 %). */
+export interface SocialRates {
+  ahv: number;
+  alv: number;
+  nbuv: number;
+  ktg: number;
+}
+
+export interface SalaryChange {
+  fromMonth: Month;
+  grossMonthly: Rappen;
+}
+
+/** Auszahlung des 13. Monatslohns: Anteil eines Monatslohns oder fixer Betrag. */
+export interface ThirteenthPayout {
+  month: Month;
+  share?: number;
+  amount?: Rappen;
+}
+
+export interface Bonus {
+  month: Month;
+  gross: Rappen;
+}
+
+export interface SalaryInput {
+  grossMonthly: Rappen;
+  changes: SalaryChange[];
+  thirteenth: ThirteenthPayout[];
+  bonuses: Bonus[];
+  rates: SocialRates;
+  bvgMonthly: Rappen;
+}
+
+// ───────────────────────────── Budget ─────────────────────────────
+
+export type BudgetCategory = 'fixed' | 'household' | 'personal' | 'mobility' | 'savings';
+
+export const CATEGORY_LABELS: Record<BudgetCategory, string> = {
+  fixed: 'Fixkosten',
+  household: 'Haushalt',
+  personal: 'Persönliches',
+  mobility: 'Mobilität',
+  savings: 'Sparen & Vorsorge',
+};
+
+export type Frequency =
+  | { kind: 'monthly' }
+  | { kind: 'yearly'; month: Month }
+  | { kind: 'quarterly'; months: Month[] }
+  | { kind: 'custom'; months: Month[] };
+
+/** Steuerliche Bedeutung eines Postens, damit die Steuer-Engine ihn findet. */
+export type TaxTag = 'insurance' | 'pillar3a' | 'taxProvision';
+
+export interface BudgetSubItem {
+  id: string;
+  name: string;
+  amount: Rappen;
+}
+
+export interface BudgetItem {
+  id: string;
+  category: BudgetCategory;
+  name: string;
+  /** Betrag pro Fälligkeit (bei monatlich: pro Monat, bei jährlich: Jahresrechnung). */
+  amount: Rappen;
+  frequency: Frequency;
+  /** Konto, von dem bezahlt wird. Ein Sparkonto (z. B. YUH) erzeugt einen Dauerauftrag. */
+  accountId?: string;
+  /** Aufgliederung, z. B. Streaming-Abos. Ist sie vorhanden, ist amount die Summe. */
+  children?: BudgetSubItem[];
+  taxTag?: TaxTag;
+  /** Steuerrückstellung automatisch aus der Steuer-Engine übernehmen. */
+  autoFromTax?: boolean;
+  goalId?: string;
+  note?: string;
+}
+
+// ───────────────────────────── Einkommen & Steuern ─────────────────────────────
+
+export type OtherIncomeKind = 'dividend' | 'interest' | 'sideJob' | 'other';
+
+export interface OtherIncome {
+  id: string;
+  name: string;
+  kind: OtherIncomeKind;
+  /** Jahresbetrag brutto (Dividenden vor Verrechnungssteuer). */
+  amount: Rappen;
+  month?: Month;
+}
+
+export type MealDeduction = 'none' | 'full' | 'reduced';
+
+export type CommuteMode = 'none' | 'bike' | 'publicTransport' | 'car';
+
+export const COMMUTE_LABELS: Record<CommuteMode, string> = {
+  none: 'Keine Kosten (zu Fuss / Homeoffice)',
+  bike: 'Velo',
+  publicTransport: 'Öffentlicher Verkehr',
+  car: 'Auto',
+};
+
+export interface TaxProfile {
+  commuteMode: CommuteMode;
+  /** Fahrkosten pro Jahr (Velo: Pauschale bis CHF 700, ÖV: Abo-Preis). */
+  commuteCosts: Rappen;
+  meal: MealDeduction;
+  /** Weitere Abzüge (Weiterbildung, Spenden, Schuldzinsen …). */
+  otherDeductions: Rappen;
+  /** KTG-Beiträge im Lohnausweis unter den Sozialabzügen (Ziffer 9). */
+  ktgDeductible: boolean;
+  /** Steuerbares Reinvermögen am 31.12. (ohne Säule 3a / Pensionskasse). */
+  wealth: Rappen;
+  /** Versicherungsprämien pro Jahr, falls nicht aus dem Budget abgeleitet. */
+  insurancePremiumsOverride?: Rappen;
+}
+
+export interface ActualTax {
+  federal?: Rappen;
+  cantonMunicipal?: Rappen;
+  note?: string;
+}
+
+/** Verteilung von 13. Lohn und Bonus auf Konten oder Sparziele. */
+export interface ExtrasAllocation {
+  id: string;
+  share: number;
+  accountId?: string;
+  goalId?: string;
+}
+
+export interface YearPlan {
+  year: number;
+  salary: SalaryInput;
+  otherIncome: OtherIncome[];
+  budget: BudgetItem[];
+  tax: TaxProfile;
+  actualTax?: ActualTax;
+  extrasAllocation: ExtrasAllocation[];
+  /** Kontostände am 1. Januar, für den Cashflow-Kalender. */
+  startBalances: Record<string, Rappen>;
+  note?: string;
+}
+
+// ───────────────────────────── Ziele & App ─────────────────────────────
+
+export interface SavingsGoal {
+  id: string;
+  name: string;
+  target: Rappen;
+  saved: Rappen;
+  /** Zieldatum im Format YYYY-MM. */
+  dueDate: string;
+  accountId?: string;
+  emoji?: string;
+}
+
+export interface Profile {
+  canton: 'BL';
+  municipality: string;
+  civilStatus: 'single';
+  church: 'none';
+}
+
+export interface AppData {
+  schemaVersion: number;
+  profile: Profile;
+  accounts: Account[];
+  years: Record<string, YearPlan>;
+  goals: SavingsGoal[];
+  activeYear: number;
+}
+
+export const SCHEMA_VERSION = 1;

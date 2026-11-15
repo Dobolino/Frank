@@ -1,0 +1,7 @@
+node_modules
+dist
+*.local.ts
+*.local.json
+*.xlsx
+.DS_Store
+*.tsbuildinfo

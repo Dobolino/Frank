@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type Context, type ReactNode } from 'react';
 import type { AppData, YearPlan } from '../domain/types';
 import { buildYearModel, type YearModel } from '../domain/yearModel';
 import { initialData } from '../seed';
@@ -17,7 +17,9 @@ interface Store {
   saveError: boolean;
 }
 
-const StoreContext = createContext<Store | null>(null);
+// Kontext über Hot-Reloads hinweg behalten (nur Entwicklung), sonst verliert App den Provider.
+const StoreContext: Context<Store | null> = import.meta.hot?.data.storeContext ?? createContext<Store | null>(null);
+if (import.meta.hot) import.meta.hot.data.storeContext = StoreContext;
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<AppData>(() => loadData() ?? initialData());

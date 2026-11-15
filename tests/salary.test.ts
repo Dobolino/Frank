@@ -56,4 +56,14 @@ describe('Lohnrechner', () => {
     expect(Math.abs(net - chf(69369.6))).toBeLessThanOrEqual(5);
     expect(lohnausweisNet(s, false)).toBeGreaterThan(net);
   });
+
+  it('zahlt Pauschalspesen ohne Sozialabzüge aus und versteuert sie nur bei Bedarf', () => {
+    const withExpenses = calculateSalary({ ...example, expenseAllowance: { monthly: chf(200), taxable: false } });
+    expect(withExpenses.regularNet).toBe(chf(5519.2));
+    expect(withExpenses.months[5]!.extrasNet).toBe(chf(2769.6));
+    expect(withExpenses.totals.social).toBe(s.totals.social);
+    expect(withExpenses.totals.expenses).toBe(chf(2400));
+    expect(lohnausweisNet(withExpenses, true, false)).toBe(lohnausweisNet(s, true));
+    expect(lohnausweisNet(withExpenses, true, true)).toBe(lohnausweisNet(s, true) + chf(2400));
+  });
 });

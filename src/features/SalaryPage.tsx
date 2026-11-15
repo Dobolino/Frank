@@ -1,5 +1,5 @@
 import { useStore } from '../app/store';
-import { Button, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, Select, cx } from './shared';
+import { Button, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, Select, Toggle, cx } from './shared';
 import { MONTHS, monthName, type Month, type SalaryInput } from '../domain/types';
 import { totalRate } from '../domain/salaryEngine';
 import { lohnausweisNet } from '../domain/salaryEngine';
@@ -38,6 +38,26 @@ export function SalaryPage() {
           <div className="flex items-center justify-between gap-3 py-1 text-sm">
             <span className="text-muted">BVG pro Monat</span>
             <MoneyInput value={s.bvgMonthly} onChange={(v) => set((x) => void (x.bvgMonthly = v))} ariaLabel="BVG" />
+          </div>
+          <div className="mt-3 border-t border-line pt-3">
+            <div className="flex items-center justify-between gap-3 py-1 text-sm">
+              <span className="text-muted" title="Pauschalspesen gemäss Lohnausweis Ziffer 13.2 – ohne AHV/ALV/BVG">Pauschalspesen / Monat</span>
+              <MoneyInput
+                value={s.expenseAllowance?.monthly ?? 0}
+                onChange={(v) => set((x) => void (x.expenseAllowance = { monthly: v, taxable: x.expenseAllowance?.taxable ?? false }))}
+                ariaLabel="Pauschalspesen"
+              />
+            </div>
+            {(s.expenseAllowance?.monthly ?? 0) > 0 && (
+              <div className="py-1">
+                <Toggle
+                  checked={!s.expenseAllowance!.taxable}
+                  onChange={(v) => set((x) => void (x.expenseAllowance = { ...x.expenseAllowance!, taxable: !v }))}
+                  label={<span className="text-xs text-muted">Spesenreglement genehmigt (steuerfrei)</span>}
+                />
+              </div>
+            )}
+            <p className="text-xs text-muted">Effektive Rückerstattungen mit Belegen nicht erfassen – sie gleichen nur Auslagen aus.</p>
           </div>
           <div className="mt-3 border-t border-line pt-3">
             <div className="mb-1 text-xs text-muted">Lohnänderungen unter dem Jahr</div>
@@ -97,7 +117,8 @@ export function SalaryPage() {
                 <th className="pb-2 font-normal">13. / Bonus</th>
                 <th className="pb-2 font-normal">Sozialabzüge</th>
                 <th className="pb-2 font-normal">BVG</th>
-                <th className="pb-2 font-normal">Netto</th>
+                {res.totals.expenses > 0 && <th className="pb-2 font-normal">Spesen</th>}
+                <th className="pb-2 font-normal">Auszahlung</th>
               </tr>
             </thead>
             <tbody className="num text-right">
@@ -108,6 +129,7 @@ export function SalaryPage() {
                   <td className="text-info">{m.thirteenthGross + m.bonusGross > 0 ? <Money value={m.thirteenthGross + m.bonusGross} /> : '–'}</td>
                   <td className="text-muted">−<Money value={m.socialTotal} /></td>
                   <td className="text-muted">−<Money value={m.bvg} /></td>
+                  {res.totals.expenses > 0 && <td className="text-muted">+<Money value={m.expenses} /></td>}
                   <td className="font-semibold"><Money value={m.net} /></td>
                 </tr>
               ))}
@@ -117,6 +139,7 @@ export function SalaryPage() {
                 <td className="text-info"><Money value={res.totals.thirteenthGross + res.totals.bonusGross} /></td>
                 <td>−<Money value={res.totals.social} /></td>
                 <td>−<Money value={res.totals.bvg} /></td>
+                {res.totals.expenses > 0 && <td>+<Money value={res.totals.expenses} /></td>}
                 <td className="text-accent"><Money value={res.totals.net} /></td>
               </tr>
             </tbody>
@@ -128,6 +151,13 @@ export function SalaryPage() {
             <Row label="AHV/IV/EO/ALV/NBUV (Ziffer 9)" value={<>−<Money value={model.plan.tax.ktgDeductible ? res.totals.social : res.totals.socialWithoutKtg} /></>} />
             <Row label="BVG ordentlich (Ziffer 10.1)" value={<>−<Money value={res.totals.bvg} /></>} />
             <Row strong label="Nettolohn (Ziffer 11)" value={<Money value={lohnausweisNet(res, model.plan.tax.ktgDeductible)} />} />
+            {res.totals.expenses > 0 && (
+              <Row
+                label="Pauschalspesen (Ziffer 13.2)"
+                hint={s.expenseAllowance?.taxable ? 'wird versteuert' : 'steuerfrei'}
+                value={<Money value={res.totals.expenses} />}
+              />
+            )}
             <p className="mt-2 text-xs text-muted">Abweichungen von wenigen Franken zum echten Lohnausweis entstehen durch Rundungen des Arbeitgebers.</p>
           </Collapsible>
         </div>

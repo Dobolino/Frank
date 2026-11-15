@@ -13,7 +13,9 @@ export interface MonthlySalary {
   ktg: Rappen;
   socialTotal: Rappen;
   bvg: Rappen;
-  /** Auszahlung auf das Lohnkonto (auf 5 Rappen gerundet). */
+  /** Pauschalspesen (ohne Sozialabzüge). */
+  expenses: Rappen;
+  /** Auszahlung auf das Lohnkonto inkl. Spesen (auf 5 Rappen gerundet). */
   net: Rappen;
   /** Davon Anteil 13. Lohn + Bonus (netto). */
   extrasNet: Rappen;
@@ -29,6 +31,7 @@ export interface SalaryYear {
     socialWithoutKtg: Rappen;
     ktg: Rappen;
     bvg: Rappen;
+    expenses: Rappen;
     net: Rappen;
     extrasNet: Rappen;
     thirteenthGross: Rappen;
@@ -71,8 +74,9 @@ export function calculateSalary(input: SalaryInput): SalaryYear {
     const nbuv = part(rates.nbuv);
     const ktg = part(rates.ktg);
     const bvg = baseGross > 0 ? input.bvgMonthly : 0;
-    const net = netOf(grossTotal, rates, bvg);
-    const regular = netOf(baseGross, rates, bvg);
+    const expenses = input.expenseAllowance?.monthly ?? 0;
+    const net = netOf(grossTotal, rates, bvg) + expenses;
+    const regular = netOf(baseGross, rates, bvg) + expenses;
     return {
       month,
       baseGross,
@@ -85,6 +89,7 @@ export function calculateSalary(input: SalaryInput): SalaryYear {
       ktg,
       socialTotal: ahv + alv + nbuv + ktg,
       bvg,
+      expenses,
       net,
       extrasNet: net - regular,
     };
@@ -95,13 +100,14 @@ export function calculateSalary(input: SalaryInput): SalaryYear {
   const social = total('socialTotal');
   return {
     months,
-    regularNet: netOf(baseGrossFor(input, 12), rates, input.bvgMonthly),
+    regularNet: netOf(baseGrossFor(input, 12), rates, input.bvgMonthly) + (input.expenseAllowance?.monthly ?? 0),
     totals: {
       gross: total('grossTotal'),
       social,
       socialWithoutKtg: social - ktg,
       ktg,
       bvg: total('bvg'),
+      expenses: total('expenses'),
       net: total('net'),
       extrasNet: total('extrasNet'),
       thirteenthGross: total('thirteenthGross'),
@@ -113,8 +119,9 @@ export function calculateSalary(input: SalaryInput): SalaryYear {
 /**
  * Nettolohn gemäss Lohnausweis (Ziffer 11): Brutto − AHV/IV/EO/ALV/NBUV − BVG.
  * KTG-Beiträge werden je nach Arbeitgeber unter Ziffer 9 aufgeführt (Schalter im Steuerprofil).
+ * Pauschalspesen (Ziffer 13.2) zählen nur dazu, wenn das Spesenreglement nicht genehmigt ist.
  */
-export function lohnausweisNet(s: SalaryYear, ktgDeductible: boolean): Rappen {
+export function lohnausweisNet(s: SalaryYear, ktgDeductible: boolean, expensesTaxable = false): Rappen {
   const social = ktgDeductible ? s.totals.social : s.totals.socialWithoutKtg;
-  return s.totals.gross - social - s.totals.bvg;
+  return s.totals.gross - social - s.totals.bvg + (expensesTaxable ? s.totals.expenses : 0);
 }

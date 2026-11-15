@@ -30,7 +30,7 @@ const ceilTo10Francs = (r: number): Rappen => Math.ceil(r / 1000 - 1e-9) * 1000;
 export function buildTaxInput(plan: YearPlan, salary: SalaryYear): TaxInput {
   const insuranceFromBudget = yearlyByTaxTag(plan.budget, 'insurance');
   return {
-    employmentNet: lohnausweisNet(salary, plan.tax.ktgDeductible),
+    employmentNet: lohnausweisNet(salary, plan.tax.ktgDeductible, plan.salary.expenseAllowance?.taxable ?? false),
     otherIncome: sum(plan.otherIncome.map((o) => o.amount)),
     commuteCosts: plan.tax.commuteMode === 'none' ? 0 : plan.tax.commuteCosts,
     commuteIsBike: plan.tax.commuteMode === 'bike',

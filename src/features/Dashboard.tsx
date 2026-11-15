@@ -4,6 +4,7 @@ import { CATEGORY_LABELS, monthName } from '../domain/types';
 import { formatPercent } from '../domain/money';
 import { goalStatus } from '../domain/goalsEngine';
 import { todayYm } from './shared';
+import { RadarCard } from './RadarCard';
 
 export function Dashboard() {
   const { model, data } = useStore();
@@ -33,7 +34,11 @@ export function Dashboard() {
         />
       </div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-3">
+      <div className="mt-4">
+        <RadarCard />
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Card title="Wohin das Geld geht" className="lg:col-span-2">
           <div className="space-y-3">
             {summary.categories.map((c) => (

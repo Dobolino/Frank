@@ -42,8 +42,19 @@ export interface Bonus {
   gross: Rappen;
 }
 
+/**
+ * Pauschalspesen pro Monat: werden mit dem Lohn ausbezahlt, sind aber kein Lohn
+ * (keine AHV/ALV/BVG-Abzüge). Effektive Spesen-Rückerstattungen gehören nicht hierher.
+ */
+export interface ExpenseAllowance {
+  monthly: Rappen;
+  /** false, wenn das Spesenreglement vom Kanton genehmigt ist (dann steuerfrei). */
+  taxable: boolean;
+}
+
 export interface SalaryInput {
   grossMonthly: Rappen;
+  expenseAllowance?: ExpenseAllowance;
   changes: SalaryChange[];
   thirteenth: ThirteenthPayout[];
   bonuses: Bonus[];
@@ -182,9 +193,20 @@ export interface Profile {
   church: 'none';
 }
 
+/** Einstellungen des Finanz-Radars auf der Übersicht. */
+export interface RadarSettings {
+  accountId?: string;
+  /** Tatsächlicher Kontostand zu Beginn von `asOfYm`. */
+  balance?: Rappen;
+  asOfYm?: string;
+  /** Unter diesem Stand wird die Ampel gelb. */
+  buffer: Rappen;
+}
+
 export interface AppData {
   schemaVersion: number;
   profile: Profile;
+  settings?: { radar?: RadarSettings };
   accounts: Account[];
   years: Record<string, YearPlan>;
   goals: SavingsGoal[];

@@ -49,10 +49,18 @@ export function ActualsCard() {
   const assign = (t: Transaction, item: string, remember: boolean) =>
     update((d) => {
       const key = merchantKey(t.text);
-      if (remember && key) d.rules = [...(d.rules ?? []).filter((r) => r.match !== key), { match: key, item }];
-      d.transactions = (d.transactions ?? []).map((x) =>
-        x.id === t.id ? { ...x, item } : remember && key && !x.item && x.amount < 0 && applyRules(x.text, [{ match: key, item }]) ? { ...x, item } : x,
-      );
+      const cat = t.category?.trim().toLowerCase();
+      let rules = d.rules ?? [];
+      if (remember && key) rules = [...rules.filter((r) => r.field === 'category' || r.match !== key), { match: key, item }];
+      // Bank-Kategorie (z. B. «Lebensmittel») nur merken, wenn es dafür noch keine Regel gibt
+      if (remember && cat && !rules.some((r) => r.field === 'category' && r.match === cat)) rules = [...rules, { match: cat, item, field: 'category' }];
+      d.rules = rules;
+      d.transactions = (d.transactions ?? []).map((x) => {
+        if (x.id === t.id) return { ...x, item };
+        if (!remember || x.item || x.amount >= 0) return x;
+        const hit = applyRules(x.text, rules, x.category);
+        return hit ? { ...x, item: hit } : x;
+      });
     });
 
   const c = ym ? compareMonth(model.budget, transactions, ym) : null;
@@ -94,6 +102,14 @@ export function ActualsCard() {
           <label className="flex items-center justify-between gap-3">
             <span className="text-muted">Text</span>
             <Select value={map.text} options={colOptions} onChange={(v) => setMap({ ...map, text: v })} />
+          </label>
+          <label className="flex items-center justify-between gap-3">
+            <span className="text-muted">Kategorie der Bank</span>
+            <Select
+              value={map.category ?? -1}
+              options={[{ value: -1, label: 'keine' }, ...colOptions]}
+              onChange={(v) => setMap(v < 0 ? { ...map, category: undefined } : { ...map, category: v })}
+            />
           </label>
           {map.amount !== undefined ? (
             <label className="flex items-center justify-between gap-3">
@@ -194,7 +210,9 @@ export function ActualsCard() {
                     <span className="num shrink-0"><Money value={-t.amount} /></span>
                   </div>
                   <div className="mt-1 flex items-center justify-between gap-2 text-xs text-muted">
-                    <span>{t.date.slice(8, 10)}.{t.date.slice(5, 7)}.</span>
+                    <span>
+                      {t.date.slice(8, 10)}.{t.date.slice(5, 7)}.{t.category ? ` · ${t.category}` : ''}
+                    </span>
                     <Select
                       ariaLabel="Budgetposten"
                       value=""
@@ -204,7 +222,7 @@ export function ActualsCard() {
                   </div>
                 </li>
               ))}
-              <li className="pt-2 text-xs text-muted">Frank merkt sich die Zuordnung und ordnet gleiche Händler künftig selbst zu.</li>
+              <li className="pt-2 text-xs text-muted">Frank merkt sich den Händler und die Kategorie der Bank und ordnet gleiche Buchungen künftig selbst zu.</li>
             </ul>
           )}
           <div className="mt-4 flex justify-between text-xs text-muted">

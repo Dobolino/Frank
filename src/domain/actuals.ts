@@ -23,9 +23,13 @@ export function transactionId(t: ParsedTransaction): string {
   return `t-${t.date}-${(h >>> 0).toString(36)}`;
 }
 
-export function applyRules(text: string, rules: CategoryRule[]): string | undefined {
+/** Zuerst Händler-Regeln auf dem Text, dann Regeln auf der Bank-Kategorie. */
+export function applyRules(text: string, rules: CategoryRule[], category?: string): string | undefined {
   const t = text.toLowerCase();
-  return rules.find((r) => r.match && t.includes(r.match))?.item;
+  const byText = rules.find((r) => r.field !== 'category' && r.match && t.includes(r.match))?.item;
+  if (byText) return byText;
+  const c = category?.trim().toLowerCase();
+  return c ? rules.find((r) => r.field === 'category' && r.match === c)?.item : undefined;
 }
 
 /** Neue Buchungen übernehmen: Duplikate weglassen, Regeln anwenden. Gibt Liste und Anzahl neu übernommener zurück. */
@@ -36,7 +40,8 @@ export function mergeTransactions(existing: Transaction[], parsed: ParsedTransac
     const id = transactionId(p);
     if (ids.has(id)) continue;
     ids.add(id);
-    added.push({ id, ...p, item: p.amount < 0 ? applyRules(p.text, rules) : undefined });
+    const item = p.amount < 0 ? applyRules(p.text, rules, p.category) : undefined;
+    added.push({ id, ...p, ...(item ? { item } : {}) });
   }
   return { list: [...existing, ...added].sort((a, b) => a.date.localeCompare(b.date)), added: added.length };
 }

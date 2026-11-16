@@ -140,6 +140,8 @@ export interface TaxProfile {
   otherDeductions: Rappen;
   /** Mieterabzug für die Kantonssteuer (nur ZG und VD). */
   rentDeduction?: Rappen;
+  /** Depotwert (Seite «Anlagen») zum Vermögen zählen. */
+  includeDepot?: boolean;
   /** KTG-Beiträge im Lohnausweis unter den Sozialabzügen (Ziffer 9). */
   ktgDeductible: boolean;
   /** Steuerbares Reinvermögen am 31.12. (ohne Säule 3a / Pensionskasse). */

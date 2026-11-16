@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type Context, type ReactNode } from 'react';
 import type { AppData, YearPlan } from '../domain/types';
 import { buildYearModel, type YearModel } from '../domain/yearModel';
+import { summarizePortfolio } from '../domain/investEngine';
 import { initialData } from '../seed';
 import { downloadJson, downloadRaw, loadData, parseAppData, saveData, STORAGE_KEY, type LoadResult } from '../storage/storage';
 
@@ -157,9 +158,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const models = useMemo(() => {
     const map = new Map<number, YearModel>();
-    for (const plan of Object.values(data.years)) map.set(plan.year, buildYearModel(plan, data.accounts, data.profile));
+    const depot = summarizePortfolio(data.investments).totalChf;
+    for (const plan of Object.values(data.years)) map.set(plan.year, buildYearModel(plan, data.accounts, data.profile, depot));
     return map;
-  }, [data.years, data.accounts, data.profile]);
+  }, [data.years, data.accounts, data.profile, data.investments]);
 
   const plan = data.years[String(data.activeYear)] ?? Object.values(data.years)[0]!;
   const model = models.get(plan.year)!;

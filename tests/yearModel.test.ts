@@ -40,3 +40,17 @@ describe('Steuerrückstellung im Jahresmodell', () => {
     expect(model.warnings.some((warning) => warning.includes('Steuerrückstellung ist tiefer'))).toBe(false);
   });
 });
+
+describe('Depot im steuerbaren Vermögen', () => {
+  it('zählt den Depotwert nur, wenn er eingeschaltet ist', async () => {
+    const { demoData } = await import('../src/seed/demo');
+    const { buildYearModel } = await import('../src/domain/yearModel');
+    const data = demoData();
+    const plan = data.years['2026']!;
+    const without = buildYearModel(plan, data.accounts, data.profile, 50_000_000);
+    expect(without.taxInput.wealth).toBe(plan.tax.wealth);
+    const withDepot = buildYearModel({ ...plan, tax: { ...plan.tax, includeDepot: true } }, data.accounts, data.profile, 50_000_000);
+    expect(withDepot.taxInput.wealth).toBe(plan.tax.wealth + 50_000_000);
+    expect(withDepot.tax.wealthTaxTotal).toBeGreaterThan(without.tax.wealthTaxTotal);
+  });
+});

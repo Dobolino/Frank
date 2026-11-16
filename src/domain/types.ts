@@ -142,6 +142,8 @@ export interface TaxProfile {
   rentDeduction?: Rappen;
   /** Depotwert (Seite «Anlagen») zum Vermögen zählen. */
   includeDepot?: boolean;
+  /** Verheiratet: Nettolohn der Partnerin oder des Partners pro Jahr (Lohnausweis). */
+  partnerNet?: Rappen;
   /** KTG-Beiträge im Lohnausweis unter den Sozialabzügen (Ziffer 9). */
   ktgDeductible: boolean;
   /** Steuerbares Reinvermögen am 31.12. (ohne Säule 3a / Pensionskasse). */
@@ -197,7 +199,9 @@ export interface Profile {
   municipality: string;
   /** Kantonskürzel, z. B. «ZH». */
   canton: string;
-  civilStatus: 'single';
+  civilStatus: 'single' | 'married';
+  /** Alter der Kinder mit Kinderabzug (in Jahren). */
+  children?: number[];
   /** Konfession für die Kirchensteuer. */
   church: 'none' | 'protestant' | 'roman' | 'christ';
 }

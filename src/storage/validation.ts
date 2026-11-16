@@ -35,7 +35,15 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
   const profile = object(value.profile, 'profile');
   text(profile.municipality, 'profile.municipality');
   choice(profile.canton, ['AG', 'AI', 'AR', 'BE', 'BL', 'BS', 'FR', 'GE', 'GL', 'GR', 'JU', 'LU', 'NE', 'NW', 'OW', 'SG', 'SH', 'SO', 'SZ', 'TG', 'TI', 'UR', 'VD', 'VS', 'ZG', 'ZH'], 'profile.canton');
-  choice(profile.civilStatus, ['single'], 'profile.civilStatus');
+  choice(profile.civilStatus, ['single', 'married'], 'profile.civilStatus');
+  optional(profile, 'children', (v, path) => {
+    const ages = array(v, path);
+    if (ages.length > 15) invalid(path);
+    ages.forEach((a, i) => {
+      const n = integer(a, `${path}[${i}]`);
+      if (n < 0 || n > 30) invalid(`${path}[${i}]`);
+    });
+  }, 'profile');
   choice(profile.church, ['none', 'protestant', 'roman', 'christ'], 'profile.church');
   optional(profile, 'bfsId', integer, 'profile');
 
@@ -157,6 +165,7 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     for (const key of ['commuteCosts', 'otherDeductions', 'wealth']) integer(tax[key], `${p}.tax.${key}`);
     for (const key of ['rentDeduction', 'insurancePremiumsOverride']) optional(tax, key, integer, `${p}.tax`);
     optional(tax, 'includeDepot', boolean, `${p}.tax`);
+    optional(tax, 'partnerNet', integer, `${p}.tax`);
     optional(plan, 'actualTax', (v, path) => {
       const a = object(v, path);
       optional(a, 'federal', integer, path);

@@ -84,6 +84,51 @@ export function LocationCard() {
         )}
       </div>
 
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        <label className="block text-xs text-muted">
+          Zivilstand
+          <Select<'single' | 'married'>
+            className="mt-1 block w-full"
+            value={data.profile.civilStatus}
+            options={[
+              { value: 'single', label: 'Ledig' },
+              { value: 'married', label: 'Verheiratet' },
+            ]}
+            onChange={(v) => update((d) => void (d.profile.civilStatus = v))}
+          />
+        </label>
+        <label className="block text-xs text-muted">
+          Kinder
+          <Select<number>
+            className="mt-1 block w-full"
+            value={data.profile.children?.length ?? 0}
+            options={[0, 1, 2, 3, 4, 5, 6].map((n) => ({ value: n, label: String(n) }))}
+            onChange={(n) =>
+              update((d) => {
+                const ages = d.profile.children ?? [];
+                d.profile.children = n === 0 ? undefined : Array.from({ length: n }, (_, i) => ages[i] ?? 5);
+              })
+            }
+          />
+        </label>
+      </div>
+      {(data.profile.children?.length ?? 0) > 0 && (
+        <div className="mt-2">
+          <div className="text-xs text-muted">Alter der Kinder (einige Kantone staffeln den Abzug nach Alter)</div>
+          <div className="mt-1 flex flex-wrap gap-2">
+            {data.profile.children!.map((age, i) => (
+              <Select<number>
+                key={i}
+                ariaLabel={`Alter Kind ${i + 1}`}
+                value={age}
+                options={Array.from({ length: 26 }, (_, a) => ({ value: a, label: `${a} J.` }))}
+                onChange={(v) => update((d) => void (d.profile.children![i] = v))}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       <label className="mt-3 block text-xs text-muted">
         Konfession
         <Select<Confession>

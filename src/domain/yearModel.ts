@@ -30,7 +30,8 @@ export interface YearModel {
 const ceilTo10Francs = (r: number): Rappen => Math.ceil(r / 1000 - 1e-9) * 1000;
 
 /** depotChf: aktueller Depotwert, zählt zum Vermögen, wenn im Steuerprofil eingeschaltet. */
-export function buildTaxInput(plan: YearPlan, salary: SalaryYear, depotChf: Rappen = 0): TaxInput {
+export function buildTaxInput(plan: YearPlan, salary: SalaryYear, depotChf: Rappen = 0, profile?: Profile): TaxInput {
+  const married = profile?.civilStatus === 'married';
   const insuranceFromBudget = yearlyByTaxTag(plan.budget, 'insurance');
   return {
     employmentNet: lohnausweisNet(salary, plan.tax.ktgDeductible, plan.salary.expenseAllowance?.taxable ?? false),
@@ -43,6 +44,9 @@ export function buildTaxInput(plan: YearPlan, salary: SalaryYear, depotChf: Rapp
     otherDeductions: plan.tax.otherDeductions,
     rentDeduction: plan.tax.rentDeduction ?? 0,
     wealth: plan.tax.wealth + (plan.tax.includeDepot ? depotChf : 0),
+    married,
+    children: profile?.children ?? [],
+    partnerNet: married ? (plan.tax.partnerNet ?? 0) : 0,
   };
 }
 
@@ -52,7 +56,7 @@ export function buildYearModel(plan: YearPlan, accounts: Account[], profile: Pro
   const bfsId = resolveBfsId(profile);
   const lookup = bfsId === undefined ? { params: null, exact: false, note: 'Wähle deinen Wohnort auf der Seite «Steuern».' } : taxParamsFor(plan.year, bfsId, profile.church);
   const { params, exact } = lookup;
-  const taxInput = buildTaxInput(plan, salary, depotChf);
+  const taxInput = buildTaxInput(plan, salary, depotChf, profile);
   const tax = params ? calculateTax(taxInput, params) : emptyTax(plan.year, taxInput);
   const taxProvisionSuggested = ceilTo10Francs(tax.total / 12);
 

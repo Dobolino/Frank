@@ -35,6 +35,8 @@ export function TaxPage() {
     : params.municipality.name.includes(`(${params.canton.code})`)
       ? params.municipality.name
       : `${params.municipality.name} (${params.canton.code})`;
+  const kids = data.profile.children?.length ?? 0;
+  const family = [data.profile.civilStatus === 'married' ? 'verheiratet' : 'ledig', kids > 0 ? `${kids} ${kids === 1 ? 'Kind' : 'Kinder'}` : ''].filter(Boolean).join(', ');
   const church = data.profile.church === 'none' ? 'ohne Konfession' : CONFESSION_LABELS[data.profile.church];
   const notes = model.warnings.filter((w) => !tax.warnings.includes(w) && /Steuer(füsse|daten)|Wohnort/.test(w));
   const setTax = (fn: (t: TaxProfile) => void) => updateYear((p) => fn(p.tax));
@@ -43,7 +45,7 @@ export function TaxPage() {
     <>
       <PageHeader
         title={`Steuern ${plan.year}`}
-        subtitle={`Provisorische Berechnung für ${place} · ledig · ${church}`}
+        subtitle={`Provisorische Berechnung für ${place} · ${family} · ${church}`}
         action={params && <Badge tone={model.taxParamsExact ? 'good' : 'warn'}>Tarif {params.year}</Badge>}
       />
       <Warnings items={[...notes, ...tax.warnings]} />
@@ -121,6 +123,12 @@ export function TaxPage() {
             Verpflegung
             <Select className="mt-1 block w-full" value={plan.tax.meal} options={MEAL_OPTIONS} onChange={(v) => setTax((t) => void (t.meal = v))} />
           </label>
+          {data.profile.civilStatus === 'married' && (
+            <div className="mt-3 flex items-center justify-between gap-3 text-sm">
+              <span className="text-muted" title="Nettolohn pro Jahr laut Lohnausweis (Ziffer 11)">Nettolohn Partner/in pro Jahr</span>
+              <MoneyInput ariaLabel="Nettolohn Partner/in" value={plan.tax.partnerNet ?? 0} onChange={(v) => setTax((t) => void (t.partnerNet = v || undefined))} />
+            </div>
+          )}
           <div className="mt-3 flex items-center justify-between gap-3 text-sm">
             <span className="text-muted">Weitere Abzüge</span>
             <MoneyInput ariaLabel="Weitere Abzüge" value={plan.tax.otherDeductions} onChange={(v) => setTax((t) => void (t.otherDeductions = v))} />

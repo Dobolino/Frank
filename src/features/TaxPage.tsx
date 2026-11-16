@@ -6,6 +6,7 @@ import { buildYearModel } from '../domain/yearModel';
 import { formatPercent, type Rappen } from '../domain/money';
 import { CONFESSION_LABELS } from '../params/taxData';
 import { LocationCard } from './LocationCard';
+import { Pillar3aCard } from './Pillar3aCard';
 import { summarizePortfolio } from '../domain/investEngine';
 import type { DeductionLine } from '../domain/tax/taxEngine';
 
@@ -167,6 +168,10 @@ export function TaxPage() {
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <OtherIncomeCard />
         <ActualTaxCard />
+      </div>
+
+      <div className="mt-4">
+        <Pillar3aCard />
       </div>
 
       <ScenarioCard plan={plan} accounts={data.accounts} profile={data.profile} depotChf={depot.totalChf} baseTotal={tax.total} baseExpenses={model.summary.expensesYearly} baseNet={model.salary.totals.net} />

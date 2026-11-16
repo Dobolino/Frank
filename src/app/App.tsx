@@ -9,6 +9,7 @@ import { TaxPage } from '../features/TaxPage';
 import { InvestPage } from '../features/InvestPage';
 import { SavingsPage } from '../features/SavingsPage';
 import { DataPage } from '../features/DataPage';
+import { Onboarding } from '../features/Onboarding';
 
 const PAGES = [
   { id: 'overview', label: 'Übersicht', short: 'Übersicht', icon: '◎', Component: Dashboard },
@@ -52,7 +53,7 @@ function canSwipeFrom(target: EventTarget | null): boolean {
 }
 
 export function App() {
-  const { data, update, saveError } = useStore();
+  const { data, update, saveError, firstRun } = useStore();
   const [{ page, direction }, setNavigation] = useState(() => ({ page: pageFromHash(), direction: 1 }));
   const [drag, setDrag] = useState(0);
   const swipe = useRef<Swipe | null>(null);
@@ -168,6 +169,8 @@ export function App() {
       </Button>
     </div>
   );
+
+  if (firstRun) return <Onboarding />;
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">

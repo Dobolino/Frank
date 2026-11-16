@@ -6,6 +6,7 @@ import { goalStatus } from '../domain/goalsEngine';
 import { todayYm } from './shared';
 import { RadarCard } from './RadarCard';
 import { BackupReminder } from './BackupReminder';
+import { ComparePage } from './ComparePage';
 import { summarizePortfolio } from '../domain/investEngine';
 
 export function Dashboard() {
@@ -159,6 +160,8 @@ export function Dashboard() {
           )}
         </Card>
       </div>
+
+      <ComparePage embedded />
     </>
   );
 }

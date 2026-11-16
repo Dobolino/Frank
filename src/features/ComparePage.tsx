@@ -1,5 +1,5 @@
 import { useStore } from '../app/store';
-import { Card, Money, PageHeader, cx } from './shared';
+import { Card, Money, PageHeader, SectionHeader, cx } from './shared';
 import { formatPercent, type Rappen } from '../domain/money';
 import type { YearModel } from '../domain/yearModel';
 
@@ -47,7 +47,8 @@ function MetricValue({ metric, model, previous }: { metric: Metric; model: YearM
   );
 }
 
-export function ComparePage() {
+export function ComparePage({ embedded = false }: { embedded?: boolean }) {
+  const Header = embedded ? SectionHeader : PageHeader;
   const { data, modelFor } = useStore();
   const models = Object.keys(data.years)
     .map(Number)
@@ -58,7 +59,7 @@ export function ComparePage() {
 
   return (
     <>
-      <PageHeader title="Jahresvergleich" subtitle="Entwicklung von Lohn, Steuern und Sparen über die Jahre." />
+      <Header title="Jahresvergleich" subtitle="Entwicklung von Lohn, Steuern und Sparen über die Jahre." />
       <div className="space-y-4 md:hidden">
         {models.map((model, index) => (
           <Card key={model.plan.year} title={String(model.plan.year)} action={model.plan.year === data.activeYear ? <span className="text-xs text-accent">Aktuelles Jahr</span> : undefined}>

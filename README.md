@@ -31,7 +31,9 @@ npm run build      # Produktions-Build nach dist/
 
 - Seite «Budget», Karte «Soll / Ist»: CSV-Export der Bank importieren. Frank erkennt Trennzeichen,
   Kopfzeile und Spalten; vor dem Import lassen sie sich prüfen und ändern.
-- Buchungen ohne Posten einmal zuordnen, Frank merkt sich den Händler.
+- Buchungen ohne Posten einmal zuordnen, Frank merkt sich den Händler und die Kategorie der Bank
+  (z. B. UBS-App: «Lebensmittel»). Konto- und Kartennummern übernimmt Frank nicht.
+- iPhone: Öffnet sich der Export in Numbers, dort «Teilen» → «Exportieren» → «CSV» wählen.
 - Die Datei verlässt das Gerät nicht.
 
 ## Bedienung auf dem Handy

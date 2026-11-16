@@ -190,6 +190,7 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
       text(t.text, `${path}[${i}].text`);
       integer(t.amount, `${path}[${i}].amount`);
       optional(t, 'item', text, `${path}[${i}]`);
+      optional(t, 'category', text, `${path}[${i}]`);
     }
   }, 'data');
   optional(value, 'rules', (v, path) => {
@@ -197,6 +198,7 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
       const r = object(entry, `${path}[${i}]`);
       if (!text(r.match, `${path}[${i}].match`)) invalid(`${path}[${i}].match`);
       text(r.item, `${path}[${i}].item`);
+      optional(r, 'field', (v, p) => choice(v, ['category'], p), `${path}[${i}]`);
     });
   }, 'data');
   optional(value, 'wealthHistory', (v, path) => {

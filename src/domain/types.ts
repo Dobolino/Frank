@@ -272,12 +272,16 @@ export interface Transaction {
   amount: Rappen;
   /** Name des Budgetpostens (über Jahre stabil, IDs sind es nicht). */
   item?: string;
+  /** Kategorie der Bank, falls im Export enthalten. */
+  category?: string;
 }
 
 /** Zuordnungsregel: Buchungstext enthält `match` → Budgetposten `item`. */
 export interface CategoryRule {
   match: string;
   item: string;
+  /** «category»: Regel gilt für die Bank-Kategorie (genauer Name), sonst für den Buchungstext. */
+  field?: 'category';
 }
 
 export interface AppData {

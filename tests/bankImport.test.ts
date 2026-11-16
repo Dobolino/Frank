@@ -84,3 +84,30 @@ describe('Zuordnung und Soll/Ist', () => {
     expect(parseAppData(JSON.stringify(data))).toEqual(data);
   });
 });
+
+/** Aufbau wie der Export aus der UBS-App (erfundene Werte). */
+const UBS_APP = `Transaktionsdatum;Konto- oder Kartennummer;Beschreibung;Einnahmen oder Ausgaben;Betrag;Währung;Kategorie
+31.10.2026;XXXX 0000;"Coop Pronto Bahnhof";Ausgaben;-23.40;CHF;Lebensmittel
+30.10.2026;XXXX 0000;"Migros Zentrum";Ausgaben;-61.15;CHF;Lebensmittel
+29.10.2026;XXXX 0000;"SBB Mobile";Ausgaben;-12.80;CHF;Transport
+28.10.2026;XXXX 0000;"Lohn";Einnahmen;5200.00;CHF;Einkommen
+`;
+
+describe('UBS-App-Export mit Bank-Kategorien', () => {
+  it('erkennt Spalten inkl. Kategorie und speichert keine Kartennummer', () => {
+    const table = parseCsv(UBS_APP);
+    const map = guessColumns(table.header);
+    expect(map).toMatchObject({ date: 0, text: 2, amount: 4, category: 6 });
+    const tx = toTransactions(table, map);
+    expect(tx[0]).toEqual({ date: '2026-10-31', text: 'Coop Pronto Bahnhof', amount: -2340, category: 'Lebensmittel' });
+    expect(JSON.stringify(tx)).not.toContain('XXXX');
+  });
+
+  it('ordnet über die Bank-Kategorie zu, wenn keine Händler-Regel greift', () => {
+    const parsed = toTransactions(parseCsv(UBS_APP), guessColumns(parseCsv(UBS_APP).header));
+    const { list } = mergeTransactions([], parsed, [{ match: 'lebensmittel', item: 'Einkauf', field: 'category' }, { match: 'sbb', item: 'ÖV-Abo' }]);
+    expect(list.filter((t) => t.item === 'Einkauf')).toHaveLength(2);
+    expect(list.find((t) => t.text.startsWith('SBB'))?.item).toBe('ÖV-Abo');
+    expect(list.find((t) => t.amount > 0)?.item).toBeUndefined();
+  });
+});

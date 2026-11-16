@@ -19,6 +19,8 @@ export interface ColumnMap {
   /** Getrennte Spalten: Belastung (Ausgabe) und Gutschrift (Eingang). */
   debit?: number;
   credit?: number;
+  /** Kategorie der Bank (z. B. UBS-App: «Lebensmittel»), optional. */
+  category?: number;
 }
 
 export interface ParsedTransaction {
@@ -27,6 +29,7 @@ export interface ParsedTransaction {
   text: string;
   /** Negativ = Ausgabe, positiv = Eingang. */
   amount: Rappen;
+  category?: string;
 }
 
 /** Eine CSV-Zeile mit Anführungszeichen korrekt aufteilen. */
@@ -56,6 +59,7 @@ const KEYWORDS = {
   amount: ['betrag', 'amount', 'credit/debit amount', 'umsatz'],
   debit: ['belastung', 'lastschrift', 'debit', 'soll', 'ausgang'],
   credit: ['gutschrift', 'credit', 'haben', 'eingang'],
+  category: ['kategorie', 'category'],
 };
 
 const norm = (s: string) => s.toLowerCase().replace(/["']/g, '').trim();
@@ -84,6 +88,12 @@ const find = (header: string[], keys: string[], exclude: number[] = []) => {
 
 /** Spalten anhand der Kopfzeile erraten. */
 export function guessColumns(header: string[]): ColumnMap {
+  const map = guessAmountColumns(header);
+  const category = find(header, KEYWORDS.category, [map.date, map.text]);
+  return category >= 0 ? { ...map, category } : map;
+}
+
+function guessAmountColumns(header: string[]): ColumnMap {
   const date = Math.max(0, find(header, KEYWORDS.date));
   const debit = find(header, KEYWORDS.debit, [date]);
   const credit = find(header, KEYWORDS.credit, [date, debit]);
@@ -132,7 +142,8 @@ export function toTransactions(table: CsvTable, map: ColumnMap): ParsedTransacti
       amount = parseAmount(r[map.amount ?? -1]);
     }
     if (amount === null || amount === 0) continue;
-    out.push({ date, text: (r[map.text] ?? '').replace(/\s+/g, ' ').trim(), amount });
+    const category = map.category !== undefined ? (r[map.category] ?? '').trim() : '';
+    out.push({ date, text: (r[map.text] ?? '').replace(/\s+/g, ' ').trim(), amount, ...(category ? { category } : {}) });
   }
   return out;
 }

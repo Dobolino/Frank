@@ -168,7 +168,9 @@ export function App() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Kopfzeile Handy */}
-      <header className="sticky top-0 z-30 border-b border-line bg-panel/95 pt-[env(safe-area-inset-top)] backdrop-blur md:hidden">
+      <header className="sticky top-0 z-30 isolate border-b border-line pt-[env(safe-area-inset-top)] md:hidden">
+        {/* Safari zeichnet Text unscharf, wenn er im selben Element wie backdrop-filter liegt: Hintergrund als eigene Ebene */}
+        <div aria-hidden className="absolute inset-0 -z-10 bg-panel/95 backdrop-blur" />
         <div className="flex items-center justify-between gap-3 px-4 py-2.5">
           <div className="min-w-0">
             <div className="text-base leading-tight font-semibold tracking-tight">

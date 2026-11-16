@@ -14,9 +14,11 @@ createRoot(document.getElementById('root')!).render(
 
 // Offline-Unterstützung (nur im Build, nicht während der Entwicklung)
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {
+  const register = () => {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {
       /* ohne Service Worker läuft die App einfach online */
     });
-  });
+  };
+  if (document.readyState === 'complete') register();
+  else window.addEventListener('load', register, { once: true });
 }

@@ -126,7 +126,7 @@ export function RadarCard() {
       <Sparkline points={main.points} alt={alt?.points} buffer={settings.buffer} level={mainLevel} altLevel={level} />
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        <div className="space-y-2 text-sm">
+        <div className="min-w-0 space-y-2 text-sm">
           <div className="flex items-center justify-between gap-2">
             <span className="text-muted">Kontostand heute</span>
             <MoneyInput
@@ -146,7 +146,7 @@ export function RadarCard() {
           {savingsAccounts.length > 1 && (
             <div className="flex items-center justify-between gap-2">
               <span className="text-muted">Konto</span>
-              <Select value={account.id} options={savingsAccounts.map((a) => ({ value: a.id, label: a.name }))} onChange={(id) => setRadar({ accountId: id, balance: undefined, asOfYm: undefined })} />
+              <Select className="min-w-0 max-w-full" ariaLabel="Sparkonto im Finanz-Radar" value={account.id} options={savingsAccounts.map((a) => ({ value: a.id, label: a.name }))} onChange={(id) => setRadar({ accountId: id, balance: undefined, asOfYm: undefined })} />
             </div>
           )}
           <div className="pt-1 text-xs text-muted">
@@ -154,7 +154,7 @@ export function RadarCard() {
           </div>
         </div>
 
-        <div className="space-y-2 text-sm">
+        <div className="min-w-0 space-y-2 text-sm">
           <div className="text-xs font-semibold tracking-wide text-muted uppercase">Bald fällig</div>
           {upcoming.length === 0 && <p className="text-muted">Keine grösseren Rechnungen in den nächsten zwei Monaten.</p>}
           {upcoming.map((b) => (
@@ -185,7 +185,7 @@ export function RadarCard() {
           )}
         </div>
 
-        <div className="space-y-2 text-sm">
+        <div className="min-w-0 space-y-2 text-sm">
           <div className="text-xs font-semibold tracking-wide text-muted uppercase">Was wäre wenn …</div>
           <div className="flex items-center justify-between gap-2">
             <span className="text-muted">Einmalige Ausgabe</span>
@@ -201,16 +201,16 @@ export function RadarCard() {
             className="w-full accent-[var(--color-accent)]"
             aria-label="Betrag der einmaligen Ausgabe"
           />
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Select
-              className="flex-1"
+              className="min-w-0 flex-1 basis-32"
               value={oneOffYm}
               options={Array.from({ length: 12 }, (_, i) => addMonths(today, i)).map((ym) => ({ value: ym, label: ymLabel(ym, true) }))}
               onChange={setOneOffYm}
               ariaLabel="Monat der Ausgabe"
             />
             <Select<'savings' | 'main'>
-              className="flex-1"
+              className="min-w-0 flex-1 basis-32"
               value={paidFrom}
               options={[
                 { value: 'savings', label: `von ${account.name}` },

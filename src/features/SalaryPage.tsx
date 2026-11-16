@@ -1,8 +1,7 @@
 import { useStore } from '../app/store';
 import { Button, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, Select, Toggle, cx } from './shared';
-import { MONTHS, monthName, type Month, type SalaryInput } from '../domain/types';
-import { totalRate } from '../domain/salaryEngine';
-import { lohnausweisNet } from '../domain/salaryEngine';
+import { MONTHS, monthName, type SalaryInput } from '../domain/types';
+import { totalRate, lohnausweisNet } from '../domain/salaryEngine';
 import { formatPercent } from '../domain/money';
 
 const monthOptions = MONTHS.map((m) => ({ value: m, label: monthName(m) }));
@@ -62,11 +61,11 @@ export function SalaryPage() {
           <div className="mt-3 border-t border-line pt-3">
             <div className="mb-1 text-xs text-muted">Lohnänderungen unter dem Jahr</div>
             {s.changes.map((c, idx) => (
-              <div key={idx} className="flex items-center gap-2 py-1 text-sm">
+              <div key={idx} className="flex flex-wrap items-center gap-2 py-1 text-sm">
                 <span className="text-muted">ab</span>
-                <Select value={c.fromMonth} options={monthOptions} onChange={(m) => set((x) => void (x.changes[idx]!.fromMonth = m))} />
-                <MoneyInput value={c.grossMonthly} onChange={(v) => set((x) => void (x.changes[idx]!.grossMonthly = v))} />
-                <Button variant="ghost" className="px-2" onClick={() => set((x) => void x.changes.splice(idx, 1))}>×</Button>
+                <Select ariaLabel={`Lohnänderung ${idx + 1}: ab Monat`} value={c.fromMonth} options={monthOptions} onChange={(m) => set((x) => void (x.changes[idx]!.fromMonth = m))} />
+                <MoneyInput ariaLabel={`Lohnänderung ${idx + 1}: Bruttolohn`} value={c.grossMonthly} onChange={(v) => set((x) => void (x.changes[idx]!.grossMonthly = v))} />
+                <Button variant="ghost" ariaLabel={`Lohnänderung ${idx + 1} löschen`} className="px-2" onClick={() => set((x) => void x.changes.splice(idx, 1))}>×</Button>
               </div>
             ))}
             <Button variant="ghost" onClick={() => set((x) => void x.changes.push({ fromMonth: 7, grossMonthly: x.grossMonthly }))}>+ Lohnerhöhung</Button>
@@ -84,23 +83,23 @@ export function SalaryPage() {
         <Card title="13. Lohn & Bonus">
           <div className="mb-1 text-xs text-muted">13. Monatslohn</div>
           {s.thirteenth.map((t, idx) => (
-            <div key={idx} className="flex items-center gap-2 py-1 text-sm">
-              <Select value={t.month} options={monthOptions} onChange={(m) => set((x) => void (x.thirteenth[idx]!.month = m))} />
+            <div key={idx} className="flex flex-wrap items-center gap-2 py-1 text-sm">
+              <Select ariaLabel={`13. Lohn ${idx + 1}: Monat`} value={t.month} options={monthOptions} onChange={(m) => set((x) => void (x.thirteenth[idx]!.month = m))} />
               {t.amount !== undefined ? (
-                <MoneyInput value={t.amount} onChange={(v) => set((x) => void (x.thirteenth[idx]!.amount = v))} />
+                <MoneyInput ariaLabel={`13. Lohn ${idx + 1}: Betrag`} value={t.amount} onChange={(v) => set((x) => void (x.thirteenth[idx]!.amount = v))} />
               ) : (
-                <NumberInput value={(t.share ?? 0) * 100} step={5} suffix="% Lohn" onChange={(v) => set((x) => void (x.thirteenth[idx]!.share = v / 100))} />
+                <NumberInput ariaLabel={`13. Lohn ${idx + 1}: Anteil in Prozent`} value={(t.share ?? 0) * 100} step={5} suffix="% Lohn" onChange={(v) => set((x) => void (x.thirteenth[idx]!.share = v / 100))} />
               )}
-              <Button variant="ghost" className="px-2" onClick={() => set((x) => void x.thirteenth.splice(idx, 1))}>×</Button>
+              <Button variant="ghost" ariaLabel={`13. Lohn ${idx + 1} löschen`} className="px-2" onClick={() => set((x) => void x.thirteenth.splice(idx, 1))}>×</Button>
             </div>
           ))}
           <Button variant="ghost" onClick={() => set((x) => void x.thirteenth.push({ month: 12, share: 0.5 }))}>+ Auszahlung</Button>
           <div className="mt-3 mb-1 border-t border-line pt-3 text-xs text-muted">Bonus</div>
           {s.bonuses.map((b, idx) => (
-            <div key={idx} className="flex items-center gap-2 py-1 text-sm">
-              <Select value={b.month} options={monthOptions} onChange={(m) => set((x) => void (x.bonuses[idx]!.month = m as Month))} />
-              <MoneyInput value={b.gross} onChange={(v) => set((x) => void (x.bonuses[idx]!.gross = v))} />
-              <Button variant="ghost" className="px-2" onClick={() => set((x) => void x.bonuses.splice(idx, 1))}>×</Button>
+            <div key={idx} className="flex flex-wrap items-center gap-2 py-1 text-sm">
+              <Select ariaLabel={`Bonus ${idx + 1}: Monat`} value={b.month} options={monthOptions} onChange={(m) => set((x) => void (x.bonuses[idx]!.month = m))} />
+              <MoneyInput ariaLabel={`Bonus ${idx + 1}: Bruttobetrag`} value={b.gross} onChange={(v) => set((x) => void (x.bonuses[idx]!.gross = v))} />
+              <Button variant="ghost" ariaLabel={`Bonus ${idx + 1} löschen`} className="px-2" onClick={() => set((x) => void x.bonuses.splice(idx, 1))}>×</Button>
             </div>
           ))}
           <Button variant="ghost" onClick={() => set((x) => void x.bonuses.push({ month: 3, gross: 0 }))}>+ Bonus</Button>
@@ -108,11 +107,12 @@ export function SalaryPage() {
       </div>
 
       <Card title="Monatsübersicht" className="mt-4">
-        <div className="overflow-x-auto">
+        <p className="mb-3 text-xs text-muted lg:hidden">↔ Die Tabelle lässt sich seitlich scrollen.</p>
+        <div className="overflow-x-auto" role="region" aria-label="Monatsübersicht Lohn" tabIndex={0}>
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="text-right text-xs text-muted">
-                <th className="pb-2 text-left font-normal">Monat</th>
+                <th className="sticky left-0 z-10 bg-panel pb-2 pr-3 text-left font-normal">Monat</th>
                 <th className="pb-2 font-normal">Brutto</th>
                 <th className="pb-2 font-normal">13. / Bonus</th>
                 <th className="pb-2 font-normal">Sozialabzüge</th>
@@ -124,7 +124,7 @@ export function SalaryPage() {
             <tbody className="num text-right">
               {res.months.map((m) => (
                 <tr key={m.month} className={cx('border-t border-line/60', m.extrasNet > 0 && 'bg-info/5')}>
-                  <td className="py-1.5 text-left">{monthName(m.month)}</td>
+                  <td className="sticky left-0 z-10 bg-panel py-1.5 pr-3 text-left">{monthName(m.month)}</td>
                   <td><Money value={m.baseGross} /></td>
                   <td className="text-info">{m.thirteenthGross + m.bonusGross > 0 ? <Money value={m.thirteenthGross + m.bonusGross} /> : '–'}</td>
                   <td className="text-muted">−<Money value={m.socialTotal} /></td>
@@ -134,7 +134,7 @@ export function SalaryPage() {
                 </tr>
               ))}
               <tr className="border-t-2 border-line font-semibold">
-                <td className="py-2 text-left">Total</td>
+                <td className="sticky left-0 z-10 bg-panel py-2 pr-3 text-left">Total</td>
                 <td><Money value={res.totals.gross - res.totals.thirteenthGross - res.totals.bonusGross} /></td>
                 <td className="text-info"><Money value={res.totals.thirteenthGross + res.totals.bonusGross} /></td>
                 <td>−<Money value={res.totals.social} /></td>
@@ -150,7 +150,7 @@ export function SalaryPage() {
             <Row label="Bruttolohn total (Ziffer 8)" value={<Money value={res.totals.gross} />} />
             <Row label="AHV/IV/EO/ALV/NBUV (Ziffer 9)" value={<>−<Money value={model.plan.tax.ktgDeductible ? res.totals.social : res.totals.socialWithoutKtg} /></>} />
             <Row label="BVG ordentlich (Ziffer 10.1)" value={<>−<Money value={res.totals.bvg} /></>} />
-            <Row strong label="Nettolohn (Ziffer 11)" value={<Money value={lohnausweisNet(res, model.plan.tax.ktgDeductible)} />} />
+            <Row strong label="Nettolohn (Ziffer 11)" value={<Money value={lohnausweisNet(res, model.plan.tax.ktgDeductible, s.expenseAllowance?.taxable ?? false)} />} />
             {res.totals.expenses > 0 && (
               <Row
                 label="Pauschalspesen (Ziffer 13.2)"

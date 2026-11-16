@@ -5,10 +5,10 @@ export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Bool
 
 export function Card({ title, action, children, className }: { title?: ReactNode; action?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={cx('rounded-2xl border border-line bg-panel p-5', className)}>
+    <section className={cx('min-w-0 rounded-2xl border border-line bg-panel p-5', className)}>
       {(title || action) && (
-        <header className="mb-4 flex items-center justify-between gap-3">
-          {title && <h2 className="text-sm font-semibold tracking-wide text-muted uppercase">{title}</h2>}
+        <header className="mb-4 flex min-w-0 flex-wrap items-center justify-between gap-3">
+          {title && <h2 className="min-w-0 flex-auto text-sm font-semibold tracking-wide text-muted uppercase">{title}</h2>}
           {action}
         </header>
       )}
@@ -132,7 +132,7 @@ export function Select<T extends string | number>({ value, options, onChange, cl
   );
 }
 
-export function Button({ children, onClick, variant = 'default', className, title, type = 'button' }: { children: ReactNode; onClick?: () => void; variant?: 'default' | 'primary' | 'ghost' | 'danger'; className?: string; title?: string; type?: 'button' | 'submit' }) {
+export function Button({ children, onClick, variant = 'default', className, title, ariaLabel, type = 'button' }: { children: ReactNode; onClick?: () => void; variant?: 'default' | 'primary' | 'ghost' | 'danger'; className?: string; title?: string; ariaLabel?: string; type?: 'button' | 'submit' }) {
   const styles = {
     default: 'border border-line bg-panel-2 hover:bg-line text-text',
     primary: 'bg-accent text-bg hover:bg-accent/90 font-medium',
@@ -140,7 +140,7 @@ export function Button({ children, onClick, variant = 'default', className, titl
     danger: 'border border-danger/40 text-danger hover:bg-danger/10',
   }[variant];
   return (
-    <button type={type} title={title} onClick={onClick} className={cx('rounded-lg px-3 py-1.5 text-sm transition-colors', styles, className)}>
+    <button type={type} title={title} aria-label={ariaLabel} onClick={onClick} className={cx('rounded-lg px-3 py-1.5 text-sm transition-colors', styles, className)}>
       {children}
     </button>
   );
@@ -149,15 +149,16 @@ export function Button({ children, onClick, variant = 'default', className, titl
 export function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: ReactNode }) {
   return (
     <label className="inline-flex cursor-pointer items-center gap-2 text-sm select-none">
-      <span
-        role="switch"
-        aria-checked={checked}
-        tabIndex={0}
-        onKeyDown={(e) => (e.key === ' ' || e.key === 'Enter') && (e.preventDefault(), onChange(!checked))}
-        onClick={() => onChange(!checked)}
-        className={cx('relative h-5 w-9 rounded-full transition-colors', checked ? 'bg-accent' : 'bg-line')}
-      >
-        <span className={cx('absolute top-0.5 h-4 w-4 rounded-full bg-text transition-all', checked ? 'left-4.5' : 'left-0.5')} />
+      <span className="relative inline-flex h-5 w-9 shrink-0">
+        <input
+          type="checkbox"
+          role="switch"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+          className="peer sr-only"
+        />
+        <span aria-hidden className="absolute inset-0 rounded-full bg-line transition-colors peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-panel" />
+        <span aria-hidden className="pointer-events-none absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-text transition-transform peer-checked:translate-x-4" />
       </span>
       {label}
     </label>

@@ -71,3 +71,49 @@ body {
     font-size: 16px !important;
   }
 }
+
+/* A small directional fade connects both tab clicks and touch navigation. */
+.page-enter {
+  animation: page-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-drag {
+  transform: translateX(var(--page-drag, 0px));
+  opacity: var(--page-opacity, 1);
+  transition: transform 100ms ease-out, opacity 100ms ease-out;
+}
+
+.page-tabs {
+  scrollbar-width: none;
+}
+
+.page-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-indicator {
+  animation: tab-indicator 200ms ease-out both;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateX(calc(var(--page-direction, 1) * 18px)); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes tab-indicator {
+  from { opacity: 0; scale: 0.65; }
+  to { opacity: 1; scale: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .tab-indicator {
+    animation: none;
+  }
+
+  .page-drag {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+}

@@ -66,4 +66,17 @@ describe('Lohnrechner', () => {
     expect(lohnausweisNet(withExpenses, true, false)).toBe(lohnausweisNet(s, true));
     expect(lohnausweisNet(withExpenses, true, true)).toBe(lohnausweisNet(s, true) + chf(2400));
   });
+
+  it('zieht bei Brutto null auch im regulären Monatslohn kein BVG ab', () => {
+    const withoutSalary = calculateSalary({ ...example, grossMonthly: 0 });
+    expect(withoutSalary.regularNet).toBe(0);
+    expect(withoutSalary.months.every((month) => month.net === 0 && month.bvg === 0)).toBe(true);
+  });
+
+  it('verwendet nach einem Lohnausfall im Dezember dieselbe BVG-Regel für die Übersicht', () => {
+    const stopped = calculateSalary({ ...example, changes: [{ fromMonth: 12, grossMonthly: 0 }], bonuses: [{ month: 12, gross: chf(1000) }] });
+    expect(stopped.regularNet).toBe(0);
+    expect(stopped.months[11]!.bvg).toBe(0);
+    expect(stopped.months[11]!.net - stopped.months[11]!.extrasNet).toBe(stopped.regularNet);
+  });
 });

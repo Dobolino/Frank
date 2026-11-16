@@ -109,28 +109,28 @@ export function TaxPage() {
             />
           </label>
           {plan.tax.commuteMode !== 'none' && (
-            <div className="mt-2 flex items-center justify-between text-sm">
+            <div className="mt-2 flex items-center justify-between gap-3 text-sm">
               <span className="text-muted">Fahrkosten pro Jahr</span>
-              <MoneyInput value={plan.tax.commuteCosts} onChange={(v) => setTax((t) => void (t.commuteCosts = v))} />
+              <MoneyInput ariaLabel="Fahrkosten pro Jahr" value={plan.tax.commuteCosts} onChange={(v) => setTax((t) => void (t.commuteCosts = v))} />
             </div>
           )}
           <label className="mt-3 block text-xs text-muted">
             Verpflegung
             <Select className="mt-1 block w-full" value={plan.tax.meal} options={MEAL_OPTIONS} onChange={(v) => setTax((t) => void (t.meal = v))} />
           </label>
-          <div className="mt-3 flex items-center justify-between text-sm">
+          <div className="mt-3 flex items-center justify-between gap-3 text-sm">
             <span className="text-muted">Weitere Abzüge</span>
-            <MoneyInput value={plan.tax.otherDeductions} onChange={(v) => setTax((t) => void (t.otherDeductions = v))} />
+            <MoneyInput ariaLabel="Weitere Abzüge" value={plan.tax.otherDeductions} onChange={(v) => setTax((t) => void (t.otherDeductions = v))} />
           </div>
           {params?.canton.deductions.rentMax ? (
-            <div className="mt-2 flex items-center justify-between text-sm">
+            <div className="mt-2 flex items-center justify-between gap-3 text-sm">
               <span className="text-muted" title={`Nur Kantonssteuer, max. CHF ${params.canton.deductions.rentMax}`}>Mieterabzug</span>
-              <MoneyInput value={plan.tax.rentDeduction ?? 0} onChange={(v) => setTax((t) => void (t.rentDeduction = v))} />
+              <MoneyInput ariaLabel="Mieterabzug" value={plan.tax.rentDeduction ?? 0} onChange={(v) => setTax((t) => void (t.rentDeduction = v))} />
             </div>
           ) : null}
-          <div className="mt-2 flex items-center justify-between text-sm">
+          <div className="mt-2 flex items-center justify-between gap-3 text-sm">
             <span className="text-muted" title="Konten, Depot, Auto – ohne Säule 3a und Pensionskasse">Vermögen 31.12.</span>
-            <MoneyInput value={plan.tax.wealth} onChange={(v) => setTax((t) => void (t.wealth = v))} />
+            <MoneyInput ariaLabel="Vermögen 31.12." value={plan.tax.wealth} onChange={(v) => setTax((t) => void (t.wealth = v))} />
           </div>
           <div className="mt-3">
             <Toggle checked={plan.tax.ktgDeductible} onChange={(v) => setTax((t) => void (t.ktgDeductible = v))} label={<span className="text-sm">KTG im Lohnausweis abgezogen</span>} />
@@ -173,12 +173,13 @@ function OtherIncomeCard() {
       {model.plan.otherIncome.map((o, idx) => (
         <div key={o.id} className="flex items-center justify-between gap-2 py-1 text-sm">
           <input
-            className="flex-1 rounded-lg border border-transparent bg-transparent px-2 py-1 hover:border-line"
+            aria-label={`Bezeichnung Einkunft ${idx + 1}`}
+            className="min-w-0 flex-1 rounded-lg border border-transparent bg-transparent px-2 py-1 hover:border-line"
             value={o.name}
             onChange={(e) => updateYear((p) => void (p.otherIncome[idx]!.name = e.target.value))}
           />
-          <MoneyInput value={o.amount} onChange={(v) => updateYear((p) => void (p.otherIncome[idx]!.amount = v))} />
-          <button className="px-2 text-muted hover:text-danger" onClick={() => updateYear((p) => void p.otherIncome.splice(idx, 1))}>×</button>
+          <MoneyInput ariaLabel={`Betrag ${o.name}`} value={o.amount} onChange={(v) => updateYear((p) => void (p.otherIncome[idx]!.amount = v))} />
+          <button aria-label={`${o.name} entfernen`} className="px-2 text-muted hover:text-danger" onClick={() => updateYear((p) => void p.otherIncome.splice(idx, 1))}>×</button>
         </div>
       ))}
       <button
@@ -199,13 +200,13 @@ function ActualTaxCard() {
   const diff = model.tax.incomeTaxTotal - actualTotal;
   return (
     <Card title="Tatsächliche Steuer (Veranlagung)">
-      <div className="flex items-center justify-between py-1 text-sm">
+      <div className="flex items-center justify-between gap-3 py-1 text-sm">
         <span className="text-muted">Bund</span>
-        <MoneyInput value={actual.federal ?? 0} onChange={(v) => updateYear((p) => void (p.actualTax = { ...p.actualTax, federal: v }))} />
+        <MoneyInput ariaLabel="Veranlagung Bund" value={actual.federal ?? 0} onChange={(v) => updateYear((p) => void (p.actualTax = { ...p.actualTax, federal: v }))} />
       </div>
-      <div className="flex items-center justify-between py-1 text-sm">
+      <div className="flex items-center justify-between gap-3 py-1 text-sm">
         <span className="text-muted">Kanton + Gemeinde</span>
-        <MoneyInput value={actual.cantonMunicipal ?? 0} onChange={(v) => updateYear((p) => void (p.actualTax = { ...p.actualTax, cantonMunicipal: v }))} />
+        <MoneyInput ariaLabel="Veranlagung Kanton und Gemeinde" value={actual.cantonMunicipal ?? 0} onChange={(v) => updateYear((p) => void (p.actualTax = { ...p.actualTax, cantonMunicipal: v }))} />
       </div>
       {actualTotal > 0 && (
         <Row
@@ -243,13 +244,13 @@ function ScenarioCard({ plan, accounts, profile, baseTotal, baseExpenses, baseNe
     <Card title="Szenario-Simulator" className="mt-4">
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-3 text-sm">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-muted">Lohnerhöhung brutto / Monat</span>
-            <MoneyInput value={raise} onChange={setRaise} />
+            <MoneyInput ariaLabel="Lohnerhöhung brutto pro Monat" value={raise} onChange={setRaise} />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-muted">Zusätzlicher Bonus brutto</span>
-            <MoneyInput value={bonus} onChange={setBonus} />
+            <MoneyInput ariaLabel="Zusätzlicher Bonus brutto" value={bonus} onChange={setBonus} />
           </div>
           <Toggle checked={no3a} onChange={setNo3a} label="Ohne Säule-3a-Einzahlung" />
         </div>

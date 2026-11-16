@@ -29,6 +29,24 @@ const METRICS: Metric[] = [
   { label: 'Sparquote', get: () => null, percent: (m) => m.summary.savingsRate },
 ];
 
+function MetricValue({ metric, model, previous }: { metric: Metric; model: YearModel; previous?: YearModel }) {
+  if (metric.percent) return <>{model.plan.budget.length > 1 ? formatPercent(metric.percent(model)) : '–'}</>;
+  const value = metric.get(model);
+  const before = previous ? metric.get(previous) : null;
+  const delta = value !== null && before !== null && before !== 0 ? (value - before) / Math.abs(before) : null;
+  const good = delta !== null && (metric.invert ? delta < 0 : delta > 0);
+  return (
+    <>
+      {value === null ? <span className="text-muted">–</span> : <Money value={value} decimals={false} />}
+      {delta !== null && Math.abs(delta) >= 0.005 && (
+        <div className={cx('text-[11px]', good ? 'text-accent' : 'text-warn')}>
+          {delta > 0 ? '+' : ''}{(delta * 100).toFixed(1)} %
+        </div>
+      )}
+    </>
+  );
+}
+
 export function ComparePage() {
   const { data, modelFor } = useStore();
   const models = Object.keys(data.years)
@@ -41,8 +59,22 @@ export function ComparePage() {
   return (
     <>
       <PageHeader title="Jahresvergleich" subtitle="Entwicklung von Lohn, Steuern und Sparen über die Jahre." />
-      <Card>
-        <div className="overflow-x-auto">
+      <div className="space-y-4 md:hidden">
+        {models.map((model, index) => (
+          <Card key={model.plan.year} title={String(model.plan.year)} action={model.plan.year === data.activeYear ? <span className="text-xs text-accent">Aktuelles Jahr</span> : undefined}>
+            <dl>
+              {METRICS.map((metric) => (
+                <div key={metric.label} className="flex items-start justify-between gap-3 border-t border-line/60 py-2 text-sm">
+                  <dt className="min-w-0 text-muted">{metric.label}</dt>
+                  <dd className="num shrink-0 text-right"><MetricValue metric={metric} model={model} previous={models[index - 1]} /></dd>
+                </div>
+              ))}
+            </dl>
+          </Card>
+        ))}
+      </div>
+      <Card className="hidden md:block">
+        <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Jahresvergleich">
           <table className="w-full min-w-[560px] text-sm">
             <thead>
               <tr className="text-right text-xs text-muted">
@@ -55,28 +87,12 @@ export function ComparePage() {
             <tbody className="num text-right">
               {METRICS.map((metric) => (
                 <tr key={metric.label} className="border-t border-line/60">
-                  <td className="py-2 text-left text-muted">{metric.label}</td>
-                  {models.map((m, idx) => {
-                    if (metric.percent) {
-                      const ok = m.plan.budget.length > 1;
-                      return <td key={m.plan.year}>{ok ? formatPercent(metric.percent(m)) : '–'}</td>;
-                    }
-                    const v = metric.get(m);
-                    const prev = idx > 0 ? metric.get(models[idx - 1]!) : null;
-                    const delta = v !== null && prev !== null && prev !== 0 ? (v - prev) / Math.abs(prev) : null;
-                    const good = delta !== null && (metric.invert ? delta < 0 : delta > 0);
-                    return (
-                      <td key={m.plan.year} className="py-2">
-                        {v === null ? <span className="text-muted">–</span> : <Money value={v} decimals={false} />}
-                        {delta !== null && Math.abs(delta) >= 0.005 && (
-                          <div className={cx('text-[11px]', good ? 'text-accent' : 'text-warn')}>
-                            {delta > 0 ? '+' : ''}
-                            {(delta * 100).toFixed(1)} %
-                          </div>
-                        )}
-                      </td>
-                    );
-                  })}
+                  <td className="sticky left-0 z-10 bg-panel py-2 pr-3 text-left text-muted">{metric.label}</td>
+                  {models.map((m, idx) => (
+                    <td key={m.plan.year} className="py-2">
+                      <MetricValue metric={metric} model={m} previous={models[idx - 1]} />
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -90,9 +106,9 @@ export function ComparePage() {
             <div key={m.plan.year}>
               <div className="mb-1 text-sm text-muted">{m.plan.year}</div>
               <div className="flex h-5 overflow-hidden rounded-md bg-line" style={{ width: `${(m.salary.totals.gross / maxNet) * 100}%` }}>
-                <div className="bg-accent/80" style={{ width: `${((m.salary.totals.net - m.tax.total) / m.salary.totals.gross) * 100}%` }} title="Netto nach Steuern" />
-                <div className="bg-warn/80" style={{ width: `${(m.tax.total / m.salary.totals.gross) * 100}%` }} title="Steuern" />
-                <div className="bg-info/60" style={{ width: `${((m.salary.totals.gross - m.salary.totals.net) / m.salary.totals.gross) * 100}%` }} title="Sozialabzüge & BVG" />
+                <div className="bg-accent/80" style={{ width: `${((m.salary.totals.net - m.tax.total) / Math.max(1, m.salary.totals.gross)) * 100}%` }} title="Netto nach Steuern" />
+                <div className="bg-warn/80" style={{ width: `${(m.tax.total / Math.max(1, m.salary.totals.gross)) * 100}%` }} title="Steuern" />
+                <div className="bg-info/60" style={{ width: `${((m.salary.totals.gross - m.salary.totals.net) / Math.max(1, m.salary.totals.gross)) * 100}%` }} title="Sozialabzüge & BVG" />
               </div>
             </div>
           ))}

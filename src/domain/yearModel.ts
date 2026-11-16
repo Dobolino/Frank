@@ -60,9 +60,7 @@ export function buildYearModel(plan: YearPlan, accounts: Account[], profile: Pro
       ? { ...item, amount: taxProvisionSuggested, frequency: { kind: 'monthly' as const }, children: undefined }
       : item,
   );
-  const taxProvisionBudgeted = sum(
-    budget.filter((i) => i.taxTag === 'taxProvision').map((i) => (i.frequency.kind === 'monthly' ? i.amount : 0)),
-  );
+  const taxProvisionBudgeted = Math.round(yearlyByTaxTag(budget, 'taxProvision') / 12);
 
   const otherIncomeYearly = taxInput.otherIncome;
   const summary = summarizeBudget(budget, {
@@ -81,7 +79,7 @@ export function buildYearModel(plan: YearPlan, accounts: Account[], profile: Pro
 
   const warnings = [...tax.warnings];
   if (lookup.note) warnings.unshift(lookup.note);
-  if (taxProvisionBudgeted > 0 && taxProvisionBudgeted < taxProvisionSuggested) {
+  if (taxProvisionBudgeted < taxProvisionSuggested) {
     warnings.push('Die budgetierte Steuerrückstellung ist tiefer als die berechnete Steuer.');
   }
   for (const c of cashflow) {

@@ -98,9 +98,10 @@ export function calculateSalary(input: SalaryInput): SalaryYear {
   const total = (key: keyof MonthlySalary) => sum(months.map((m) => m[key] as number));
   const ktg = total('ktg');
   const social = total('socialTotal');
+  const december = months[11]!;
   return {
     months,
-    regularNet: netOf(baseGrossFor(input, 12), rates, input.bvgMonthly) + (input.expenseAllowance?.monthly ?? 0),
+    regularNet: december.net - december.extrasNet,
     totals: {
       gross: total('grossTotal'),
       social,

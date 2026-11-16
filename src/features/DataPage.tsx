@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useStore } from '../app/store';
 import { Button, Card, PageHeader, todayYm } from './shared';
-import { downloadJson, parseAppData } from '../storage/storage';
+import { downloadJson, downloadRaw, latestRecovery, parseAppData } from '../storage/storage';
 import { initialData, hasPersonalSeed } from '../seed';
 import { buildAiSummary } from '../domain/aiSummary';
 
@@ -9,13 +9,14 @@ export function DataPage() {
   const { data, replaceAll, model } = useStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+  const recovery = latestRecovery();
   const summary = buildAiSummary(model, data.goals, todayYm());
 
   const onImport = async (file: File) => {
     try {
       const parsed = parseAppData(await file.text());
       if (!window.confirm(`Backup mit ${Object.keys(parsed.years).length} Jahr(en) laden? Die aktuellen Daten werden ersetzt.`)) return;
-      replaceAll(parsed);
+      if (!await replaceAll(parsed)) return;
       setMessage({ ok: true, text: 'Backup geladen.' });
     } catch (e) {
       setMessage({ ok: false, text: e instanceof Error ? e.message : 'Import fehlgeschlagen.' });
@@ -61,12 +62,18 @@ export function DataPage() {
               }}
             />
           </div>
+          {recovery !== null && (
+            <div className="mt-4">
+              <Button onClick={() => downloadRaw(recovery, 'frank-backup-wiederherstellung.json')}>Vorherigen Stand herunterladen</Button>
+              <p className="mt-2 text-xs text-muted">Sicherung vor dem letzten Import oder Zurücksetzen.</p>
+            </div>
+          )}
           <div className="mt-6 border-t border-line pt-4">
             <Button
               variant="danger"
-              onClick={() => {
+              onClick={async () => {
                 if (window.confirm('Alle Änderungen verwerfen und die Startdaten neu laden? Vorher ein Backup machen!')) {
-                  replaceAll(initialData());
+                  if (!await replaceAll(initialData())) return;
                   setMessage({ ok: true, text: 'Startdaten neu geladen.' });
                 }
               }}
@@ -79,7 +86,7 @@ export function DataPage() {
 
         <Card title="KI-Zusammenfassung" action={<Button onClick={copy}>Kopieren</Button>}>
           <p className="mb-3 text-sm text-muted">
-            Anonymisiert (ohne Namen und Kontonummern). Die App sendet nichts – du entscheidest, wo du den Text einfügst.
+            Die Zusammenfassung enthält deine Beträge sowie die Namen deiner Budgetposten und Sparziele. Prüfe persönliche Angaben vor dem Teilen. Die App sendet den Text nicht automatisch.
           </p>
           <pre className="max-h-96 overflow-auto rounded-xl bg-bg p-3 text-xs whitespace-pre-wrap text-muted">{summary}</pre>
         </Card>

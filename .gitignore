@@ -3,5 +3,6 @@ dist
 *.local.ts
 *.local.json
 *.xlsx
+frank-backup-*.json
 .DS_Store
 *.tsbuildinfo

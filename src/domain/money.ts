@@ -16,9 +16,6 @@ export const roundTo5 = (r: number): Rappen => Math.round(r / 5) * 5;
 /** Auf ganze Franken aufrunden (z. B. für Daueraufträge). */
 export const ceilToFranc = (r: number): Rappen => Math.ceil(r / 100 - 1e-9) * 100;
 
-/** Auf ganze Franken abrunden. */
-export const floorToFranc = (r: number): Rappen => Math.floor(r / 100 + 1e-9) * 100;
-
 export const sum = (values: readonly number[]): number => values.reduce((a, b) => a + b, 0);
 
 const fmt2 = new Intl.NumberFormat('de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

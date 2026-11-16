@@ -78,11 +78,11 @@ export function BudgetPage() {
               </div>
             }
           >
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[820px] table-fixed text-sm">
-                <thead>
+            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={`Budget ${CATEGORY_LABELS[cat.category]}`}>
+              <table className="block w-full table-fixed text-sm sm:table sm:min-w-[1004px]">
+                <thead className="hidden sm:table-header-group">
                   <tr className="text-left text-xs text-muted">
-                    <th className="pb-2 font-normal">Posten</th>
+                    <th className="sticky left-0 z-10 w-44 bg-panel pb-2 font-normal">Posten</th>
                     <th className="w-32 pb-2 text-right font-normal">Betrag</th>
                     <th className="w-56 pb-2 pl-3 font-normal">Fälligkeit</th>
                     <th className="w-40 pb-2 font-normal">Bezahlt von</th>
@@ -91,7 +91,7 @@ export function BudgetPage() {
                     <th className="w-10" />
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="block sm:table-row-group">
                   {cat.items.filter(visible).map((item) => (
                     <ItemRow key={item.id} item={item} edit={edit} accountOptions={accountOptions} />
                   ))}
@@ -149,8 +149,8 @@ function ItemRow({
 
   return (
     <>
-      <tr className="border-t border-line/60 align-middle">
-        <td className="py-1.5 pr-2">
+      <tr className="grid grid-cols-2 gap-x-3 gap-y-2 border-t border-line/60 py-3 align-middle sm:table-row sm:py-0">
+        <td className="col-span-2 min-w-0 bg-panel py-1.5 sm:sticky sm:left-0 sm:z-10 sm:pr-2">
           <div className="flex items-center gap-2">
             <TextInput value={item.name} onChange={(v) => edit(item.id, (i) => void (i.name = v))} className="w-full min-w-0 border-transparent bg-transparent hover:border-line" ariaLabel="Name" />
             {item.taxTag === 'pillar3a' && <Badge tone="info">3a</Badge>}
@@ -159,7 +159,8 @@ function ItemRow({
             {item.goalId && <Badge tone="good">Ziel</Badge>}
           </div>
         </td>
-        <td className="py-1.5 text-right">
+        <td className="col-span-2 flex items-center justify-between gap-2 py-1.5 text-right sm:table-cell">
+          <span className="text-xs text-muted sm:hidden">Betrag pro Fälligkeit</span>
           {hasChildren || auto ? (
             <span className="num pr-2.5 text-muted" title={auto ? 'Aus der Steuerberechnung' : 'Summe der Unterposten'}>
               <Money value={itemAmount(item)} />
@@ -168,8 +169,9 @@ function ItemRow({
             <MoneyInput value={item.amount} onChange={(v) => edit(item.id, (i) => void (i.amount = v))} ariaLabel={`Betrag ${item.name}`} />
           )}
         </td>
-        <td className="py-1.5 pl-3">
-          <div className="flex items-center gap-1">
+        <td className={cx("col-span-2 py-1.5 sm:table-cell sm:pl-3", !open && "hidden")} >
+          <span className="mb-1 block text-xs text-muted sm:hidden">Fälligkeit</span>
+          <div className="flex flex-wrap items-center gap-1">
             <Select value={f.kind} options={FREQ_OPTIONS} onChange={(k) => edit(item.id, (i) => void (i.frequency = changeFrequency(k, i.frequency)))} ariaLabel="Häufigkeit" />
             {f.kind === 'yearly' && (
               <Select
@@ -181,20 +183,22 @@ function ItemRow({
             )}
           </div>
         </td>
-        <td className="py-1.5">
+        <td className={cx("col-span-2 py-1.5 sm:table-cell", !open && "hidden")}>
+          <span className="mb-1 block text-xs text-muted sm:hidden">Bezahlt von</span>
           <Select className="w-full" value={item.accountId ?? ''} options={accountOptions} onChange={(v) => edit(item.id, (i) => void (i.accountId = v || undefined))} ariaLabel="Konto" />
         </td>
-        <td className="num py-1.5 text-right"><Money value={monthlyAmount(item)} /></td>
-        <td className="num py-1.5 text-right text-muted"><Money value={yearlyAmount(item)} decimals={false} /></td>
-        <td className="py-1.5 text-right">
-          <Button variant="ghost" onClick={() => setOpen(!open)} title="Details" className="px-2">
-            {open ? '▾' : '⋯'}
+        <td className="num hidden py-1.5 text-right sm:table-cell"><Money value={monthlyAmount(item)} /></td>
+        <td className="num hidden py-1.5 text-right text-muted sm:table-cell"><Money value={yearlyAmount(item)} decimals={false} /></td>
+        <td className="col-span-2 flex items-center justify-between gap-2 py-1.5 text-right sm:table-cell">
+          <span className="text-left text-xs text-muted sm:hidden"><Money value={monthlyAmount(item)} /> / Mt<br /><Money value={yearlyAmount(item)} decimals={false} /> / Jahr</span>
+          <Button variant="ghost" onClick={() => setOpen(!open)} title="Details" ariaLabel={`Details ${item.name}`} className="px-2">
+            <span className="sm:hidden">{open ? 'Schliessen' : 'Details'}</span><span className="hidden sm:inline">{open ? '▾' : '⋯'}</span>
           </Button>
         </td>
       </tr>
       {open && (
-        <tr>
-          <td colSpan={7} className="pb-3">
+        <tr className="block sm:table-row">
+          <td colSpan={7} className="block pb-3 sm:table-cell">
             <div className="grid gap-4 rounded-xl bg-panel-2 p-4 md:grid-cols-2">
               <div className="space-y-3">
                 {(f.kind === 'custom' || f.kind === 'quarterly') && (
@@ -206,6 +210,7 @@ function ItemRow({
                         return (
                           <button
                             key={m}
+                            aria-pressed={on}
                             onClick={() =>
                               edit(item.id, (i) => {
                                 const months = on ? f.months.filter((x) => x !== m) : [...f.months, m].sort((a, b) => a - b);
@@ -259,13 +264,13 @@ function ItemRow({
                   {(item.children ?? []).map((c) => (
                     <div key={c.id} className="flex items-center gap-2">
                       <TextInput
-                        className="flex-1"
+                        className="min-w-0 flex-1"
                         value={c.name}
                         onChange={(v) => edit(item.id, (i) => void (i.children!.find((x) => x.id === c.id)!.name = v))}
                         ariaLabel="Unterposten"
                       />
-                      <MoneyInput value={c.amount} onChange={(v) => edit(item.id, (i) => void (i.children!.find((x) => x.id === c.id)!.amount = v))} />
-                      <Button variant="ghost" className="px-2" onClick={() => edit(item.id, (i) => void (i.children = i.children!.filter((x) => x.id !== c.id)))} title="Entfernen">
+                      <MoneyInput ariaLabel={`Betrag ${c.name}`} value={c.amount} onChange={(v) => edit(item.id, (i) => void (i.children!.find((x) => x.id === c.id)!.amount = v))} />
+                      <Button variant="ghost" className="px-2" onClick={() => edit(item.id, (i) => void (i.children = i.children!.filter((x) => x.id !== c.id)))} title="Entfernen" ariaLabel={`${c.name} entfernen`}>
                         ×
                       </Button>
                     </div>

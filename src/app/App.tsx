@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type TouchEvent } from 'react';
 import { useStore } from './store';
 import { Button, Select, cx } from '../components/ui';
 import { emptyYear } from '../seed/builders';
@@ -11,7 +11,6 @@ import { GoalsPage } from '../features/GoalsPage';
 import { CashflowPage } from '../features/CashflowPage';
 import { ComparePage } from '../features/ComparePage';
 import { DataPage } from '../features/DataPage';
-import { useSwipe } from './useSwipe';
 
 const PAGES = [
   { id: 'overview', label: 'Übersicht', short: 'Übersicht', icon: '◎', Component: Dashboard },
@@ -32,43 +31,113 @@ const pageFromHash = (): PageId => {
   return (PAGES.find((p) => p.id === id)?.id ?? 'overview') as PageId;
 };
 
-const indexOf = (id: PageId) => PAGES.findIndex((p) => p.id === id);
+interface Swipe {
+  x: number;
+  y: number;
+  started: number;
+}
+
+// Text fields, buttons and horizontal tables keep their own touch gestures.
+function canSwipeFrom(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  if (target.closest('input, select, textarea, button, a, label, summary, [role="switch"], [role="slider"], [contenteditable="true"], [data-no-swipe]')) return false;
+  for (let element: HTMLElement | null = target; element && element.tagName !== 'MAIN'; element = element.parentElement) {
+    if (element.scrollWidth > element.clientWidth + 1 && /auto|scroll/.test(getComputedStyle(element).overflowX)) return false;
+  }
+  return !window.getSelection()?.toString();
+}
 
 export function App() {
   const { data, update, saveError } = useStore();
-  const [page, setPage] = useState<PageId>(pageFromHash);
-  const [direction, setDirection] = useState<'left' | 'right' | null>(null);
-  const tabRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [{ page, direction }, setNavigation] = useState(() => ({ page: pageFromHash(), direction: 1 }));
+  const [drag, setDrag] = useState(0);
+  const swipe = useRef<Swipe | null>(null);
+  const nav = useRef<HTMLElement>(null);
+  const main = useRef<HTMLElement>(null);
+  const index = PAGES.findIndex((p) => p.id === page);
 
   useEffect(() => {
     const onHash = () => {
       const next = pageFromHash();
-      setPage((prev) => {
-        if (prev !== next) setDirection(indexOf(next) > indexOf(prev) ? 'left' : 'right');
-        return next;
-      });
+      // A swipe/history change does not naturally blur a focused amount field.
+      // Commit its draft before unmounting the current page.
+      const focused = document.activeElement;
+      if (focused instanceof HTMLElement && focused.matches('input, textarea, select, [contenteditable="true"]')) focused.blur();
+      setNavigation((previous) => ({
+        page: next,
+        direction: PAGES.findIndex((p) => p.id === next) >= PAGES.findIndex((p) => p.id === previous.page) ? 1 : -1,
+      }));
+      swipe.current = null;
+      setDrag(0);
       window.scrollTo(0, 0);
     };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  // Aktiven Tab in der unteren Leiste sichtbar halten
   useEffect(() => {
-    tabRefs.current[page]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    const strip = nav.current;
+    const active = strip?.querySelector<HTMLAnchorElement>('[aria-current="page"]');
+    if (!strip || !active || window.matchMedia('(min-width: 768px)').matches) return;
+    strip.scrollTo({
+      left: active.offsetLeft - strip.offsetLeft - (strip.clientWidth - active.offsetWidth) / 2,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+    });
   }, [page]);
 
-  const go = (offset: number) => {
-    const next = PAGES[indexOf(page) + offset];
+  useEffect(() => {
+    const surface = main.current;
+    if (!surface) return;
+    // React's delegated touch listeners are passive. Only a deliberate horizontal
+    // page gesture suppresses browser scrolling; tables and vertical scroll stay native.
+    const preventHorizontalScroll = (event: globalThis.TouchEvent) => {
+      const start = swipe.current;
+      const touch = event.touches[0];
+      if (!start || !touch || event.touches.length !== 1) return;
+      const dx = Math.abs(touch.clientX - start.x);
+      const dy = Math.abs(touch.clientY - start.y);
+      if (dx > 12 && dy < dx * 0.6 && event.cancelable) event.preventDefault();
+    };
+    surface.addEventListener('touchmove', preventHorizontalScroll, { passive: false });
+    return () => surface.removeEventListener('touchmove', preventHorizontalScroll);
+  }, []);
+
+  const cancelSwipe = () => {
+    swipe.current = null;
+    setDrag(0);
+  };
+  const onTouchStart = (event: TouchEvent<HTMLElement>) => {
+    cancelSwipe();
+    const touch = event.touches[0];
+    if (!touch || event.touches.length !== 1 || window.innerWidth >= 768 || !canSwipeFrom(event.target)) return;
+    // Leave the screen edges to the browser's back/forward gestures.
+    if (touch.clientX < 24 || touch.clientX > window.innerWidth - 24) return;
+    swipe.current = { x: touch.clientX, y: touch.clientY, started: performance.now() };
+  };
+  const onTouchMove = (event: TouchEvent<HTMLElement>) => {
+    const start = swipe.current;
+    const touch = event.touches[0];
+    if (!start || !touch) return;
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    if (event.touches.length !== 1 || Math.abs(dy) > Math.max(16, Math.abs(dx) * 0.6)) {
+      cancelSwipe();
+      return;
+    }
+    const nextIndex = index + (dx < 0 ? 1 : -1);
+    setDrag(nextIndex >= 0 && nextIndex < PAGES.length ? Math.max(-54, Math.min(54, dx * 0.25)) : 0);
+  };
+  const onTouchEnd = (event: TouchEvent<HTMLElement>) => {
+    const start = swipe.current;
+    const touch = event.changedTouches[0];
+    cancelSwipe();
+    if (!start || !touch) return;
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    if (Math.abs(dx) < 64 || Math.abs(dy) > Math.abs(dx) * 0.6 || performance.now() - start.started > 900) return;
+    const next = PAGES[index + (dx < 0 ? 1 : -1)];
     if (next) window.location.hash = next.id;
   };
-  const swipe = useSwipe(contentRef, {
-    onNext: () => go(1),
-    onPrev: () => go(-1),
-    canNext: indexOf(page) < PAGES.length - 1,
-    canPrev: indexOf(page) > 0,
-  });
 
   const years = Object.keys(data.years).map(Number).sort();
   const Current = PAGES.find((p) => p.id === page)!.Component;
@@ -126,11 +195,12 @@ export function App() {
           <div className="text-xs text-muted">Finanzen · {data.profile.municipality}</div>
           <div className="mt-5">{yearControls}</div>
         </div>
-        <nav className="flex flex-col gap-1 px-3 pb-3">
+        <nav aria-label="Hauptnavigation" className="flex flex-col gap-1 px-3 pb-3">
           {PAGES.map((p) => (
             <a
               key={p.id}
               href={`#${p.id}`}
+              aria-current={page === p.id ? 'page' : undefined}
               className={cx(
                 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
                 page === p.id ? 'bg-panel-2 text-text' : 'text-muted hover:bg-panel-2/60 hover:text-text',
@@ -146,32 +216,41 @@ export function App() {
         {saveError && <p className="px-5 pb-4 text-xs text-danger">Speichern im Browser fehlgeschlagen – bitte Export nutzen.</p>}
       </aside>
 
-      <main className="min-w-0 flex-1 touch-pan-y overflow-x-hidden px-4 pt-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:px-10 md:py-8" {...swipe}>
-        {saveError && <p className="mb-3 text-xs text-danger md:hidden">Speichern im Browser fehlgeschlagen – bitte Export nutzen.</p>}
-        <div ref={contentRef} className="mx-auto max-w-6xl will-change-transform">
-          <div key={page} className={cx(direction === 'left' && 'animate-page-left', direction === 'right' && 'animate-page-right')}>
-            <Current />
+      <main
+        ref={main}
+        className="min-w-0 flex-1 overflow-x-clip px-4 pt-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:px-10 md:py-8"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onTouchCancel={cancelSwipe}
+      >
+        <div className="mx-auto max-w-6xl">
+          <div className="page-drag" style={{ '--page-drag': `${drag}px`, '--page-opacity': 1 - Math.abs(drag) / 240 } as CSSProperties}>
+            <div key={page} className="page-enter" style={{ '--page-direction': direction } as CSSProperties}>
+              <Current />
+            </div>
           </div>
         </div>
       </main>
 
       {/* Tab-Leiste Handy */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t border-line bg-panel/95 pb-[env(safe-area-inset-bottom)] backdrop-blur select-none md:hidden"
+        ref={nav}
+        className="page-tabs fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t border-line bg-panel/95 pb-[env(safe-area-inset-bottom)] backdrop-blur select-none md:hidden"
         aria-label="Seiten"
       >
         {PAGES.map((p) => (
           <a
             key={p.id}
-            ref={(el) => void (tabRefs.current[p.id] = el)}
             href={`#${p.id}`}
-            className={cx('flex min-w-[4.6rem] shrink-0 flex-col items-center gap-0.5 px-2 pt-2 pb-1.5 text-[11px]', page === p.id ? 'text-accent' : 'text-muted')}
+            className={cx('relative flex min-w-[4.6rem] shrink-0 flex-col items-center gap-0.5 px-2 pt-2 pb-1.5 text-[11px]', page === p.id ? 'text-accent' : 'text-muted')}
             aria-current={page === p.id ? 'page' : undefined}
           >
             <span className="text-lg leading-none" aria-hidden>
               {p.icon}
             </span>
             {p.short}
+            {page === p.id && <span aria-hidden className="tab-indicator absolute inset-x-3 top-0 h-0.5 rounded-full bg-accent" />}
           </a>
         ))}
       </nav>

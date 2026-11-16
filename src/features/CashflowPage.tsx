@@ -36,16 +36,18 @@ export function CashflowPage() {
                     <div className="num text-3xl font-semibold text-accent"><Money value={cf.standingOrder} decimals={false} /></div>
                     {transfer && <div className="num text-xs text-muted">exakt <Money value={Math.round(transfer.monthlyNeed)} /></div>}
                   </div>
-                  <div className="flex items-center justify-between pt-2 text-sm">
+                  <div className="flex items-center justify-between gap-3 pt-2 text-sm">
                     <span className="text-muted">Kontostand 1. Januar</span>
                     <MoneyInput
+                      ariaLabel={`Kontostand 1. Januar ${cf.account.name}`}
                       value={cf.startBalance}
                       onChange={(v) => updateYear((p) => void (p.startBalances[cf.account.id] = v))}
                     />
                   </div>
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between gap-3 text-sm">
                     <span className="text-muted">Anteil 13. Lohn / Bonus</span>
                     <NumberInput
+                      ariaLabel={`Anteil 13. Lohn und Bonus ${cf.account.name}`}
                       value={Math.round((alloc?.share ?? 0) * 100)}
                       step={5}
                       suffix="%"
@@ -93,11 +95,12 @@ export function CashflowPage() {
 
                   <div className="mt-3">
                     <Collapsible summary="Monat für Monat">
-                      <div className="overflow-x-auto">
+                      <p className="mb-2 text-xs text-muted sm:hidden">Tabelle seitlich scrollen für alle Beträge.</p>
+                      <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={`Monatlicher Kontoverlauf ${cf.account.name}`}>
                         <table className="w-full min-w-[520px] text-sm">
                           <thead>
                             <tr className="text-right text-xs text-muted">
-                              <th className="pb-2 text-left font-normal">Monat</th>
+                              <th className="sticky left-0 z-10 bg-panel-2 pb-2 text-left font-normal">Monat</th>
                               <th className="pb-2 font-normal">Eingang</th>
                               <th className="pb-2 font-normal">Rechnungen</th>
                               <th className="pb-2 font-normal">Stand</th>
@@ -106,7 +109,7 @@ export function CashflowPage() {
                           <tbody className="num text-right">
                             {cf.months.map((m) => (
                               <tr key={m.month} className="border-t border-line/60 align-top">
-                                <td className="py-1.5 text-left">{monthName(m.month)}</td>
+                                <td className="sticky left-0 z-10 bg-panel-2 py-1.5 pr-2 text-left">{monthName(m.month)}</td>
                                 <td>
                                   <Money value={m.inflowStandingOrder + m.inflowExtras} />
                                   {m.inflowExtras > 0 && <div className="text-xs text-info">inkl. <Money value={m.inflowExtras} /> 13./Bonus</div>}

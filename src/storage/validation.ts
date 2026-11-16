@@ -156,6 +156,7 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     boolean(tax.ktgDeductible, `${p}.tax.ktgDeductible`);
     for (const key of ['commuteCosts', 'otherDeductions', 'wealth']) integer(tax[key], `${p}.tax.${key}`);
     for (const key of ['rentDeduction', 'insurancePremiumsOverride']) optional(tax, key, integer, `${p}.tax`);
+    optional(tax, 'includeDepot', boolean, `${p}.tax`);
     optional(plan, 'actualTax', (v, path) => {
       const a = object(v, path);
       optional(a, 'federal', integer, path);

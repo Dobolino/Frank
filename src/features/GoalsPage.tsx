@@ -1,11 +1,12 @@
 import { useStore } from '../app/store';
-import { Bar, Badge, Button, Card, Money, MoneyInput, PageHeader, Row, Select, TextInput, todayYm } from './shared';
+import { Bar, Badge, Button, Card, Money, MoneyInput, PageHeader, Row, SectionHeader, Select, TextInput, todayYm } from './shared';
 import { goalStatus, setGoalMonthlyRate } from '../domain/goalsEngine';
 import { dueMonths } from '../domain/budgetEngine';
 import { uid } from '../seed/builders';
 import { chf } from '../domain/money';
 
-export function GoalsPage() {
+export function GoalsPage({ embedded = false }: { embedded?: boolean }) {
+  const Header = embedded ? SectionHeader : PageHeader;
   const { data, model, update, updateYear } = useStore();
   const today = todayYm();
   const savingsAccounts = data.accounts.filter((a) => a.type === 'savings');
@@ -26,7 +27,7 @@ export function GoalsPage() {
 
   return (
     <>
-      <PageHeader
+      <Header
         title="Sparziele"
         subtitle="Reisen, Anschaffungen, Notgroschen – mit Monatsrate und Prognose."
         action={<Button variant="primary" onClick={addGoal}>+ Sparziel</Button>}

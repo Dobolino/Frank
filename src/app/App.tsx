@@ -7,9 +7,7 @@ import { BudgetPage } from '../features/BudgetPage';
 import { SalaryPage } from '../features/SalaryPage';
 import { TaxPage } from '../features/TaxPage';
 import { InvestPage } from '../features/InvestPage';
-import { GoalsPage } from '../features/GoalsPage';
-import { CashflowPage } from '../features/CashflowPage';
-import { ComparePage } from '../features/ComparePage';
+import { SavingsPage } from '../features/SavingsPage';
 import { DataPage } from '../features/DataPage';
 
 const PAGES = [
@@ -18,18 +16,24 @@ const PAGES = [
   { id: 'salary', label: 'Lohn', short: 'Lohn', icon: '₣', Component: SalaryPage },
   { id: 'tax', label: 'Steuern', short: 'Steuern', icon: '§', Component: TaxPage },
   { id: 'invest', label: 'Anlagen', short: 'Anlagen', icon: '↗', Component: InvestPage },
-  { id: 'cashflow', label: 'Sparkonto', short: 'Sparkonto', icon: '⇄', Component: CashflowPage },
-  { id: 'goals', label: 'Sparziele', short: 'Ziele', icon: '✈', Component: GoalsPage },
-  { id: 'compare', label: 'Jahresvergleich', short: 'Vergleich', icon: '▥', Component: ComparePage },
-  { id: 'data', label: 'Daten & KI', short: 'Daten', icon: '⤓', Component: DataPage },
+  { id: 'savings', label: 'Sparen', short: 'Sparen', icon: '⇄', Component: SavingsPage },
 ] as const;
 
-type PageId = (typeof PAGES)[number]['id'];
+/** Nicht in der Tab-Leiste: über das Symbol in der Kopfzeile erreichbar. */
+const DATA_PAGE = { id: 'data', label: 'Daten & KI', short: 'Daten', icon: '⤓', Component: DataPage } as const;
+
+type PageId = (typeof PAGES)[number]['id'] | typeof DATA_PAGE.id;
+
+/** Frühere Seiten-Adressen (Lesezeichen) zeigen auf die neue Seite. */
+const ALIASES: Record<string, PageId> = { cashflow: 'savings', goals: 'savings', compare: 'overview' };
 
 const pageFromHash = (): PageId => {
   const id = window.location.hash.replace('#', '');
-  return (PAGES.find((p) => p.id === id)?.id ?? 'overview') as PageId;
+  if (id === DATA_PAGE.id) return DATA_PAGE.id;
+  return ALIASES[id] ?? (PAGES.find((p) => p.id === id)?.id ?? 'overview');
 };
+
+const orderOf = (id: PageId) => (id === DATA_PAGE.id ? PAGES.length : PAGES.findIndex((p) => p.id === id));
 
 interface Swipe {
   x: number;
@@ -65,7 +69,7 @@ export function App() {
       if (focused instanceof HTMLElement && focused.matches('input, textarea, select, [contenteditable="true"]')) focused.blur();
       setNavigation((previous) => ({
         page: next,
-        direction: PAGES.findIndex((p) => p.id === next) >= PAGES.findIndex((p) => p.id === previous.page) ? 1 : -1,
+        direction: orderOf(next) >= orderOf(previous.page) ? 1 : -1,
       }));
       swipe.current = null;
       setDrag(0);
@@ -109,7 +113,7 @@ export function App() {
   const onTouchStart = (event: TouchEvent<HTMLElement>) => {
     cancelSwipe();
     const touch = event.touches[0];
-    if (!touch || event.touches.length !== 1 || window.innerWidth >= 768 || !canSwipeFrom(event.target)) return;
+    if (!touch || index < 0 || event.touches.length !== 1 || window.innerWidth >= 768 || !canSwipeFrom(event.target)) return;
     // Leave the screen edges to the browser's back/forward gestures.
     if (touch.clientX < 24 || touch.clientX > window.innerWidth - 24) return;
     swipe.current = { x: touch.clientX, y: touch.clientY, started: performance.now() };
@@ -140,7 +144,7 @@ export function App() {
   };
 
   const years = Object.keys(data.years).map(Number).sort();
-  const Current = PAGES.find((p) => p.id === page)!.Component;
+  const Current = page === DATA_PAGE.id ? DATA_PAGE.Component : PAGES.find((p) => p.id === page)!.Component;
 
   const addYear = () => {
     const last = Math.max(...years);
@@ -178,7 +182,17 @@ export function App() {
             </div>
             <div className="truncate text-[11px] text-muted">{data.profile.municipality}</div>
           </div>
-          {yearControls}
+          <div className="flex items-center gap-1">
+            {yearControls}
+            <a
+              href={`#${DATA_PAGE.id}`}
+              aria-label="Daten, Backup und KI"
+              aria-current={page === DATA_PAGE.id ? 'page' : undefined}
+              className={cx('flex h-9 w-9 items-center justify-center rounded-lg text-lg', page === DATA_PAGE.id ? 'bg-panel-2 text-accent' : 'text-muted')}
+            >
+              {DATA_PAGE.icon}
+            </a>
+          </div>
         </div>
         {/* Fortschritt: wo in der Seitenfolge du bist */}
         <div className="flex gap-1 px-4 pb-2" aria-hidden>
@@ -198,7 +212,7 @@ export function App() {
           <div className="mt-5">{yearControls}</div>
         </div>
         <nav aria-label="Hauptnavigation" className="flex flex-col gap-1 px-3 pb-3">
-          {PAGES.map((p) => (
+          {[...PAGES, DATA_PAGE].map((p) => (
             <a
               key={p.id}
               href={`#${p.id}`}
@@ -245,7 +259,7 @@ export function App() {
           <a
             key={p.id}
             href={`#${p.id}`}
-            className={cx('relative flex min-w-[4.6rem] shrink-0 flex-col items-center gap-0.5 px-2 pt-2 pb-1.5 text-[11px]', page === p.id ? 'text-accent' : 'text-muted')}
+            className={cx('relative flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 pt-2 pb-1.5 text-[11px]', page === p.id ? 'text-accent' : 'text-muted')}
             aria-current={page === p.id ? 'page' : undefined}
           >
             <span className="text-lg leading-none" aria-hidden>

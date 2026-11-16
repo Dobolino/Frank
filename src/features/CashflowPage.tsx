@@ -1,15 +1,16 @@
 import { useStore } from '../app/store';
-import { Badge, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, cx } from './shared';
+import { Badge, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, SectionHeader, cx } from './shared';
 import { frequencyLabel, monthlyAmount } from '../domain/budgetEngine';
 import { monthName } from '../domain/types';
 import { uid } from '../seed/builders';
 
-export function CashflowPage() {
+export function CashflowPage({ embedded = false }: { embedded?: boolean }) {
   const { model, updateYear } = useStore();
+  const Header = embedded ? SectionHeader : PageHeader;
 
   return (
     <>
-      <PageHeader
+      <Header
         title="Sparkonto & Daueraufträge"
         subtitle="Wie viel du monatlich überweisen musst, damit alle Jahres- und Quartalsrechnungen gedeckt sind."
       />

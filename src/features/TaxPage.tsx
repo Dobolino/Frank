@@ -6,6 +6,7 @@ import { buildYearModel } from '../domain/yearModel';
 import { formatPercent, type Rappen } from '../domain/money';
 import { CONFESSION_LABELS } from '../params/taxData';
 import { LocationCard } from './LocationCard';
+import { summarizePortfolio } from '../domain/investEngine';
 import type { DeductionLine } from '../domain/tax/taxEngine';
 
 const MEAL_OPTIONS: { value: MealDeduction; label: string }[] = [
@@ -27,6 +28,7 @@ function Deductions({ lines }: { lines: DeductionLine[] }) {
 export function TaxPage() {
   const { model, updateYear, data } = useStore();
   const { tax, plan, taxParams: params } = model;
+  const depot = summarizePortfolio(data.investments);
   const place = !params
     ? 'ohne Wohnort'
     : params.municipality.name.includes(`(${params.canton.code})`)
@@ -86,7 +88,7 @@ export function TaxPage() {
               <Row label="Gemeindesteuer" value={<Money value={tax.canton.municipalTax} />} />
               {tax.canton.churchTax > 0 && <Row label="Kirchensteuer" value={<Money value={tax.canton.churchTax} />} />}
               {tax.canton.personalTax > 0 && <Row label="Personalsteuer" value={<Money value={tax.canton.personalTax} />} />}
-              {plan.tax.wealth > 0 && (
+              {model.taxInput.wealth > 0 && (
                 <>
                   <Row label="Steuerbares Vermögen" hint="nach Freibetrag" value={<Money value={tax.canton.wealthTaxable} decimals={false} />} />
                   <Row label={tax.canton.wealthChurch > 0 ? 'Vermögenssteuer Kanton, Gemeinde, Kirche' : 'Vermögenssteuer Kanton + Gemeinde'} value={<Money value={tax.wealthTaxTotal} />} />
@@ -129,9 +131,29 @@ export function TaxPage() {
             </div>
           ) : null}
           <div className="mt-2 flex items-center justify-between gap-3 text-sm">
-            <span className="text-muted" title="Konten, Depot, Auto – ohne Säule 3a und Pensionskasse">Vermögen 31.12.</span>
+            <span className="text-muted" title="Konten, Auto, übriges Vermögen – ohne Säule 3a und Pensionskasse">
+              {depot.positions.length > 0 ? 'Konten & übriges Vermögen' : 'Vermögen 31.12.'}
+            </span>
             <MoneyInput ariaLabel="Vermögen 31.12." value={plan.tax.wealth} onChange={(v) => setTax((t) => void (t.wealth = v))} />
           </div>
+          {depot.positions.length > 0 && (
+            <div className="mt-2">
+              <Toggle
+                checked={plan.tax.includeDepot ?? false}
+                onChange={(v) => setTax((t) => void (t.includeDepot = v || undefined))}
+                label={
+                  <span className="text-sm">
+                    Depot einrechnen <span className="text-muted">(<Money value={depot.totalChf} decimals={false} />)</span>
+                  </span>
+                }
+              />
+              {plan.tax.includeDepot && (
+                <p className="mt-1 text-xs text-muted">
+                  Steuerbares Vermögen total <Money value={model.taxInput.wealth} decimals={false} />. Frank nimmt den aktuellen Depotwert, massgebend ist der Wert am 31.12.
+                </p>
+              )}
+            </div>
+          )}
           <div className="mt-3">
             <Toggle checked={plan.tax.ktgDeductible} onChange={(v) => setTax((t) => void (t.ktgDeductible = v))} label={<span className="text-sm">KTG im Lohnausweis abgezogen</span>} />
           </div>
@@ -147,7 +169,7 @@ export function TaxPage() {
         <ActualTaxCard />
       </div>
 
-      <ScenarioCard plan={plan} accounts={data.accounts} profile={data.profile} baseTotal={tax.total} baseExpenses={model.summary.expensesYearly} baseNet={model.salary.totals.net} />
+      <ScenarioCard plan={plan} accounts={data.accounts} profile={data.profile} depotChf={depot.totalChf} baseTotal={tax.total} baseExpenses={model.summary.expensesYearly} baseNet={model.salary.totals.net} />
 
       <p className="mt-6 text-xs text-muted">
         Quelle: ESTV-Steuerrechner (Tarife, Abzüge, Steuerfüsse). Die Berechnung ist für alle Kantonshauptorte gegen den ESTV-Rechner getestet. Provisorische Schätzung, massgebend ist die Veranlagung.
@@ -220,7 +242,7 @@ function ActualTaxCard() {
   );
 }
 
-function ScenarioCard({ plan, accounts, profile, baseTotal, baseExpenses, baseNet }: { plan: YearPlan; accounts: Parameters<typeof buildYearModel>[1]; profile: Profile; baseTotal: Rappen; baseExpenses: Rappen; baseNet: Rappen }) {
+function ScenarioCard({ plan, accounts, profile, depotChf, baseTotal, baseExpenses, baseNet }: { plan: YearPlan; accounts: Parameters<typeof buildYearModel>[1]; profile: Profile; depotChf: Rappen; baseTotal: Rappen; baseExpenses: Rappen; baseNet: Rappen }) {
   const [raise, setRaise] = useState<Rappen>(0);
   const [bonus, setBonus] = useState<Rappen>(0);
   const [no3a, setNo3a] = useState(false);
@@ -231,8 +253,8 @@ function ScenarioCard({ plan, accounts, profile, baseTotal, baseExpenses, baseNe
     p.salary.changes = p.salary.changes.map((c) => ({ ...c, grossMonthly: c.grossMonthly + raise }));
     if (bonus > 0) p.salary.bonuses.push({ month: 3, gross: bonus });
     if (no3a) p.budget = p.budget.filter((b) => b.taxTag !== 'pillar3a');
-    return buildYearModel(p, accounts, profile);
-  }, [plan, accounts, profile, raise, bonus, no3a]);
+    return buildYearModel(p, accounts, profile, depotChf);
+  }, [plan, accounts, profile, depotChf, raise, bonus, no3a]);
 
   const dNet = scenario.salary.totals.net - baseNet;
   const dTax = scenario.tax.total - baseTotal;

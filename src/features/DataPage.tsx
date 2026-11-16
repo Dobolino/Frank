@@ -4,12 +4,14 @@ import { Button, Card, PageHeader, todayYm } from './shared';
 import { downloadJson, downloadRaw, latestRecovery, parseAppData } from '../storage/storage';
 import { initialData, hasPersonalSeed } from '../seed';
 import { buildAiSummary } from '../domain/aiSummary';
+import { lastBackup, saveBackup } from '../storage/backup';
 
 export function DataPage() {
   const { data, replaceAll, model } = useStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const recovery = latestRecovery();
+  const [last, setLast] = useState(lastBackup);
   const summary = buildAiSummary(model, data.goals, todayYm());
 
   const onImport = async (file: File) => {
@@ -42,13 +44,25 @@ export function DataPage() {
       )}
       <div className="grid gap-4 md:grid-cols-2">
         <Card title="Backup">
-          <p className="mb-4 text-sm text-muted">
-            Die Daten liegen im LocalStorage dieses Browsers. Lade regelmässig ein Backup herunter – z. B. in deinen OneDrive-Ordner.
+          <p className="mb-2 text-sm text-muted">
+            Die Daten liegen nur auf diesem Gerät. Auf dem iPhone: «Sichern», dann «In Dateien sichern» und einen Ordner in iCloud Drive wählen.
+          </p>
+          <p className="mb-4 text-xs text-muted">
+            Letztes Backup: {last ? last.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'noch keines'}
           </p>
           <div className="flex flex-wrap gap-2">
-            <Button variant="primary" onClick={() => downloadJson(data, `frank-backup-${new Date().toISOString().slice(0, 10)}.json`)}>
-              Export (JSON)
+            <Button
+              variant="primary"
+              onClick={async () => {
+                const result = await saveBackup(data);
+                if (result === 'cancelled') return;
+                setLast(lastBackup());
+                setMessage({ ok: true, text: result === 'shared' ? 'Backup gesichert.' : 'Backup heruntergeladen.' });
+              }}
+            >
+              Sichern
             </Button>
+            <Button onClick={() => downloadJson(data, `frank-backup-${new Date().toISOString().slice(0, 10)}.json`)}>Als Datei laden</Button>
             <Button onClick={() => fileRef.current?.click()}>Import …</Button>
             <input
               ref={fileRef}

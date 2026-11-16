@@ -5,6 +5,8 @@ import { formatPercent } from '../domain/money';
 import { goalStatus } from '../domain/goalsEngine';
 import { todayYm } from './shared';
 import { RadarCard } from './RadarCard';
+import { BackupReminder } from './BackupReminder';
+import { ComparePage } from './ComparePage';
 import { summarizePortfolio } from '../domain/investEngine';
 
 export function Dashboard() {
@@ -17,6 +19,7 @@ export function Dashboard() {
   return (
     <>
       <PageHeader title={`Übersicht ${model.plan.year}`} subtitle="Monat, Jahr, Steuern und Sparkonto auf einen Blick." />
+      <BackupReminder />
       <Warnings items={model.warnings} />
 
       <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -157,6 +160,8 @@ export function Dashboard() {
           )}
         </Card>
       </div>
+
+      <ComparePage embedded />
     </>
   );
 }

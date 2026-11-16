@@ -248,11 +248,23 @@ export interface Investments {
   fx: Record<string, { rate: number; asOf: string }>;
 }
 
+/** Vermögensstand zu einem Monat (Rappen). */
+export interface WealthSnapshot {
+  /** YYYY-MM */
+  month: string;
+  /** Bank- und Sparkonten. */
+  accounts: Rappen;
+  depot: Rappen;
+  pillar3a: Rappen;
+}
+
 export interface AppData {
   schemaVersion: number;
   profile: Profile;
   settings?: { radar?: RadarSettings };
   investments?: Investments;
+  /** Vermögensstände über die Zeit, ein Eintrag pro Monat. */
+  wealthHistory?: WealthSnapshot[];
   accounts: Account[];
   years: Record<string, YearPlan>;
   goals: SavingsGoal[];

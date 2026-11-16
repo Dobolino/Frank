@@ -27,6 +27,7 @@ const GROUP_ALL_LOCATIONS = 99;
 const GROUP_CAPITALS = 88;
 const CALCULATOR_INCOME_WEALTH = 1;
 const SINGLE = 1;
+const MARRIED = 2;
 const NO_CONFESSION = 5;
 const EMPLOYED = 1;
 
@@ -79,6 +80,14 @@ function pickSingle(entries) {
   return null;
 }
 
+/** Familientarif: Gruppe mit Verheirateten, sonst der Einheitstarif. Splitting gilt nur hier. */
+function pickFamily(entries) {
+  const hit = entries.find((e) => e.Group.split(',').includes('VERHEIRATET')) ?? entries.find((e) => e.Group === 'ALLE');
+  return hit ?? null;
+}
+
+const familyScale = (entry) => (entry ? { scale: toScale(entry), splitting: clean(entry.Splitting || 0) } : null);
+
 const num = String.raw`(-?\d+(?:\.\d+)?)`;
 const W = String.raw`\s*\$wert\$\s*`;
 const FORMULA_PATTERNS = [
@@ -124,19 +133,60 @@ function toScale(entry) {
 }
 
 function extractScales(scales) {
-  const federal = pickSingle(scales.filter((s) => s.Target === 'BUND' && s.TaxType === 'EINKOMMENSSTEUER'));
+  const fedEntries = scales.filter((s) => s.Target === 'BUND' && s.TaxType === 'EINKOMMENSSTEUER');
+  const federal = pickSingle(fedEntries);
+  const federalFamily = familyScale(pickFamily(fedEntries));
   const cantons = {};
   for (const canton of new Set(scales.map((s) => s.Location.Canton))) {
     const own = scales.filter((s) => s.Location.Canton === canton && s.Target === 'KANTON');
     const income = pickSingle(own.filter((s) => s.TaxType === 'EINKOMMENSSTEUER'));
     const wealth = pickSingle(own.filter((s) => s.TaxType === 'VERMOEGENSSTEUER'));
     if (!income) throw new Error(`${canton}: kein Einkommenssteuertarif für Ledige gefunden`);
-    cantons[canton] = { income: toScale(income), wealth: wealth ? toScale(wealth) : null };
+    const incomeEntries = own.filter((s) => s.TaxType === 'EINKOMMENSSTEUER');
+    const wealthEntries = own.filter((s) => s.TaxType === 'VERMOEGENSSTEUER');
+    const wealthFamily = pickFamily(wealthEntries);
+    cantons[canton] = {
+      income: toScale(income),
+      wealth: wealth ? toScale(wealth) : null,
+      family: {
+        income: familyScale(pickFamily(incomeEntries)),
+        wealth: wealthFamily ? toScale(wealthFamily) : null,
+      },
+    };
   }
-  return { federal: federal ? toScale(federal) : null, cantons };
+  return { federal: federal ? toScale(federal) : null, federalFamily, cantons };
 }
 
 // ───────────────────────────── Abzüge ─────────────────────────────
+
+/**
+ * Kinderabzüge: nach Alter (SozKinderAlterUnter7, …Zwischen5und15, minderjährig/volljährig) oder nach
+ * Anzahl (1. und 2. Kind, ab dem 3.). Ausbildungsabzüge für auswärtige Ausbildung bleiben weg.
+ */
+function childRules(byId) {
+  const value = (t) => (t.Format.includes('STANDARDIZED') ? t.Amount : t.Format.includes('MINIMUM') ? t.Minimum : t.Maximum);
+  const age = [];
+  for (const [id, t] of Object.entries(byId)) {
+    let m;
+    let range = null;
+    if (id === 'SozKind') range = [0, 99];
+    else if (id === 'SozminderjKinder') range = [0, 17];
+    else if (id === 'SozvolljKinder') range = [18, 99];
+    else if ((m = id.match(/^SozKinderAlterUnter(\d+)$/))) range = [0, +m[1] - 1];
+    else if ((m = id.match(/^SozKinderAlterUeber(\d+)$/))) range = [+m[1] + 1, 99];
+    else if ((m = id.match(/^SozKinderAlterZwischen(\d+)und(\d+)$/))) range = [+m[1], +m[2]];
+    else if (id === 'SozKinderAltervon17Jahren') range = [17, 17];
+    else if (id === 'SozKinderAlter18oder19') range = [18, 19];
+    if (range && value(t) > 0) age.push({ minAge: range[0], maxAge: range[1], amount: value(t) });
+  }
+  return {
+    age,
+    firstTwo: byId.SozKinderAnzahl1Oder2 ? value(byId.SozKinderAnzahl1Oder2) : 0,
+    fromThird: byId.SozKinderAnzahlUeber2 ? value(byId.SozKinderAnzahlUeber2) : 0,
+    /** Abzug für Eigenbetreuung pro Kind bis 14 (LU, NW, ZG). */
+    ownCare: byId.EigenBetr ? value(byId.EigenBetr) : 0,
+  };
+}
 
 /** Abzüge für eine ledige, unselbständig erwerbstätige Person ohne Kinder mit Pensionskasse. */
 function extractDeductions(table) {
@@ -185,7 +235,35 @@ function extractDeductions(table) {
       ? { threshold: byId.EntlAlleinstehendeSchwellwert.Amount, percent: byId.SozBeschEK.Percent }
       : null;
 
+  // Verheiratete und Kinder
+  const pctDeduction = (t) => {
+    if (!t) return null;
+    const f = t.Format.split(',');
+    if (f.includes('PERCENT')) return { base: 0, percent: t.Percent, min: f.includes('MINIMUM') ? t.Minimum : 0, max: f.includes('MAXIMUM') ? t.Maximum : null };
+    const flat = f.includes('STANDARDIZED') ? t.Amount : t.Maximum;
+    return { base: flat, percent: 0, min: 0, max: null };
+  };
+  const marriedInsuranceParts = [
+    ['KKSparzVerhMitBVGS3a'],
+    ['KKSparzVerhBeideMitBVGS3a'],
+    ['PrivVersSparzVerhMitBVGS3a', 'KKDurchschnittsprämieErw', 'KKDurchschnittsprämieErw'],
+    ['KKPrivVersVerheiratet', 'SparzinsenVerheiratet'],
+    ['KKVerheiratet', 'PrivVersVerheiratet', 'SparzinsenVerheiratet'],
+  ].find((ids) => byId[ids[0]]);
+  const family = {
+    married: pctDeduction(byId.SozVerheiratet),
+    /** Zusätzlicher Sozialabzug, gilt für Verheiratete (BE, OW). */
+    marriedExtra: amount('SozZusAbzug') ?? 0,
+    insuranceMax: marriedInsuranceParts ? marriedInsuranceParts.reduce((s, id) => s + (max(id) ?? 0), 0) : null,
+    /** JU: höherer Abzug, wenn nur eine Person Beiträge an die Pensionskasse zahlt. */
+    insuranceMaxOneEarner: max('KKSparzVerhEineOhneBVGS3a') ?? null,
+    insurancePerChild: max('KKSparProKind') ?? max('KKProMinderjKind') ?? max('KKSparProminderjKind') ?? max('KKPrivVersProKind') ?? max('PrivVersSparProKind') ?? 0,
+    children: childRules(byId),
+    secondEarner: pctDeduction(byId.ZweitVerdiener),
+  };
+
   return {
+    family,
     commuteMax: max('Fahrkosten') ?? null,
     otherPro,
     mealFull: max('VerpflOhneVerb') ?? 0,
@@ -202,7 +280,11 @@ function extractDeductions(table) {
 function extractWealthAllowance(table) {
   const byId = Object.fromEntries(table.map((t) => [t.Name.ID.replace(/_VM$/, ''), t]));
   const hit = byId.SozLedigOhneKinder ?? byId.SozLedigMitOhneKinder;
-  return hit ? hit.Amount : 0;
+  return {
+    single: hit ? hit.Amount : 0,
+    married: byId.SozVerheiratet?.Amount ?? 0,
+    perChild: byId.SozKind?.Amount ?? 0,
+  };
 }
 
 function extractAllDeductions(rows) {
@@ -212,7 +294,11 @@ function extractAllDeductions(rows) {
     if (r.Target !== 'KANTON') continue;
     const c = (cantons[r.Location.Canton] ??= {});
     if (r.TaxType === 'EINKOMMENSSTEUER') Object.assign(c, extractDeductions(r.Table));
-    if (r.TaxType === 'VERMOEGENSSTEUER') c.wealthAllowance = extractWealthAllowance(r.Table);
+    if (r.TaxType === 'VERMOEGENSSTEUER') {
+      const w = extractWealthAllowance(r.Table);
+      c.wealthAllowance = w.single;
+      c.wealthFamily = { married: w.married, perChild: w.perChild };
+    }
   }
   return { federal: fedRow ? extractDeductions(fedRow.Table) : null, cantons };
 }
@@ -236,26 +322,36 @@ const REFERENCE_CASES = [
   { gross: 300_000, fortune: 1_500_000 },
 ];
 
+/** Familienfälle: Alleinverdienende mit zwei Kindern und Doppelverdienende ohne Kinder. */
+const REFERENCE_FAMILY_CASES = [
+  { gross: 120_000, gross2: 0, children: [6, 10], fortune: 200_000 },
+  { gross: 80_000, gross2: 50_000, children: [], fortune: 100_000 },
+];
+
 async function buildReference(year, capitals) {
   const out = [];
+  const cases = [
+    ...REFERENCE_CASES.map((c) => ({ ...c, married: false, gross2: 0, children: [] })),
+    ...REFERENCE_FAMILY_CASES.map((c) => ({ ...c, married: true })),
+  ];
   for (const loc of capitals) {
-    for (const c of REFERENCE_CASES) {
+    for (const c of cases) {
       const r = await call('API_calculateDetailedTaxes', {
         SimKey: null,
         TaxYear: year,
         TaxLocationID: loc.TaxLocationID,
-        Relationship: SINGLE,
+        Relationship: c.married ? MARRIED : SINGLE,
         Confession1: NO_CONFESSION,
-        Children: [],
+        Children: c.children.map((Age) => ({ Age })),
         Age1: 35,
         RevenueType1: EMPLOYED,
         Revenue1: c.gross,
         Fortune: c.fortune,
         Language: 1,
-        Confession2: 0,
-        Age2: 0,
-        RevenueType2: 0,
-        Revenue2: 0,
+        Confession2: c.married ? NO_CONFESSION : 0,
+        Age2: c.married ? 35 : 0,
+        RevenueType2: c.gross2 > 0 ? EMPLOYED : 0,
+        Revenue2: c.gross2,
       });
       const net = r.InfoBoth.find((i) => i.Entry.ID === 'TXT_1');
       out.push({
@@ -263,9 +359,13 @@ async function buildReference(year, capitals) {
         canton: loc.Canton,
         bfsId: loc.BfsID,
         city: loc.City,
+        married: c.married,
+        children: c.children,
         gross: c.gross,
+        gross2: c.gross2,
         fortune: c.fortune,
-        netWage: net ? net.Fed : null,
+        netWage: r.IncomeP1?.NetIncome ?? (net ? net.Fed : null),
+        netWage2: r.IncomeP2?.NetIncome ?? 0,
         taxableIncomeFed: r.TaxableIncomeFed,
         taxableIncomeCanton: r.TaxableIncomeCanton,
         taxableFortune: r.TaxableFortuneCanton,
@@ -317,21 +417,76 @@ function fitDivisor(scale, income, target) {
   return (lo + hi) / 2;
 }
 
+const FAMILY_INCOMES = [40_000, 80_000, 150_000, 300_000];
 const CITY_CURVE_INCOMES = [15_000, 30_000, 50_000, 80_000, 120_000, 200_000, 350_000, 600_000, 1_000_000];
 
-function simpleTaxes(year, loc, income, fortune) {
+function simpleTaxes(year, loc, income, fortune, family = null) {
   return call('API_calculateSimpleTaxes', {
     SimKey: null,
     TaxYear: year,
     TaxLocationID: loc.TaxLocationID,
-    Relationship: SINGLE,
+    Relationship: family ? MARRIED : SINGLE,
     Confession1: NO_CONFESSION,
-    Children: [],
-    Confession2: 0,
+    Children: (family?.children ?? []).map((Age) => ({ Age })),
+    Confession2: family ? NO_CONFESSION : 0,
     TaxableIncomeCanton: income,
-    TaxableIncomeFed: 0,
+    TaxableIncomeFed: family ? income : 0,
     TaxableFortune: fortune,
   });
+}
+
+const familyTax = (fam, x) => (fam.splitting > 0 ? fam.splitting * applyScale(fam.scale, x / fam.splitting) : applyScale(fam.scale, x));
+
+/**
+ * Verheiratete und Kinder: Familientarif mit dem ESTV-Rechner prüfen und Steuerrabatte pro Kind
+ * (Bund: Elterntarif, einige Kantone: Ermässigung) aus der Differenz mit und ohne Kinder ableiten.
+ */
+async function calibrateFamily(year, loc, canton, federalFamily, rate) {
+  const fam = canton.family?.income;
+  if (!fam) return null;
+  const [incCanton, incCity] = rate;
+  const out = {};
+  const notes = [];
+  const runs = [];
+  for (const income of FAMILY_INCOMES) {
+    const none = await simpleTaxes(year, loc, income, 0, { children: [] });
+    await sleep(120);
+    const two = await simpleTaxes(year, loc, income, 0, { children: [8, 12] });
+    await sleep(120);
+    runs.push({ income, none, two });
+  }
+  // Familientarif prüfen, sonst Divisor anpassen
+  const ratios = runs.map(({ income, none }) => none.IncomeSimpleTaxCanton / (familyTax(fam, income) || 1));
+  if (ratios.some((x) => Math.abs(x - 1) > TOLERANCE)) {
+    const mid = runs[2];
+    const k = fitDivisor(fam.scale, mid.income, mid.none.IncomeSimpleTaxCanton);
+    out.divisor = round4(k);
+    const check = runs.map(({ income: x, none: r }) => (k * applyScale(fam.scale, x / k)) / (r.IncomeSimpleTaxCanton || 1));
+    if (check.some((x) => Math.abs(x - 1) > TOLERANCE)) notes.push('Familientarif');
+  }
+  if (federalFamily) {
+    const fedRatios = runs.map(({ income, none }) => none.IncomeTaxFed / (familyTax(federalFamily, Math.floor(income / 100) * 100) || 1));
+    if (fedRatios.slice(1).some((x) => Math.abs(x - 1) > TOLERANCE)) notes.push('Bund Familientarif');
+  }
+  // Rabatte nach dem Steuerfuss (VS: Familienrabatt) als Verhältnis je Einkommen
+  const curveOrFactor = (key, values) => {
+    const pts = runs.map(({ income }, i) => [income, round4(values[i])]).filter(([, v]) => Number.isFinite(v) && v > 0);
+    if (pts.length === 0) return;
+    const vs = pts.map(([, v]) => v);
+    if (spread(vs) > TOLERANCE) out[`${key}Curve`] = pts;
+    else if (Math.abs(mean(vs) - 1) > TOLERANCE / 2) out[`${key}Factor`] = round4(mean(vs));
+  };
+  curveOrFactor('canton', runs.map(({ none: r }) => r.IncomeTaxCanton / ((r.IncomeSimpleTaxCanton * incCanton) / 100)));
+  if (incCity > 0) curveOrFactor('city', runs.map(({ none: r }) => r.IncomeTaxCity / ((r.IncomeSimpleTaxCanton * incCity) / 100)));
+  // Bund: Elterntarif pro Kind (beim höchsten Einkommen messen, sonst fällt die Steuer auf null)
+  const top = runs[runs.length - 1];
+  const fedCredit = Math.round((top.none.IncomeTaxFed - top.two.IncomeTaxFed) / 2);
+  if (fedCredit > 0) out.childCreditFed = fedCredit;
+  // Kanton und Gemeinde: Wirkung pro Kind über Tarif oder Rabatt (BL: Ermässigung, VD: Familienquotient, VS: Abzug)
+  const kids = runs.map(({ income, none, two }) => [income, Math.round((none.IncomeTaxCanton + none.IncomeTaxCity - two.IncomeTaxCanton - two.IncomeTaxCity) / 2)]);
+  if (kids.some(([, v]) => v > 0)) out.childCurve = kids;
+  if (notes.length) out.approximate = notes;
+  return out;
 }
 
 async function calibrate(year, loc, canton, rate) {
@@ -428,7 +583,7 @@ async function main() {
     const s = extractScales(scales);
     const d = extractAllDeductions(deductions);
     if (!s.federal || !d.federal) throw new Error(`${year}: Bundessteuer fehlt`);
-    data.federal[year] = { income: s.federal, deductions: d.federal };
+    data.federal[year] = { income: s.federal, family: s.federalFamily, deductions: d.federal };
 
     for (const canton of cantonsWithYear) {
       if (!s.cantons[canton] || !d.cantons[canton]) {
@@ -460,6 +615,8 @@ async function main() {
     for (const loc of capitals) {
       const entry = data.cantons[loc.Canton][year];
       const cal = await calibrate(year, loc, entry, yearRates[loc.BfsID]);
+      const family = await calibrateFamily(year, loc, entry, data.federal[year].family, yearRates[loc.BfsID]);
+      if (family && Object.keys(family).length > 0) cal.family = family;
       if (Object.keys(cal).length > 0) {
         entry.calibration = cal;
         console.log(`  ${year} ${loc.Canton}: ${JSON.stringify(cal)}`);

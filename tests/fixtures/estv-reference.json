@@ -4,9 +4,13 @@
   "canton": "AG",
   "bfsId": 4001,
   "city": "Aarau",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35213,
   "taxableFortune": 0,
@@ -49,9 +53,13 @@
   "canton": "AG",
   "bfsId": 4001,
   "city": "Aarau",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 70205,
   "taxableFortune": 120000,
@@ -94,9 +102,13 @@
   "canton": "AG",
   "bfsId": 4001,
   "city": "Aarau",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 126739,
   "taxableFortune": 0,
@@ -139,9 +151,13 @@
   "canton": "AG",
   "bfsId": 4001,
   "city": "Aarau",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 263539,
   "taxableFortune": 1370000,
@@ -181,12 +197,153 @@
  },
  {
   "year": 2026,
+  "canton": "AG",
+  "bfsId": 4001,
+  "city": "Aarau",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 78174,
+  "taxableFortune": 0,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3161,
+  "incomeTaxCity": 2946,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": 0
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -7600
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -18600
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -32000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -260000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AG",
+  "bfsId": 4001,
+  "city": "Aarau",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 104950,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5327,
+  "incomeTaxCity": 4965,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": 0
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -600
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -7600
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -260000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "AI",
   "bfsId": 3101,
   "city": "Appenzell",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35063,
   "taxableFortune": 0,
@@ -223,9 +380,13 @@
   "canton": "AI",
   "bfsId": 3101,
   "city": "Appenzell",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 68579,
   "taxableFortune": 200000,
@@ -262,9 +423,13 @@
   "canton": "AI",
   "bfsId": 3101,
   "city": "Appenzell",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 126639,
   "taxableFortune": 10000,
@@ -301,9 +466,13 @@
   "canton": "AI",
   "bfsId": 3101,
   "city": "Appenzell",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 263439,
   "taxableFortune": 1450000,
@@ -337,12 +506,141 @@
  },
  {
   "year": 2026,
+  "canton": "AI",
+  "bfsId": 3101,
+  "city": "Appenzell",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 83602,
+  "taxableFortune": 60000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 4268,
+  "incomeTaxCity": 2490,
+  "fortuneTaxCanton": 86,
+  "fortuneTaxCity": 50,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -5000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -7000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -12000
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -40000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AI",
+  "bfsId": 3101,
+  "city": "Appenzell",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 103141,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5857,
+  "incomeTaxCity": 3417,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -4594
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -3271
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -5800
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -500
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "AR",
   "bfsId": 3001,
   "city": "Herisau",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35913,
   "taxableFortune": 0,
@@ -379,9 +677,13 @@
   "canton": "AR",
   "bfsId": 3001,
   "city": "Herisau",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 71193,
   "taxableFortune": 175000,
@@ -418,9 +720,13 @@
   "canton": "AR",
   "bfsId": 3001,
   "city": "Herisau",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 129439,
   "taxableFortune": 0,
@@ -457,9 +763,13 @@
   "canton": "AR",
   "bfsId": 3001,
   "city": "Herisau",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 266239,
   "taxableFortune": 1425000,
@@ -493,12 +803,141 @@
  },
  {
   "year": 2026,
+  "canton": "AR",
+  "bfsId": 3001,
+  "city": "Herisau",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 83002,
+  "taxableFortune": 0,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 4267,
+  "incomeTaxCity": 5302,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -7400
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -14800
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -50000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -150000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AR",
+  "bfsId": 3001,
+  "city": "Herisau",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 102804,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5994,
+  "incomeTaxCity": 7448,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -5400
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -4302
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -150000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "BE",
   "bfsId": 351,
   "city": "Bern",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 28813,
   "taxableFortune": 30000,
@@ -547,9 +986,13 @@
   "canton": "BE",
   "bfsId": 351,
   "city": "Bern",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 63855,
   "taxableFortune": 250000,
@@ -592,9 +1035,13 @@
   "canton": "BE",
   "bfsId": 351,
   "city": "Bern",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 120389,
   "taxableFortune": 60000,
@@ -637,9 +1084,13 @@
   "canton": "BE",
   "bfsId": 351,
   "city": "Bern",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 257189,
   "taxableFortune": 1500000,
@@ -679,12 +1130,141 @@
  },
  {
   "year": 2026,
+  "canton": "BE",
+  "bfsId": 351,
+  "city": "Bern",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 70874,
+  "taxableFortune": 146000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 7393,
+  "incomeTaxCity": 3827,
+  "fortuneTaxCanton": 192,
+  "fortuneTaxCity": 100,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -6300
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -16600
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -10600
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -36000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -18000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BE",
+  "bfsId": 351,
+  "city": "Bern",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 95304,
+  "taxableFortune": 82000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 10674,
+  "incomeTaxCity": 5525,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -4900
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -2346
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -10600
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -18000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "BL",
   "bfsId": 2829,
   "city": "Liestal",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 38513,
   "taxableFortune": 0,
@@ -727,9 +1307,13 @@
   "canton": "BL",
   "bfsId": 2829,
   "city": "Liestal",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 73793,
   "taxableFortune": 160000,
@@ -772,9 +1356,13 @@
   "canton": "BL",
   "bfsId": 2829,
   "city": "Liestal",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 132039,
   "taxableFortune": 0,
@@ -817,9 +1405,13 @@
   "canton": "BL",
   "bfsId": 2829,
   "city": "Liestal",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 268839,
   "taxableFortune": 1410000,
@@ -859,12 +1451,147 @@
  },
  {
   "year": 2026,
+  "canton": "BL",
+  "bfsId": 2829,
+  "city": "Liestal",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 102202,
+  "taxableFortune": 20000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 5786,
+  "incomeTaxCity": 3761,
+  "fortuneTaxCanton": 22,
+  "fortuneTaxCity": 14,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": 0
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -4900
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -180000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BL",
+  "bfsId": 2829,
+  "city": "Liestal",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 111306,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 8567,
+  "incomeTaxCity": 5569,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -500
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": 0
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -1000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -180000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "BS",
   "bfsId": 2701,
   "city": "Basel",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 13113,
   "taxableFortune": 0,
@@ -907,9 +1634,13 @@
   "canton": "BS",
   "bfsId": 2701,
   "city": "Basel",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 48393,
   "taxableFortune": 175000,
@@ -952,9 +1683,13 @@
   "canton": "BS",
   "bfsId": 2701,
   "city": "Basel",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 106639,
   "taxableFortune": 0,
@@ -997,9 +1732,13 @@
   "canton": "BS",
   "bfsId": 2701,
   "city": "Basel",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 243439,
   "taxableFortune": 1425000,
@@ -1039,12 +1778,141 @@
  },
  {
   "year": 2026,
+  "canton": "BS",
+  "bfsId": 2701,
+  "city": "Basel",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 39002,
+  "taxableFortune": 20000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 4095,
+  "incomeTaxCity": 4095,
+  "fortuneTaxCanton": 45,
+  "fortuneTaxCity": 45,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -8400
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -18000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -38000
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -30000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -150000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BS",
+  "bfsId": 2701,
+  "city": "Basel",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 61406,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 6447,
+  "incomeTaxCity": 6447,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -8400
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -1100
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -38000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -150000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "FR",
   "bfsId": 2196,
   "city": "Fribourg",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 33353,
   "taxableFortune": 0,
@@ -1093,9 +1961,13 @@
   "canton": "FR",
   "bfsId": 2196,
   "city": "Fribourg",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 69445,
   "taxableFortune": 250000,
@@ -1132,9 +2004,13 @@
   "canton": "FR",
   "bfsId": 2196,
   "city": "Fribourg",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 125979,
   "taxableFortune": 5000,
@@ -1177,9 +2053,13 @@
   "canton": "FR",
   "bfsId": 2196,
   "city": "Fribourg",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 262779,
   "taxableFortune": 1500000,
@@ -1213,12 +2093,147 @@
  },
  {
   "year": 2026,
+  "canton": "FR",
+  "bfsId": 2196,
+  "city": "Fribourg",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 78654,
+  "taxableFortune": 155000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 5331,
+  "incomeTaxCity": 4443,
+  "fortuneTaxCanton": 179,
+  "fortuneTaxCity": 143,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": 0
+   },
+   {
+    "id": "TXT_466",
+    "label": "Prämienabzug private Versicherungen (K/U)",
+    "fed": 0,
+    "canton": -11520
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -14200
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -45000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "FR",
+  "bfsId": 2196,
+  "city": "Fribourg",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 103530,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 8220,
+  "incomeTaxCity": 6850,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": 0
+   },
+   {
+    "id": "TXT_466",
+    "label": "Prämienabzug private Versicherungen (K/U)",
+    "fed": 0,
+    "canton": -9120
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -500
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -105000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "GE",
   "bfsId": 6621,
   "city": "Genève",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35223,
   "taxableFortune": 0,
@@ -1261,9 +2276,13 @@
   "canton": "GE",
   "bfsId": 6621,
   "city": "Genève",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 69916,
   "taxableFortune": 162128,
@@ -1306,9 +2325,13 @@
   "canton": "GE",
   "bfsId": 6621,
   "city": "Genève",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 128162,
   "taxableFortune": 0,
@@ -1351,9 +2374,13 @@
   "canton": "GE",
   "bfsId": 6621,
   "city": "Genève",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 264962,
   "taxableFortune": 1412128,
@@ -1393,12 +2420,153 @@
  },
  {
   "year": 2026,
+  "canton": "GE",
+  "bfsId": 6621,
+  "city": "Genève",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 66869,
+  "taxableFortune": 0,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3522,
+  "incomeTaxCity": 1225,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 25,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -1817
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": 0
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_500",
+    "label": "Prämienabzug Krankenkasse",
+    "fed": 0,
+    "canton": -11520
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -27396
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -87872
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -175743
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GE",
+  "bfsId": 6621,
+  "city": "Genève",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 103953,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 9459,
+  "incomeTaxCity": 3290,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 25,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -1817
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -1362
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": 0
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -1054
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_500",
+    "label": "Prämienabzug Krankenkasse",
+    "fed": 0,
+    "canton": -9120
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -175743
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "GL",
   "bfsId": 1632,
   "city": "Glarus",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35913,
   "taxableFortune": 0,
@@ -1435,9 +2603,13 @@
   "canton": "GL",
   "bfsId": 1632,
   "city": "Glarus",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 70905,
   "taxableFortune": 172600,
@@ -1474,9 +2646,13 @@
   "canton": "GL",
   "bfsId": 1632,
   "city": "Glarus",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 127439,
   "taxableFortune": 0,
@@ -1513,9 +2689,13 @@
   "canton": "GL",
   "bfsId": 1632,
   "city": "Glarus",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 264239,
   "taxableFortune": 1422600,
@@ -1549,12 +2729,141 @@
  },
  {
   "year": 2026,
+  "canton": "GL",
+  "bfsId": 1632,
+  "city": "Glarus",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 81774,
+  "taxableFortune": 0,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 4247,
+  "incomeTaxCity": 4340,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -8200
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -14400
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -51600
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -154700
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GL",
+  "bfsId": 1632,
+  "city": "Glarus",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 102608,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 6047,
+  "incomeTaxCity": 6179,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -6200
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -4342
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -154700
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "GR",
   "bfsId": 3901,
   "city": "Chur",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 33153,
   "taxableFortune": 0,
@@ -1591,9 +2900,13 @@
   "canton": "GR",
   "bfsId": 3901,
   "city": "Chur",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 68433,
   "taxableFortune": 181000,
@@ -1630,9 +2943,13 @@
   "canton": "GR",
   "bfsId": 3901,
   "city": "Chur",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 126679,
   "taxableFortune": 0,
@@ -1669,9 +2986,13 @@
   "canton": "GR",
   "bfsId": 3901,
   "city": "Chur",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 263479,
   "taxableFortune": 1431000,
@@ -1705,12 +3026,153 @@
  },
  {
   "year": 2026,
+  "canton": "GR",
+  "bfsId": 3901,
+  "city": "Chur",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 69502,
+  "taxableFortune": 6000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 2468,
+  "incomeTaxCity": 2361,
+  "fortuneTaxCanton": 5,
+  "fortuneTaxCity": 5,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3300
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -11200
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": 0
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_454",
+    "label": "Kinderabzug Kinder im Vorschulalter",
+    "fed": 0,
+    "canton": -9900
+   },
+   {
+    "id": "TXT_468",
+    "label": "Abzug Kinder in Ausbildung",
+    "fed": 0,
+    "canton": -13700
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -56000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -138000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GR",
+  "bfsId": 3901,
+  "city": "Chur",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 99386,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5166,
+  "incomeTaxCity": 4941,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -3300
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -3300
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -9120
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -2200
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -138000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "JU",
   "bfsId": 6711,
   "city": "Delémont",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 31713,
   "taxableFortune": 1500,
@@ -1759,9 +3221,13 @@
   "canton": "JU",
   "bfsId": 6711,
   "city": "Delémont",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 66993,
   "taxableFortune": 221500,
@@ -1810,9 +3276,13 @@
   "canton": "JU",
   "bfsId": 6711,
   "city": "Delémont",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 125239,
   "taxableFortune": 31500,
@@ -1861,9 +3331,13 @@
   "canton": "JU",
   "bfsId": 6711,
   "city": "Delémont",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 262039,
   "taxableFortune": 1471500,
@@ -1909,12 +3383,159 @@
  },
  {
   "year": 2026,
+  "canton": "JU",
+  "bfsId": 6711,
+  "city": "Delémont",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 78772,
+  "taxableFortune": 86000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 6192,
+  "incomeTaxCity": 4128,
+  "fortuneTaxCanton": 123,
+  "fortuneTaxCity": 82,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": 0
+   },
+   {
+    "id": "TXT_506",
+    "label": "Berufsauslagen Haupterwerb Pauschal",
+    "fed": 0,
+    "canton": -4100
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -9630
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -11400
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -3700
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -57000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -57000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "JU",
+  "bfsId": 6711,
+  "city": "Delémont",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 95906,
+  "taxableFortune": 43000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 8311,
+  "incomeTaxCity": 5541,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": 0
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": 0
+   },
+   {
+    "id": "TXT_506",
+    "label": "Berufsauslagen Haupterwerb Pauschal",
+    "fed": 0,
+    "canton": -4100
+   },
+   {
+    "id": "TXT_508",
+    "label": "Berufsauslagen Haupterwerb Pauschal (P2)",
+    "fed": 0,
+    "canton": -4100
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -6800
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -2700
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -3700
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -57000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "LU",
   "bfsId": 1061,
   "city": "Luzern",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 34455,
   "taxableFortune": 0,
@@ -1957,9 +3578,13 @@
   "canton": "LU",
   "bfsId": 1061,
   "city": "Luzern",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 71405,
   "taxableFortune": 187500,
@@ -1996,9 +3621,13 @@
   "canton": "LU",
   "bfsId": 1061,
   "city": "Luzern",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 127939,
   "taxableFortune": 0,
@@ -2035,9 +3664,13 @@
   "canton": "LU",
   "bfsId": 1061,
   "city": "Luzern",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 264739,
   "taxableFortune": 1437500,
@@ -2071,12 +3704,147 @@
  },
  {
   "year": 2026,
+  "canton": "LU",
+  "bfsId": 1061,
+  "city": "Luzern",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 77574,
+  "taxableFortune": 50000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3336,
+  "incomeTaxCity": 3336,
+  "fortuneTaxCanton": 54,
+  "fortuneTaxCity": 54,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -6600
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_58",
+    "label": "Abzug eigene Kinderbetreuung",
+    "fed": 0,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -16200
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -25000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -125000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "LU",
+  "bfsId": 1061,
+  "city": "Luzern",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 102950,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5020,
+  "incomeTaxCity": 5020,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -5200
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -5000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -125000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "NE",
   "bfsId": 6458,
   "city": "Neuchâtel",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35813,
   "taxableFortune": 30000,
@@ -2119,9 +3887,13 @@
   "canton": "NE",
   "bfsId": 6458,
   "city": "Neuchâtel",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 71505,
   "taxableFortune": 250000,
@@ -2158,9 +3930,13 @@
   "canton": "NE",
   "bfsId": 6458,
   "city": "Neuchâtel",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 128039,
   "taxableFortune": 60000,
@@ -2197,9 +3973,13 @@
   "canton": "NE",
   "bfsId": 6458,
   "city": "Neuchâtel",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 264839,
   "taxableFortune": 1500000,
@@ -2233,12 +4013,135 @@
  },
  {
   "year": 2026,
+  "canton": "NE",
+  "bfsId": 6458,
+  "city": "Neuchâtel",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 84474,
+  "taxableFortune": 200000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 7663,
+  "incomeTaxCity": 4227,
+  "fortuneTaxCanton": 386,
+  "fortuneTaxCity": 203,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": 0
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -6500
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -13400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NE",
+  "bfsId": 6458,
+  "city": "Neuchâtel",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 107050,
+  "taxableFortune": 100000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 11530,
+  "incomeTaxCity": 6044,
+  "fortuneTaxCanton": 14,
+  "fortuneTaxCity": 8,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": 0
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -1200
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -4900
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "NW",
   "bfsId": 1509,
   "city": "Stans",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 37163,
   "taxableFortune": 0,
@@ -2275,9 +4178,13 @@
   "canton": "NW",
   "bfsId": 1509,
   "city": "Stans",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 70679,
   "taxableFortune": 215000,
@@ -2314,9 +4221,13 @@
   "canton": "NW",
   "bfsId": 1509,
   "city": "Stans",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 126013,
   "taxableFortune": 25000,
@@ -2353,9 +4264,13 @@
   "canton": "NW",
   "bfsId": 1509,
   "city": "Stans",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 262539,
   "taxableFortune": 1465000,
@@ -2389,12 +4304,147 @@
  },
  {
   "year": 2026,
+  "canton": "NW",
+  "bfsId": 1509,
+  "city": "Stans",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 77922,
+  "taxableFortune": 100000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3381,
+  "incomeTaxCity": 3044,
+  "fortuneTaxCanton": 65,
+  "fortuneTaxCity": 59,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -5380
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -5100
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_58",
+    "label": "Abzug eigene Kinderbetreuung",
+    "fed": 0,
+    "canton": -6400
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -12800
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -30000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -70000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NW",
+  "bfsId": 1509,
+  "city": "Stans",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 106541,
+  "taxableFortune": 30000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5579,
+  "incomeTaxCity": 5023,
+  "fortuneTaxCanton": 20,
+  "fortuneTaxCity": 18,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -3594
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2271
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -3700
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -1200
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -70000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "OW",
   "bfsId": 1407,
   "city": "Sarnen",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 26045,
   "taxableFortune": 5000,
@@ -2443,9 +4493,13 @@
   "canton": "OW",
   "bfsId": 1407,
   "city": "Sarnen",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 62305,
   "taxableFortune": 225000,
@@ -2488,9 +4542,13 @@
   "canton": "OW",
   "bfsId": 1407,
   "city": "Sarnen",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 118839,
   "taxableFortune": 35000,
@@ -2533,9 +4591,13 @@
   "canton": "OW",
   "bfsId": 1407,
   "city": "Sarnen",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 255639,
   "taxableFortune": 1475000,
@@ -2575,12 +4637,159 @@
  },
  {
   "year": 2026,
+  "canton": "OW",
+  "bfsId": 1407,
+  "city": "Sarnen",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 67242,
+  "taxableFortune": 130000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3931,
+  "incomeTaxCity": 4669,
+  "fortuneTaxCanton": 85,
+  "fortuneTaxCity": 100,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -4700
+   },
+   {
+    "id": "TXT_461",
+    "label": "Abzug bescheidene Einkommen",
+    "fed": 0,
+    "canton": -32
+   },
+   {
+    "id": "TXT_67",
+    "label": "Sozialabzug",
+    "fed": 0,
+    "canton": -10000
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -12400
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -10000
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -20000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "OW",
+  "bfsId": 1407,
+  "city": "Sarnen",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 86450,
+  "taxableFortune": 50000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5054,
+  "incomeTaxCity": 6003,
+  "fortuneTaxCanton": 33,
+  "fortuneTaxCity": 39,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -3300
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_67",
+    "label": "Sozialabzug",
+    "fed": 0,
+    "canton": -10000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -10000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "SG",
   "bfsId": 3203,
   "city": "St. Gallen",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35213,
   "taxableFortune": 0,
@@ -2617,9 +4826,13 @@
   "canton": "SG",
   "bfsId": 3203,
   "city": "St. Gallen",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 70493,
   "taxableFortune": 175000,
@@ -2656,9 +4869,13 @@
   "canton": "SG",
   "bfsId": 3203,
   "city": "St. Gallen",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 128739,
   "taxableFortune": 0,
@@ -2695,9 +4912,13 @@
   "canton": "SG",
   "bfsId": 3203,
   "city": "St. Gallen",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 265539,
   "taxableFortune": 1425000,
@@ -2731,12 +4952,147 @@
  },
  {
   "year": 2026,
+  "canton": "SG",
+  "bfsId": 3203,
+  "city": "St. Gallen",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 77802,
+  "taxableFortune": 10000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3478,
+  "incomeTaxCity": 4571,
+  "fortuneTaxCanton": 18,
+  "fortuneTaxCity": 23,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -9000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -10800
+   },
+   {
+    "id": "TXT_454",
+    "label": "Kinderabzug Kinder im Vorschulalter",
+    "fed": 0,
+    "canton": -7600
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -40000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -150000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SG",
+  "bfsId": 3203,
+  "city": "St. Gallen",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 105206,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5779,
+  "incomeTaxCity": 7596,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -6800
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -500
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -150000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "SH",
   "bfsId": 2939,
   "city": "Schaffhausen",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35263,
   "taxableFortune": 0,
@@ -2773,9 +5129,13 @@
   "canton": "SH",
   "bfsId": 2939,
   "city": "Schaffhausen",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 70255,
   "taxableFortune": 200000,
@@ -2812,9 +5172,13 @@
   "canton": "SH",
   "bfsId": 2939,
   "city": "Schaffhausen",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 126789,
   "taxableFortune": 10000,
@@ -2851,9 +5215,13 @@
   "canton": "SH",
   "bfsId": 2939,
   "city": "Schaffhausen",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 263589,
   "taxableFortune": 1450000,
@@ -2887,12 +5255,141 @@
  },
  {
   "year": 2026,
+  "canton": "SH",
+  "bfsId": 2939,
+  "city": "Schaffhausen",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 78074,
+  "taxableFortune": 40000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 2866,
+  "incomeTaxCity": 3130,
+  "fortuneTaxCanton": 27,
+  "fortuneTaxCity": 30,
+  "personalTax": 60,
+  "taxCredit": -640,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -9500
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -16800
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -60000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SH",
+  "bfsId": 2939,
+  "city": "Schaffhausen",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 104850,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 4652,
+  "incomeTaxCity": 5080,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 60,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -7500
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -800
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "SO",
   "bfsId": 2601,
   "city": "Solothurn",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 36413,
   "taxableFortune": 0,
@@ -2929,9 +5426,13 @@
   "canton": "SO",
   "bfsId": 2601,
   "city": "Solothurn",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 71405,
   "taxableFortune": 190000,
@@ -2968,9 +5469,13 @@
   "canton": "SO",
   "bfsId": 2601,
   "city": "Solothurn",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 127939,
   "taxableFortune": 0,
@@ -3007,9 +5512,13 @@
   "canton": "SO",
   "bfsId": 2601,
   "city": "Solothurn",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 264739,
   "taxableFortune": 1440000,
@@ -3043,12 +5552,141 @@
  },
  {
   "year": 2026,
+  "canton": "SO",
+  "bfsId": 2601,
+  "city": "Solothurn",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 79174,
+  "taxableFortune": 60000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 4463,
+  "incomeTaxCity": 4806,
+  "fortuneTaxCanton": 49,
+  "fortuneTaxCity": 53,
+  "personalTax": 100,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -6600
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -18600
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -40000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SO",
+  "bfsId": 2601,
+  "city": "Solothurn",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 106950,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 7357,
+  "incomeTaxCity": 7923,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 100,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -5200
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -1000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "SZ",
   "bfsId": 1372,
   "city": "Schwyz",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 25087,
   "taxableFortune": 0,
@@ -3097,9 +5735,13 @@
   "canton": "SZ",
   "bfsId": 1372,
   "city": "Schwyz",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 60993,
   "taxableFortune": 125000,
@@ -3142,9 +5784,13 @@
   "canton": "SZ",
   "bfsId": 1372,
   "city": "Schwyz",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 119239,
   "taxableFortune": 0,
@@ -3187,9 +5833,13 @@
   "canton": "SZ",
   "bfsId": 1372,
   "city": "Schwyz",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 256039,
   "taxableFortune": 1375000,
@@ -3229,12 +5879,147 @@
  },
  {
   "year": 2026,
+  "canton": "SZ",
+  "bfsId": 1372,
+  "city": "Schwyz",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 60293,
+  "taxableFortune": 0,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 1496,
+  "incomeTaxCity": 2380,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -6900
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -9400
+   },
+   {
+    "id": "TXT_497",
+    "label": "Zusätzlicher Sozialabzug",
+    "fed": 0,
+    "canton": -2609
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -20000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -8400
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -60000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -250000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SZ",
+  "bfsId": 1372,
+  "city": "Schwyz",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 84606,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 2390,
+  "incomeTaxCity": 3802,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -6900
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -6900
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -8400
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -2100
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -8400
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -250000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "TG",
   "bfsId": 4566,
   "city": "Frauenfeld",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 35513,
   "taxableFortune": 0,
@@ -3271,9 +6056,13 @@
   "canton": "TG",
   "bfsId": 4566,
   "city": "Frauenfeld",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 70505,
   "taxableFortune": 150000,
@@ -3310,9 +6099,13 @@
   "canton": "TG",
   "bfsId": 4566,
   "city": "Frauenfeld",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 127039,
   "taxableFortune": 0,
@@ -3349,9 +6142,13 @@
   "canton": "TG",
   "bfsId": 4566,
   "city": "Frauenfeld",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 263839,
   "taxableFortune": 1400000,
@@ -3385,12 +6182,141 @@
  },
  {
   "year": 2026,
+  "canton": "TG",
+  "bfsId": 4566,
+  "city": "Frauenfeld",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 80574,
+  "taxableFortune": 0,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3250,
+  "incomeTaxCity": 4234,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": -200,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -9000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -14800
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -200000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -200000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TG",
+  "bfsId": 4566,
+  "city": "Frauenfeld",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 106150,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5204,
+  "incomeTaxCity": 6780,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -7000
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": 0
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -200000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "TI",
   "bfsId": 5002,
   "city": "Bellinzona",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 32953,
   "taxableFortune": 30000,
@@ -3421,9 +6347,13 @@
   "canton": "TI",
   "bfsId": 5002,
   "city": "Bellinzona",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 68233,
   "taxableFortune": 250000,
@@ -3454,9 +6384,13 @@
   "canton": "TI",
   "bfsId": 5002,
   "city": "Bellinzona",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 126479,
   "taxableFortune": 60000,
@@ -3487,9 +6421,13 @@
   "canton": "TI",
   "bfsId": 5002,
   "city": "Bellinzona",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 263279,
   "taxableFortune": 1500000,
@@ -3517,12 +6455,141 @@
  },
  {
   "year": 2026,
+  "canton": "TI",
+  "bfsId": 5002,
+  "city": "Bellinzona",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 69582,
+  "taxableFortune": 80000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3094,
+  "incomeTaxCity": 2877,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 40,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -11520
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -23000
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -60000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -60000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TI",
+  "bfsId": 5002,
+  "city": "Bellinzona",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 93086,
+  "taxableFortune": 40000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5636,
+  "incomeTaxCity": 5242,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 40,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -9120
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -8100
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -60000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "UR",
   "bfsId": 1201,
   "city": "Altdorf UR",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 21913,
   "taxableFortune": 0,
@@ -3565,9 +6632,13 @@
   "canton": "UR",
   "bfsId": 1201,
   "city": "Altdorf UR",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 56905,
   "taxableFortune": 144200,
@@ -3610,9 +6681,13 @@
   "canton": "UR",
   "bfsId": 1201,
   "city": "Altdorf UR",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 113439,
   "taxableFortune": 0,
@@ -3655,9 +6730,13 @@
   "canton": "UR",
   "bfsId": 1201,
   "city": "Altdorf UR",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 250239,
   "taxableFortune": 1394200,
@@ -3697,12 +6776,141 @@
  },
  {
   "year": 2026,
+  "canton": "UR",
+  "bfsId": 1201,
+  "city": "Altdorf UR",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 55374,
+  "taxableFortune": 0,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 3932,
+  "incomeTaxCity": 3735,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 70,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -5100
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -17000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -26900
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -63600
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -211700
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "UR",
+  "bfsId": 1201,
+  "city": "Altdorf UR",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 78850,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5598,
+  "incomeTaxCity": 5318,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 70,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -3700
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -3700
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -26900
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -211700
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "VD",
   "bfsId": 5586,
   "city": "Lausanne",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 22794,
   "taxableFortune": 30000,
@@ -3751,9 +6959,13 @@
   "canton": "VD",
   "bfsId": 5586,
   "city": "Lausanne",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 69445,
   "taxableFortune": 250000,
@@ -3790,9 +7002,13 @@
   "canton": "VD",
   "bfsId": 5586,
   "city": "Lausanne",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 125979,
   "taxableFortune": 60000,
@@ -3829,9 +7045,13 @@
   "canton": "VD",
   "bfsId": 5586,
   "city": "Lausanne",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 262779,
   "taxableFortune": 1500000,
@@ -3865,12 +7085,153 @@
  },
  {
   "year": 2026,
+  "canton": "VD",
+  "bfsId": 5586,
+  "city": "Lausanne",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 87025,
+  "taxableFortune": 200000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 7397,
+  "incomeTaxCity": 3943,
+  "fortuneTaxCanton": 404,
+  "fortuneTaxCity": 205,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": 0
+   },
+   {
+    "id": "TXT_459",
+    "label": "Abzug private Versicherungen",
+    "fed": 0,
+    "canton": -11520
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": 0
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_59",
+    "label": "Mieterabzug",
+    "fed": 0,
+    "canton": -2529
+   },
+   {
+    "id": "TXT_462",
+    "label": "Abzug Verheiratete oder Alleinerzieher",
+    "fed": 0,
+    "canton": -3300
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VD",
+  "bfsId": 5586,
+  "city": "Lausanne",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 101030,
+  "taxableFortune": 100000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 10482,
+  "incomeTaxCity": 5588,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": 0
+   },
+   {
+    "id": "TXT_459",
+    "label": "Abzug private Versicherungen",
+    "fed": 0,
+    "canton": -9120
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -1700
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_462",
+    "label": "Abzug Verheiratete oder Alleinerzieher",
+    "fed": 0,
+    "canton": -1300
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "VS",
   "bfsId": 6266,
   "city": "Sion",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 33088,
   "taxableFortune": 0,
@@ -3913,9 +7274,13 @@
   "canton": "VS",
   "bfsId": 6266,
   "city": "Sion",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 70205,
   "taxableFortune": 205000,
@@ -3952,9 +7317,13 @@
   "canton": "VS",
   "bfsId": 6266,
   "city": "Sion",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 126739,
   "taxableFortune": 15000,
@@ -3991,9 +7360,13 @@
   "canton": "VS",
   "bfsId": 6266,
   "city": "Sion",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 263539,
   "taxableFortune": 1455000,
@@ -4027,12 +7400,153 @@
  },
  {
   "year": 2026,
+  "canton": "VS",
+  "bfsId": 6266,
+  "city": "Sion",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 71454,
+  "taxableFortune": 110000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 2547,
+  "incomeTaxCity": 3194,
+  "fortuneTaxCanton": 209,
+  "fortuneTaxCity": 230,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -9860
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": 0
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_58",
+    "label": "Abzug eigene Kinderbetreuung",
+    "fed": 0,
+    "canton": -6260
+   },
+   {
+    "id": "TXT_454",
+    "label": "Kinderabzug Kinder im Vorschulalter",
+    "fed": 0,
+    "canton": -7860
+   },
+   {
+    "id": "TXT_455",
+    "label": "Kinderabzug Kinder von 7 bis 16 Jahre",
+    "fed": 0,
+    "canton": -8940
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -90000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VS",
+  "bfsId": 6266,
+  "city": "Sion",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 98550,
+  "taxableFortune": 10000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 5493,
+  "incomeTaxCity": 5168,
+  "fortuneTaxCanton": 10,
+  "fortuneTaxCity": 11,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -7600
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -7000
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -90000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "ZG",
   "bfsId": 1711,
   "city": "Zug",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 19378,
   "taxableFortune": 0,
@@ -4081,9 +7595,13 @@
   "canton": "ZG",
   "bfsId": 1711,
   "city": "Zug",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 51724,
   "taxableFortune": 46000,
@@ -4132,9 +7650,13 @@
   "canton": "ZG",
   "bfsId": 1711,
   "city": "Zug",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 103890,
   "taxableFortune": 0,
@@ -4183,9 +7705,13 @@
   "canton": "ZG",
   "bfsId": 1711,
   "city": "Zug",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 239979,
   "taxableFortune": 1296000,
@@ -4231,12 +7757,159 @@
  },
  {
   "year": 2026,
+  "canton": "ZG",
+  "bfsId": 1711,
+  "city": "Zug",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 11184,
+  "taxableFortune": 0,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 113,
+  "incomeTaxCity": 75,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -11520
+   },
+   {
+    "id": "TXT_58",
+    "label": "Abzug eigene Kinderbetreuung",
+    "fed": 0,
+    "canton": -24400
+   },
+   {
+    "id": "TXT_59",
+    "label": "Mieterabzug",
+    "fed": 0,
+    "canton": -8070
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -25200
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -24000
+   },
+   {
+    "id": "TXT_101",
+    "label": "Kinderabzug",
+    "fed": 0,
+    "canton": -204000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -408000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZG",
+  "bfsId": 1711,
+  "city": "Zug",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 66631,
+  "taxableFortune": 0,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 1709,
+  "incomeTaxCity": 1139,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -9120
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -4600
+   },
+   {
+    "id": "TXT_59",
+    "label": "Mieterabzug",
+    "fed": 0,
+    "canton": -8799
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": -24000
+   },
+   {
+    "id": "TXT_102",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": 0,
+    "canton": -408000
+   }
+  ]
+ },
+ {
+  "year": 2026,
   "canton": "ZH",
   "bfsId": 261,
   "city": "Zürich",
+  "married": false,
+  "children": [],
   "gross": 45000,
+  "gross2": 0,
   "fortune": 30000,
   "netWage": 41013,
+  "netWage2": 0,
   "taxableIncomeFed": 37213,
   "taxableIncomeCanton": 36113,
   "taxableFortune": 30000,
@@ -4267,9 +7940,13 @@
   "canton": "ZH",
   "bfsId": 261,
   "city": "Zürich",
+  "married": false,
+  "children": [],
   "gross": 85000,
+  "gross2": 0,
   "fortune": 250000,
   "netWage": 76293,
+  "netWage2": 0,
   "taxableIncomeFed": 72205,
   "taxableIncomeCanton": 71105,
   "taxableFortune": 250000,
@@ -4300,9 +7977,13 @@
   "canton": "ZH",
   "bfsId": 261,
   "city": "Zürich",
+  "married": false,
+  "children": [],
   "gross": 150000,
+  "gross2": 0,
   "fortune": 60000,
   "netWage": 134539,
+  "netWage2": 0,
   "taxableIncomeFed": 128739,
   "taxableIncomeCanton": 127639,
   "taxableFortune": 60000,
@@ -4333,9 +8014,13 @@
   "canton": "ZH",
   "bfsId": 261,
   "city": "Zürich",
+  "married": false,
+  "children": [],
   "gross": 300000,
+  "gross2": 0,
   "fortune": 1500000,
   "netWage": 271339,
+  "netWage2": 0,
   "taxableIncomeFed": 265539,
   "taxableIncomeCanton": 264439,
   "taxableFortune": 1500000,
@@ -4358,6 +8043,113 @@
     "label": "Abzug private Versicherungen / Sparzinsen",
     "fed": -1800,
     "canton": -2900
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZH",
+  "bfsId": 261,
+  "city": "Zürich",
+  "married": true,
+  "children": [
+   6,
+   10
+  ],
+  "gross": 120000,
+  "gross2": 0,
+  "fortune": 200000,
+  "netWage": 107602,
+  "netWage2": 0,
+  "taxableIncomeFed": 82874,
+  "taxableIncomeCanton": 77174,
+  "taxableFortune": 200000,
+  "incomeTaxFed": 551,
+  "incomeTaxCanton": 2948,
+  "incomeTaxCity": 3693,
+  "fortuneTaxCanton": 19,
+  "fortuneTaxCity": 23,
+  "personalTax": 48,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -3228,
+    "canton": -3228
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -5100,
+    "canton": -8400
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_53",
+    "label": "Kindersozialabzug",
+    "fed": -13600,
+    "canton": -18800
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZH",
+  "bfsId": 261,
+  "city": "Zürich",
+  "married": true,
+  "children": [],
+  "gross": 80000,
+  "gross2": 50000,
+  "fortune": 100000,
+  "netWage": 71883,
+  "netWage2": 45423,
+  "taxableIncomeFed": 92550,
+  "taxableIncomeCanton": 101150,
+  "taxableFortune": 100000,
+  "incomeTaxFed": 1465,
+  "incomeTaxCanton": 4589,
+  "incomeTaxCity": 5749,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 48,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2156,
+    "canton": -2156
+   },
+   {
+    "id": "TXT_31",
+    "label": "Übrige Berufsauslagen Haupterwerb (P2)",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -3700,
+    "canton": -5800
+   },
+   {
+    "id": "TXT_34",
+    "label": "Zweitverdienerabzug",
+    "fed": -14100,
+    "canton": -6200
+   },
+   {
+    "id": "TXT_57",
+    "label": "Abzug verheiratete Steuerpflichtige",
+    "fed": -2800,
+    "canton": 0
    }
   ]
  }

@@ -27,6 +27,13 @@ npm run build      # Produktions-Build nach dist/
 | **Jahresvergleich** | Lohn, Steuern, Sparen über mehrere Jahre |
 | **Daten & KI** | JSON-Backup (Export/Import) und anonymisierte Zusammenfassung zum Einfügen in einen KI-Assistenten |
 
+## Soll/Ist mit Bank-Import
+
+- Seite «Budget», Karte «Soll / Ist»: CSV-Export der Bank importieren. Frank erkennt Trennzeichen,
+  Kopfzeile und Spalten; vor dem Import lassen sie sich prüfen und ändern.
+- Buchungen ohne Posten einmal zuordnen, Frank merkt sich den Händler.
+- Die Datei verlässt das Gerät nicht.
+
 ## Bedienung auf dem Handy
 
 - Tab-Leiste unten, Wischen nach links oder rechts wechselt zur nächsten Seite.
@@ -66,11 +73,13 @@ tests/                Vitest: Lohn, Budget, Steuern gegen ESTV-Vergleichswerte
 
 - Tarife, Abzüge und Steuerfüsse stammen aus dem [ESTV-Steuerrechner](https://swisstaxcalculator.estv.admin.ch).
   Die App ruft die ESTV nie auf. Die Daten liegen in `src/params/generated/tax-data.json`.
-- Den Wohnort wählst du auf der Seite «Steuern». Er bestimmt Kanton, Steuerfüsse und Kirchensteuer.
+- Wohnort, Zivilstand, Kinder (mit Alter) und Konfession wählst du auf der Seite «Steuern».
+  Verheiratete rechnen mit Familientarif, Splitting und dem Nettolohn der Partnerin oder des Partners.
 - `tests/estvReference.test.ts` vergleicht die ganze Berechnung für alle 26 Kantonshauptorte
-  mit dem ESTV-Detailrechner (4 Lohnstufen, Toleranz 1 %).
+  mit dem ESTV-Detailrechner: 4 Lohnstufen für Ledige (Toleranz 1 %), dazu Alleinverdienende mit
+  zwei Kindern und Doppelverdienende ohne Kinder (Toleranz 3 %).
 - `tests/goldenTax.test.ts` prüft die Tarife von Aesch BL gegen frühere Vergleichswerte (±1 CHF).
-- Die Berechnung ist eine **provisorische Schätzung** für Ledige ohne Kinder. Massgebend ist die Veranlagung.
+- Die Berechnung ist eine **provisorische Schätzung**. Massgebend ist die Veranlagung.
 
 ### Steuerdaten aktualisieren
 
@@ -94,6 +103,9 @@ Die App läuft dann mit den bisherigen Daten weiter.
   schätzt Frank bei tiefen Einkommen eher zu hohe Steuern.
 - Mieterabzug (ZG, VD): Betrag selbst erfassen, Frank begrenzt ihn auf das kantonale Maximum.
 - Personalsteuer: Frank verwendet den Betrag des Kantonshauptorts.
+- Familien: Rabatte nach dem Tarif (VS Familienrabatt, VD Familienquotient, BL Kinderermässigung) misst
+  das Skript am Kantonshauptort. Ausbildungsabzüge für Kinder und Alleinerziehendenabzüge fehlen.
+  Die Partnerin oder der Partner erhält nur die Pauschale für Berufskosten, keine Fahrkosten.
 
 ## Datenschutz
 
@@ -103,5 +115,4 @@ Die App läuft dann mit den bisherigen Daten weiter.
 
 ## Später geplant
 
-- CSV-Import aus der Banking-App (Soll/Ist-Vergleich) als eigenes Modul unter `src/importers/`
-- Verheiratete und Kinder
+- Provisorische Steuerraten prüfen (Rückstellung bis zu jedem Termin)

@@ -12,7 +12,10 @@ export function buildAiSummary(m: YearModel, goals: SavingsGoal[], today: string
   const c = (r: number) => `CHF ${formatChf(r)}`;
   const lines: string[] = [];
   const canton = m.taxParams ? `Kanton ${m.taxParams.canton.name}, ` : '';
-  lines.push(`# Meine Finanzen ${m.plan.year} (Schweiz, ${canton}ledig)`);
+  const status = m.taxInput.married ? 'verheiratet' : 'ledig';
+  const n = m.taxInput.children?.length ?? 0;
+  const kids = n ? `, ${n} ${n === 1 ? 'Kind' : 'Kinder'}` : '';
+  lines.push(`# Meine Finanzen ${m.plan.year} (Schweiz, ${canton}${status}${kids})`);
   lines.push('');
   lines.push('## Einkommen');
   lines.push(`- Nettolohn regulär: ${c(m.salary.regularNet)} pro Monat`);

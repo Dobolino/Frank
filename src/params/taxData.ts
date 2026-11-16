@@ -38,6 +38,48 @@ export interface Deductions {
   lowIncome?: { threshold: number; percent: number } | null;
   /** Mieterabzug (ZG, VD): Maximum. Den Betrag erfasst die Person selbst. */
   rentMax?: number | null;
+  /** Abzüge für Verheiratete und Kinder. */
+  family?: FamilyDeductions;
+}
+
+/** Abzug als Grundbetrag + Prozent eines Einkommens, begrenzt durch Minimum und Maximum. */
+export interface PercentDeduction {
+  base: number;
+  percent: number;
+  min: number;
+  max: number | null;
+}
+
+export interface FamilyDeductions {
+  /** Abzug für Verheiratete (Prozent vom Nettoeinkommen in OW). */
+  married: PercentDeduction | null;
+  /** Versicherungsprämien und Sparzinsen für Verheiratete mit Pensionskasse. */
+  insuranceMax: number | null;
+  insurancePerChild: number;
+  /** Kinderabzüge nach Alter oder Anzahl. */
+  children: ChildRules;
+  /** Zusätzlicher Sozialabzug für Verheiratete (BE, OW). */
+  marriedExtra?: number;
+  /** JU: Versicherungsabzug, wenn nur eine Person in der Pensionskasse ist. */
+  insuranceMaxOneEarner?: number | null;
+  /** Zweitverdienerabzug, berechnet auf dem tieferen Erwerbseinkommen. */
+  secondEarner: PercentDeduction | null;
+}
+
+export interface ChildRules {
+  /** Abzug nach Altersspanne; bei Überschneidung gilt die engste Spanne. */
+  age: { minAge: number; maxAge: number; amount: number }[];
+  /** Nach Anzahl: 1. und 2. Kind, ab dem 3. Kind (JU, FR, AI). */
+  firstTwo: number;
+  fromThird: number;
+  /** Eigenbetreuung pro Kind bis 14 Jahre. */
+  ownCare: number;
+}
+
+/** Familientarif: Tabelle und Splitting-Divisor (0 = eigene Tabelle ohne Splitting). */
+export interface FamilyScale {
+  scale: Scale;
+  splitting: number;
 }
 
 export interface Calibration {
@@ -53,12 +95,28 @@ export interface Calibration {
   personalTax?: number;
   /** Teile, die nur angenähert berechnet werden. */
   approximate?: string[];
+  /** Verheiratete und Kinder. */
+  family?: {
+    /** Familientarif weicht ab: Divisor k wie beim Wallis. */
+    divisor?: number;
+    /** Steuerrabatt pro Kind auf der Bundessteuer (Elterntarif), CHF. */
+    childCreditFed?: number;
+    /** Rabatt nach Steuerfuss für Verheiratete (VS), fest oder je Einkommen. */
+    cantonFactor?: number;
+    cantonCurve?: [income: number, factor: number][];
+    cityFactor?: number;
+    cityCurve?: [income: number, factor: number][];
+    /** Wirkung pro Kind auf Kantons- und Gemeindesteuer zusammen (CHF), je steuerbarem Einkommen. */
+    childCurve?: [income: number, perChild: number][];
+    approximate?: string[];
+  };
 }
 
 export interface CantonYear {
   income: Scale;
   wealth: Scale | null;
-  deductions: Deductions & { wealthAllowance: number };
+  deductions: Deductions & { wealthAllowance: number; wealthFamily?: { married: number; perChild: number } };
+  family?: { income: FamilyScale | null; wealth: Scale | null };
   calibration?: Calibration;
 }
 
@@ -68,7 +126,7 @@ interface TaxDataFile {
   years: number[];
   /** BFS-Nummer → [Name, Kanton] */
   municipalities: Record<string, [string, string]>;
-  federal: Record<string, { income: Scale; deductions: Deductions }>;
+  federal: Record<string, { income: Scale; family?: FamilyScale | null; deductions: Deductions }>;
   cantons: Record<string, Record<string, CantonYear>>;
   /** Jahr → BFS-Nummer → Steuerfüsse in %: [Kanton, Gemeinde, ref., kath., christkath.] (+ gleich für Vermögen, falls abweichend) */
   rates: Record<string, Record<string, number[]>>;
@@ -157,7 +215,7 @@ function toRates(r: number[], church: Confession): Rates {
 export interface TaxYearParams {
   /** Jahr, aus dem die Tarife stammen. */
   year: number;
-  federal: { income: Scale; deductions: Deductions };
+  federal: { income: Scale; family?: FamilyScale | null; deductions: Deductions };
   canton: CantonYear & { code: string; name: string; bikeFlat?: number };
   municipality: Municipality & { ratesYear: number };
   rates: Rates;

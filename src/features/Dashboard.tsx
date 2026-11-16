@@ -1,10 +1,11 @@
 import { useStore } from '../app/store';
 import { Bar, Card, Money, PageHeader, Row, Stat, Warnings, formatChfShort } from './shared';
-import { CATEGORY_LABELS, monthName } from '../domain/types';
+import { monthName } from '../domain/types';
 import { formatPercent } from '../domain/money';
 import { goalStatus } from '../domain/goalsEngine';
 import { todayYm } from './shared';
 import { RadarCard } from './RadarCard';
+import { CategoryDonut } from './charts';
 import { BackupReminder } from './BackupReminder';
 import { Pillar3aReminder } from './Pillar3aCard';
 import { ComparePage } from './ComparePage';
@@ -47,19 +48,7 @@ export function Dashboard() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Card title="Wohin das Geld geht" className="lg:col-span-2">
-          <div className="space-y-3">
-            {summary.categories.map((c) => (
-              <div key={c.category}>
-                <div className="mb-1 flex justify-between text-sm">
-                  <span>{CATEGORY_LABELS[c.category]}</span>
-                  <span className="num text-muted">
-                    <Money value={c.monthly} /> / Mt · {summary.incomeMonthly > 0 ? formatPercent(c.monthly / summary.incomeMonthly, 0) : '–'}
-                  </span>
-                </div>
-                <Bar value={summary.incomeMonthly > 0 ? c.monthly / summary.incomeMonthly : 0} tone={c.category === 'savings' ? 'good' : 'info'} />
-              </div>
-            ))}
-          </div>
+          <CategoryDonut categories={summary.categories} />
           <div className="mt-5 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
             <div>
               <div className="text-muted">Sparquote</div>

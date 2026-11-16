@@ -1,4 +1,5 @@
 import { SCHEMA_VERSION, type AppData } from '../domain/types';
+import { findMunicipality, resolveBfsId } from '../params/taxData';
 
 const KEY = 'frank.data.v1';
 
@@ -31,7 +32,17 @@ export function clearData(): void {
 }
 
 /** Migrationen: Index = Version, von der aus migriert wird. */
-const MIGRATIONS: Record<number, (d: Record<string, unknown>) => Record<string, unknown>> = {};
+const MIGRATIONS: Record<number, (d: Record<string, unknown>) => Record<string, unknown>> = {
+  // v1 → v2: Wohnort als BFS-Gemeindenummer statt fest Aesch BL
+  1: (d) => ({ ...d, profile: withBfsId((d.profile ?? {}) as AppData['profile']) }),
+};
+
+/** Ergänzt die BFS-Nummer und den offiziellen Gemeindenamen, falls sie fehlen. */
+export function withBfsId(profile: AppData['profile']): AppData['profile'] {
+  const bfsId = resolveBfsId(profile);
+  const m = bfsId === undefined ? undefined : findMunicipality(bfsId);
+  return m ? { ...profile, bfsId: m.bfsId, municipality: m.name, canton: m.canton } : profile;
+}
 
 /** JSON prüfen und auf das aktuelle Schema migrieren. Wirft einen Fehler mit verständlicher Meldung. */
 export function parseAppData(text: string): AppData {

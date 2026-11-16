@@ -3,14 +3,16 @@ import { calculateSalary, lohnausweisNet, type SalaryYear } from './salaryEngine
 import { calculateTax, type TaxInput, type TaxResult } from './tax/taxEngine';
 import { standingOrders, summarizeBudget, yearlyByTaxTag, type AccountTransfer, type BudgetSummary } from './budgetEngine';
 import { simulateAccounts, type AccountCashflow } from './cashflowEngine';
-import { taxParamsFor } from '../params/taxParams';
-import type { Account, BudgetItem, YearPlan } from './types';
+import { resolveBfsId, taxParamsFor, type TaxYearParams } from '../params/taxData';
+import type { Account, BudgetItem, Profile, YearPlan } from './types';
 
 export interface YearModel {
   plan: YearPlan;
   salary: SalaryYear;
   taxInput: TaxInput;
   tax: TaxResult;
+  /** null, wenn für den Wohnort keine Steuerdaten vorliegen. */
+  taxParams: TaxYearParams | null;
   taxParamsExact: boolean;
   /** Empfohlene monatliche Steuerrückstellung (auf 10 CHF aufgerundet). */
   taxProvisionSuggested: Rappen;
@@ -38,16 +40,19 @@ export function buildTaxInput(plan: YearPlan, salary: SalaryYear): TaxInput {
     pillar3a: yearlyByTaxTag(plan.budget, 'pillar3a'),
     insurancePremiums: plan.tax.insurancePremiumsOverride ?? insuranceFromBudget,
     otherDeductions: plan.tax.otherDeductions,
+    rentDeduction: plan.tax.rentDeduction ?? 0,
     wealth: plan.tax.wealth,
   };
 }
 
 /** Zentrale Berechnung eines Jahres: Lohn → Steuern → Budget → Daueraufträge → Cashflow. */
-export function buildYearModel(plan: YearPlan, accounts: Account[]): YearModel {
+export function buildYearModel(plan: YearPlan, accounts: Account[], profile: Profile): YearModel {
   const salary = calculateSalary(plan.salary);
-  const { params, exact } = taxParamsFor(plan.year);
+  const bfsId = resolveBfsId(profile);
+  const lookup = bfsId === undefined ? { params: null, exact: false, note: 'Wähle deinen Wohnort auf der Seite «Steuern».' } : taxParamsFor(plan.year, bfsId, profile.church);
+  const { params, exact } = lookup;
   const taxInput = buildTaxInput(plan, salary);
-  const tax = calculateTax(taxInput, params);
+  const tax = params ? calculateTax(taxInput, params) : emptyTax(plan.year, taxInput);
   const taxProvisionSuggested = ceilTo10Francs(tax.total / 12);
 
   const budget = plan.budget.map((item) =>
@@ -75,7 +80,7 @@ export function buildYearModel(plan: YearPlan, accounts: Account[]): YearModel {
   });
 
   const warnings = [...tax.warnings];
-  if (!exact) warnings.push(`Für ${plan.year} sind keine Steuertarife hinterlegt – es werden die Tarife ${params.year} verwendet.`);
+  if (lookup.note) warnings.unshift(lookup.note);
   if (taxProvisionBudgeted > 0 && taxProvisionBudgeted < taxProvisionSuggested) {
     warnings.push('Die budgetierte Steuerrückstellung ist tiefer als die berechnete Steuer.');
   }
@@ -90,6 +95,7 @@ export function buildYearModel(plan: YearPlan, accounts: Account[]): YearModel {
     salary,
     taxInput,
     tax,
+    taxParams: params,
     taxParamsExact: exact,
     taxProvisionSuggested,
     taxProvisionBudgeted,
@@ -99,5 +105,33 @@ export function buildYearModel(plan: YearPlan, accounts: Account[]): YearModel {
     cashflow,
     otherIncomeYearly,
     warnings,
+  };
+}
+
+/** Platzhalter ohne Steuerdaten: alle Steuern 0, damit Budget und Übersicht weiter funktionieren. */
+function emptyTax(year: number, input: TaxInput): TaxResult {
+  const gross = input.employmentNet + input.otherIncome;
+  const level = { grossIncome: gross, deductions: [], taxableIncome: 0 };
+  return {
+    year,
+    federal: { ...level, tax: 0 },
+    canton: {
+      ...level,
+      simpleTax: 0,
+      cantonTax: 0,
+      municipalTax: 0,
+      churchTax: 0,
+      personalTax: 0,
+      wealthTaxable: 0,
+      wealthCanton: 0,
+      wealthMunicipal: 0,
+      wealthChurch: 0,
+    },
+    total: 0,
+    incomeTaxTotal: 0,
+    wealthTaxTotal: 0,
+    effectiveRate: 0,
+    marginalRate: 0,
+    warnings: [],
   };
 }

@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { TAX_PARAMS } from '../src/params/taxParams';
-import { applyIncomeTariff, applySliceTariff } from '../src/domain/tax/tariff';
+import { taxParamsFor } from '../src/params/taxData';
+import { applyScale } from '../src/domain/tax/scales';
+
+/** Aesch BL: unabhängige Vergleichswerte aus der ersten Version von Frank (vor den ESTV-Exporten). */
+const AESCH_BL = 2761;
+const paramsFor = (year: number) => {
+  const { params, exact } = taxParamsFor(year, AESCH_BL);
+  if (!params || !exact) throw new Error(`Keine Daten für ${year}`);
+  return params;
+};
 
 /**
  * Vergleichswerte aus dem offiziellen ESTV-Steuerrechner (abgerufen 15.11.2026),
@@ -96,20 +104,21 @@ const TOLERANCE_CHF = 1;
 
 describe('Einkommenssteuer gegen ESTV-Rechner', () => {
   it.each(INCOME)('%i: Einkommen %i → Bund %i, Kanton %i, Gemeinde %i', (year, income, fed, canton, city) => {
-    const p = TAX_PARAMS[year]!;
-    const fedTax = applyIncomeTariff(p.federal.tariff, Math.floor(income / 100) * 100);
-    const simple = applyIncomeTariff(p.canton.tariff, income);
+    const p = paramsFor(year);
+    const fedRaw = applyScale(p.federal.income, Math.floor(income / 100) * 100);
+    const fedTax = fedRaw < 25 ? 0 : fedRaw;
+    const simple = applyScale(p.canton.income, income);
     expect(Math.abs(fedTax - fed)).toBeLessThanOrEqual(TOLERANCE_CHF);
-    expect(Math.abs(simple * p.canton.cantonRate - canton)).toBeLessThanOrEqual(TOLERANCE_CHF);
-    expect(Math.abs(simple * p.municipality.rate - city)).toBeLessThanOrEqual(TOLERANCE_CHF);
+    expect(Math.abs(simple * p.rates.incomeCanton - canton)).toBeLessThanOrEqual(TOLERANCE_CHF);
+    expect(Math.abs(simple * p.rates.incomeCity - city)).toBeLessThanOrEqual(TOLERANCE_CHF);
   });
 });
 
 describe('Vermögenssteuer gegen ESTV-Rechner', () => {
   it.each(WEALTH)('%i: steuerbares Vermögen %i → Kanton %i, Gemeinde %i', (year, wealth, canton, city) => {
-    const p = TAX_PARAMS[year]!;
-    const simple = applySliceTariff(p.canton.wealth.tariff, wealth);
-    expect(Math.abs(simple - canton)).toBeLessThanOrEqual(TOLERANCE_CHF);
-    expect(Math.abs(simple * p.municipality.rate - city)).toBeLessThanOrEqual(TOLERANCE_CHF);
+    const p = paramsFor(year);
+    const simple = applyScale(p.canton.wealth!, wealth);
+    expect(Math.abs(simple * p.rates.wealthCanton - canton)).toBeLessThanOrEqual(TOLERANCE_CHF);
+    expect(Math.abs(simple * p.rates.wealthCity - city)).toBeLessThanOrEqual(TOLERANCE_CHF);
   });
 });

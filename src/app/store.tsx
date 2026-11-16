@@ -48,9 +48,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const models = useMemo(() => {
     const map = new Map<number, YearModel>();
-    for (const plan of Object.values(data.years)) map.set(plan.year, buildYearModel(plan, data.accounts));
+    for (const plan of Object.values(data.years)) map.set(plan.year, buildYearModel(plan, data.accounts, data.profile));
     return map;
-  }, [data.years, data.accounts]);
+  }, [data.years, data.accounts, data.profile]);
 
   const plan = data.years[String(data.activeYear)] ?? Object.values(data.years)[0]!;
   const model = models.get(plan.year)!;

@@ -258,6 +258,24 @@ export interface WealthSnapshot {
   pillar3a: Rappen;
 }
 
+/** Buchung aus dem Bank-Import. */
+export interface Transaction {
+  id: string;
+  /** YYYY-MM-DD */
+  date: string;
+  text: string;
+  /** Negativ = Ausgabe, positiv = Eingang. */
+  amount: Rappen;
+  /** Name des Budgetpostens (über Jahre stabil, IDs sind es nicht). */
+  item?: string;
+}
+
+/** Zuordnungsregel: Buchungstext enthält `match` → Budgetposten `item`. */
+export interface CategoryRule {
+  match: string;
+  item: string;
+}
+
 export interface AppData {
   schemaVersion: number;
   profile: Profile;
@@ -265,6 +283,10 @@ export interface AppData {
   investments?: Investments;
   /** Vermögensstände über die Zeit, ein Eintrag pro Monat. */
   wealthHistory?: WealthSnapshot[];
+  /** Importierte Bankbuchungen für den Soll/Ist-Vergleich. */
+  transactions?: Transaction[];
+  /** Zuordnungsregeln für den Bank-Import. */
+  rules?: CategoryRule[];
   accounts: Account[];
   years: Record<string, YearPlan>;
   goals: SavingsGoal[];

@@ -5,12 +5,14 @@ import { formatPercent } from '../domain/money';
 import { goalStatus } from '../domain/goalsEngine';
 import { todayYm } from './shared';
 import { RadarCard } from './RadarCard';
+import { summarizePortfolio } from '../domain/investEngine';
 
 export function Dashboard() {
   const { model, data } = useStore();
   const { summary, salary, tax, transfers } = model;
   const maxNet = Math.max(...salary.months.map((m) => m.net));
   const goals = data.goals.map((g) => goalStatus(g, model.budget, todayYm()));
+  const portfolio = summarizePortfolio(data.investments);
 
   return (
     <>
@@ -92,6 +94,29 @@ export function Dashboard() {
           </div>
         </Card>
       </div>
+
+      {portfolio.positions.length > 0 && (
+        <a href="#invest" className="mt-4 block">
+          <Card title="Anlagen">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <div>
+                <div className="text-xs text-muted">Depotwert</div>
+                <div className="num text-2xl font-semibold"><Money value={portfolio.totalChf} decimals={false} /></div>
+              </div>
+              <div className="text-right text-sm">
+                <div className={portfolio.dayChangeChf >= 0 ? 'text-accent' : 'text-danger'}>
+                  Heute <Money value={portfolio.dayChangeChf} decimals={false} signed />
+                </div>
+                {portfolio.gainPct !== null && (
+                  <div className={portfolio.gainChf >= 0 ? 'text-accent' : 'text-danger'}>
+                    Total <Money value={portfolio.gainChf} decimals={false} signed /> ({formatPercent(portfolio.gainPct)})
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
+        </a>
+      )}
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Card title="Lohn im Jahresverlauf" className="lg:col-span-2">

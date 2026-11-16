@@ -210,10 +210,47 @@ export interface RadarSettings {
   buffer: Rappen;
 }
 
+// ───────────────────────────── Anlagen ─────────────────────────────
+
+/** Letzter bekannter Kurs einer Position. */
+export interface Quote {
+  /** Kurs in der Handelswährung der Position. */
+  price: number;
+  /** Veränderung zum Vortag in Prozent. */
+  changePct?: number;
+  /** Zeitpunkt des Kurses (ISO). */
+  asOf: string;
+}
+
+/** Eine Aktie, ein ETF oder ein Fonds im Depot. */
+export interface Holding {
+  id: string;
+  /** Tickersymbol beim Kursdienst, z. B. «AAPL» oder «NESN». */
+  symbol: string;
+  /** Börse (z. B. «SIX»), falls der Kursdienst sie braucht. */
+  exchange?: string;
+  name: string;
+  /** Handelswährung, z. B. CHF, USD, EUR, GBX (Pence). */
+  currency: string;
+  quantity: number;
+  /** Einstandswert total in CHF (optional, für Gewinn/Verlust). */
+  costChf?: Rappen;
+  /** Von Hand gesetzter Kurs, falls kein Kursdienst eingerichtet ist. */
+  manualPrice?: number;
+  quote?: Quote;
+}
+
+export interface Investments {
+  holdings: Holding[];
+  /** Wechselkurse zu CHF: 1 Einheit Fremdwährung = rate CHF. */
+  fx: Record<string, { rate: number; asOf: string }>;
+}
+
 export interface AppData {
   schemaVersion: number;
   profile: Profile;
   settings?: { radar?: RadarSettings };
+  investments?: Investments;
   accounts: Account[];
   years: Record<string, YearPlan>;
   goals: SavingsGoal[];

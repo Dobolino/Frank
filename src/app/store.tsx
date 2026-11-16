@@ -16,6 +16,10 @@ interface Store {
   model: YearModel;
   modelFor: (year: number) => YearModel | null;
   saveError: boolean;
+  /** Erster Start ohne gespeicherte Daten: Einstieg zeigen. */
+  firstRun: boolean;
+  /** Einstieg abschliessen und die Startdaten speichern. */
+  finishSetup: (data: AppData) => Promise<boolean>;
 }
 
 // Kontext über Hot-Reloads hinweg behalten (nur Entwicklung), sonst verliert App den Provider.
@@ -31,6 +35,7 @@ interface StorageProblem {
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [loaded] = useState(loadData);
   const [data, setData] = useState<AppData>(() => loaded.status === 'loaded' ? loaded.data : initialData());
+  const [firstRun, setFirstRun] = useState(() => loaded.status === 'empty');
   const [problem, setProblem] = useState<StorageProblem | null>(() => loaded.status === 'error'
     ? { kind: 'load', message: loaded.message, raw: loaded.raw } : null);
   const [importError, setImportError] = useState('');
@@ -175,6 +180,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     model,
     modelFor: (year) => models.get(year) ?? null,
     saveError: problem?.kind === 'save',
+    firstRun,
+    finishSetup: async (next) => {
+      const saved = await replaceAll(next);
+      if (saved) setFirstRun(false);
+      return saved;
+    },
   };
   if (problem) {
     return (

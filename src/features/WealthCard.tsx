@@ -102,8 +102,6 @@ export function WealthCard() {
                   aria-label={`${label(s.month)}: ${Math.round(total / 100)} Franken`}
                   className="flex h-full flex-1 items-end"
                   onClick={() => setActive(active === idx ? null : idx)}
-                  onMouseEnter={() => setActive(idx)}
-                  onMouseLeave={() => setActive(null)}
                 >
                   <div
                     className={cx('flex w-full flex-col-reverse gap-[2px] overflow-hidden rounded-t-[4px]', active !== null && active !== idx && 'opacity-40')}

@@ -174,6 +174,16 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     }
     optional(plan, 'note', text, p);
   }
+  optional(value, 'wealthHistory', (v, path) => {
+    const months = new Set<string>();
+    array(v, path).forEach((entry, i) => {
+      const e = object(entry, `${path}[${i}]`);
+      yearMonth(e.month, `${path}[${i}].month`);
+      if (months.has(e.month as string)) invalid(`${path}[${i}].month`);
+      months.add(e.month as string);
+      for (const key of ['accounts', 'depot', 'pillar3a']) integer(e[key], `${path}[${i}].${key}`);
+    });
+  }, 'data');
   optional(value, 'settings', (v, path) => {
     const settings = object(v, path);
     optional(settings, 'radar', (v, path) => {

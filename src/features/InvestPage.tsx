@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { useStore } from '../app/store';
+import { WealthCard } from './WealthCard';
 import { Badge, Button, Card, Money, MoneyInput, PageHeader, Row, Select, Stat, Warnings, cx } from './shared';
 import { formatPercent } from '../domain/money';
 import { neededFx, summarizePortfolio, type HoldingValue } from '../domain/investEngine';
@@ -125,6 +126,10 @@ export function InvestPage() {
           sub={summary.gainPct !== null ? signedPct(summary.gainPct) : 'Einstand erfassen'}
         />
         <Stat label="Positionen" value={inv.holdings.length} sub={neededFx(inv).length ? `Währungen: CHF, ${neededFx(inv).join(', ')}` : 'CHF'} />
+      </div>
+
+      <div className="mt-4">
+        <WealthCard />
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">

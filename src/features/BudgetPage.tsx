@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../app/store';
 import { Badge, Button, Card, Money, MoneyInput, PageHeader, Select, TextInput, Toggle, Warnings, cx } from './shared';
+import { MonthlyOutflowChart } from './charts';
 import { CATEGORY_LABELS, MONTHS, monthName, type BudgetCategory, type BudgetItem, type Frequency, type Month, type TaxTag } from '../domain/types';
 import { itemAmount, monthlyAmount, yearlyAmount } from '../domain/budgetEngine';
 import { uid } from '../seed/builders';
@@ -66,6 +67,10 @@ export function BudgetPage() {
         }
       />
       <Warnings items={model.warnings.filter((w) => w.includes('Steuerrückstellung'))} />
+
+      <Card title="Ausgaben übers Jahr" className="mt-4">
+        <MonthlyOutflowChart items={model.budget} />
+      </Card>
 
       <div className="mt-4 space-y-4">
         {model.summary.categories.map((cat) => (

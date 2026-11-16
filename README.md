@@ -21,10 +21,24 @@ npm run build      # Produktions-Build nach dist/
 | **Budget** | Posten mit Häufigkeit (monatlich, quartalsweise, jährlich, bestimmte Monate), Konto-Zuordnung, Unterposten (z. B. Streaming-Abos), Steuer-Markierung |
 | **Lohn** | Brutto → Netto mit AHV/ALV/NBUV/KTG, BVG, 13. Lohn (Juni/Dezember), Bonus, Lohnerhöhungen unter dem Jahr, Lohnausweis-Werte |
 | **Steuern** | Wohnort frei wählbar: Bund, Kanton, Gemeinde, Kirche, Vermögenssteuer, Abzüge, Grenzsteuersatz, Szenario-Simulator, Vergleich mit Veranlagung |
+| **Anlagen** | Aktien, ETFs und Fonds mit Depotwert in CHF, Gewinn/Verlust, Tagesveränderung. Kurse über eigenen API-Key (Twelve Data oder Alpha Vantage) oder von Hand |
 | **Sparkonto** | Dauerauftrag pro Sparkonto und Kontoverlauf Monat für Monat inkl. Jahresrechnungen |
 | **Sparziele** | Reisen & Co. mit nötiger Monatsrate, Prognose und Übernahme ins Budget |
 | **Jahresvergleich** | Lohn, Steuern, Sparen über mehrere Jahre |
 | **Daten & KI** | JSON-Backup (Export/Import) und anonymisierte Zusammenfassung zum Einfügen in einen KI-Assistenten |
+
+## Bedienung auf dem Handy
+
+- Tab-Leiste unten, Wischen nach links oder rechts wechselt zur nächsten Seite.
+- Breite Tabellen scrollen zuerst selbst, am Rand wechselt die Seite.
+- Als App installieren: in Safari «Teilen», dann «Zum Home-Bildschirm».
+
+## Kurse für Anlagen
+
+- Gratis-Key bei [Twelve Data](https://twelvedata.com/register) oder [Alpha Vantage](https://www.alphavantage.co/support/#api-key) holen und auf der Seite «Anlagen» eintragen.
+- Der Key bleibt im LocalStorage des Geräts und ist nicht im JSON-Backup.
+- An den Kursdienst gehen nur Tickersymbole und Währungen, keine Stückzahlen oder Beträge.
+- Gratis-Angebote haben Limits (Twelve Data: 8 Abfragen pro Minute, Alpha Vantage: 25 pro Tag). Börsen ausserhalb der USA sind teils eingeschränkt. Dann den Kurs von Hand eintragen.
 
 ## Architektur
 

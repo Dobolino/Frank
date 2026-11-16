@@ -15,6 +15,18 @@
   --color-info: #60a5fa;
   --color-warn: #fbbf24;
   --color-danger: #f87171;
+
+  --animate-page-left: page-left 220ms ease-out;
+  --animate-page-right: page-right 220ms ease-out;
+
+  @keyframes page-left {
+    from { opacity: 0.4; transform: translateX(32px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes page-right {
+    from { opacity: 0.4; transform: translateX(-32px); }
+    to { opacity: 1; transform: none; }
+  }
 }
 
 html,
@@ -53,14 +65,37 @@ details > summary::-webkit-details-marker {
 
 /* ── iPhone / Home-Bildschirm ─────────────────────────── */
 
-/* Platz für Notch und Home-Indikator, wenn die App im Vollbild läuft */
+/* Platz für Notch und Home-Indikator: oben und unten übernehmen Kopfzeile und Tab-Leiste */
 body {
-  padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
   -webkit-tap-highlight-color: transparent;
-  overscroll-behavior-y: none;
+}
+
+/* Wie eine App: kein Gummiband-Effekt, keine Scrollbalken, kein Text-Markieren auf Bedienelementen */
+html,
+body {
+  overscroll-behavior: none;
+}
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+a,
+button,
+summary {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-page-left,
+  .animate-page-right {
+    animation: none;
+  }
 }
 
 /* iOS zoomt bei Eingabefeldern unter 16px automatisch hinein – auf Handys verhindern */

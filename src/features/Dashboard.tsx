@@ -73,8 +73,11 @@ export function Dashboard() {
 
         <Card title="Steuern">
           <Row label="Bund" value={<Money value={tax.federal.tax} />} />
-          <Row label="Kanton BL" value={<Money value={tax.canton.cantonTax} />} />
+          <Row label={`Kanton ${model.taxParams?.canton.code ?? ''}`} value={<Money value={tax.canton.cantonTax} />} />
           <Row label="Gemeinde" value={<Money value={tax.canton.municipalTax} />} />
+          {tax.canton.churchTax + tax.canton.personalTax > 0 && (
+            <Row label="Kirche / Personalsteuer" value={<Money value={tax.canton.churchTax + tax.canton.personalTax} />} />
+          )}
           {tax.wealthTaxTotal > 0 && <Row label="Vermögenssteuer" value={<Money value={tax.wealthTaxTotal} />} />}
           <Row label="Total" strong value={<Money value={tax.total} />} />
           <div className="mt-3 rounded-xl bg-panel-2 p-3 text-sm">

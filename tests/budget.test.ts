@@ -7,7 +7,7 @@ import type { Account, BudgetItem } from '../src/domain/types';
 
 const accounts: Account[] = [
   { id: 'main', name: 'Lohnkonto', type: 'checking' },
-  { id: 'yuh', name: 'YUH', type: 'savings' },
+  { id: 'spar', name: 'Sparkonto', type: 'savings' },
 ];
 
 const m = (name: string, amount: number, extra: Partial<BudgetItem> = {}): BudgetItem => ({
@@ -45,19 +45,19 @@ describe('Budget', () => {
     expect(s.expensesMonthly * 12).toBe(s.expensesYearly);
   });
 
-  it('berechnet den YUH-Dauerauftrag aus allen markierten Posten', () => {
-    const yuh = { accountId: 'yuh' };
+  it('berechnet den Sparkonto-Dauerauftrag aus allen markierten Posten', () => {
+    const spar = { accountId: 'spar' };
     const items = [
-      m('Strom', 90, yuh), m('Hausrat', 25, yuh), m('Serafe', 28, yuh), m('Ausgang', 200, yuh),
-      m('Autoversicherung', 100, yuh), m('MFK', 30, yuh), m('Steuern', 700, yuh), m('ETF', 400, yuh),
-      m('Sparen Auto', 50, yuh), m('Miete', 1500),
+      m('Strom', 90, spar), m('Hausrat', 25, spar), m('Serafe', 28, spar), m('Ausgang', 200, spar),
+      m('Autoversicherung', 100, spar), m('MFK', 30, spar), m('Steuern', 700, spar), m('ETF', 400, spar),
+      m('Sparen Auto', 50, spar), m('Miete', 1500),
     ];
     const [order] = standingOrders(items, accounts);
     expect(order!.standingOrder).toBe(chf(1623));
   });
 
   it('erkennt, wenn das Sparkonto vor einer Jahresrechnung zu wenig Guthaben hat', () => {
-    const items = [m('Autoversicherung', 1200, { accountId: 'yuh', frequency: { kind: 'yearly', month: 2 } })];
+    const items = [m('Autoversicherung', 1200, { accountId: 'spar', frequency: { kind: 'yearly', month: 2 } })];
     const [flow] = simulateAccounts({ items, accounts, salaryMonths: [], allocations: [], startBalances: {} });
     expect(flow!.standingOrder).toBe(chf(100));
     expect(flow!.minMonth).toBe(2);

@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useStore } from '../app/store';
 import { Badge, Card, Collapsible, Money, MoneyInput, PageHeader, Row, Select, Toggle, Warnings, cx } from './shared';
-import { COMMUTE_LABELS, type CommuteMode, type MealDeduction, type TaxProfile, type YearPlan } from '../domain/types';
+import { COMMUTE_LABELS, type CommuteMode, type MealDeduction, type Profile, type TaxProfile, type YearPlan } from '../domain/types';
 import { buildYearModel } from '../domain/yearModel';
 import { formatPercent, type Rappen } from '../domain/money';
-import { taxParamsFor } from '../params/taxParams';
+import { CONFESSION_LABELS } from '../params/taxData';
+import { LocationCard } from './LocationCard';
 import type { DeductionLine } from '../domain/tax/taxEngine';
 
 const MEAL_OPTIONS: { value: MealDeduction; label: string }[] = [
@@ -25,25 +26,31 @@ function Deductions({ lines }: { lines: DeductionLine[] }) {
 
 export function TaxPage() {
   const { model, updateYear, data } = useStore();
-  const { tax, plan } = model;
-  const { params } = taxParamsFor(plan.year);
+  const { tax, plan, taxParams: params } = model;
+  const place = !params
+    ? 'ohne Wohnort'
+    : params.municipality.name.includes(`(${params.canton.code})`)
+      ? params.municipality.name
+      : `${params.municipality.name} (${params.canton.code})`;
+  const church = data.profile.church === 'none' ? 'ohne Konfession' : CONFESSION_LABELS[data.profile.church];
+  const notes = model.warnings.filter((w) => !tax.warnings.includes(w) && /Steuer(füsse|daten)|Wohnort/.test(w));
   const setTax = (fn: (t: TaxProfile) => void) => updateYear((p) => fn(p.tax));
 
   return (
     <>
       <PageHeader
         title={`Steuern ${plan.year}`}
-        subtitle={`Provisorische Berechnung für ${params.municipality.name} · ledig · ohne Konfession`}
-        action={<Badge tone={model.taxParamsExact ? 'good' : 'warn'}>Tarif {params.year}</Badge>}
+        subtitle={`Provisorische Berechnung für ${place} · ledig · ${church}`}
+        action={params && <Badge tone={model.taxParamsExact ? 'good' : 'warn'}>Tarif {params.year}</Badge>}
       />
-      <Warnings items={tax.warnings} />
+      <Warnings items={[...notes, ...tax.warnings]} />
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Card title="Ergebnis" className="lg:col-span-2">
           <div className="grid gap-3 sm:grid-cols-4">
             <Mini label="Bund" value={tax.federal.tax} />
-            <Mini label="Kanton BL" value={tax.canton.cantonTax} />
-            <Mini label={`Gemeinde (${Math.round(params.municipality.rate * 100)} %)`} value={tax.canton.municipalTax} />
+            <Mini label={`Kanton ${params?.canton.code ?? ''}`} value={tax.canton.cantonTax} />
+            <Mini label={`Gemeinde${params ? ` (${Math.round(params.rates.incomeCity * 1000) / 10} %)` : ''}`} value={tax.canton.municipalTax} />
             <Mini label="Total" value={tax.total} accent />
           </div>
           <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
@@ -74,17 +81,23 @@ export function TaxPage() {
               <Row label="Einkünfte" value={<Money value={tax.canton.grossIncome} />} />
               <Deductions lines={tax.canton.deductions} />
               <Row strong label="Steuerbares Einkommen" value={<Money value={tax.canton.taxableIncome} />} />
-              <Row label="Einfache Staatssteuer" value={<Money value={tax.canton.simpleTax} />} />
+              <Row label="Einfache Steuer" hint="Tarif vor Steuerfuss" value={<Money value={tax.canton.simpleTax} />} />
+              <Row label="Kantonssteuer" value={<Money value={tax.canton.cantonTax} />} />
+              <Row label="Gemeindesteuer" value={<Money value={tax.canton.municipalTax} />} />
+              {tax.canton.churchTax > 0 && <Row label="Kirchensteuer" value={<Money value={tax.canton.churchTax} />} />}
+              {tax.canton.personalTax > 0 && <Row label="Personalsteuer" value={<Money value={tax.canton.personalTax} />} />}
               {plan.tax.wealth > 0 && (
                 <>
                   <Row label="Steuerbares Vermögen" hint="nach Freibetrag" value={<Money value={tax.canton.wealthTaxable} decimals={false} />} />
-                  <Row label="Vermögenssteuer Kanton + Gemeinde" value={<Money value={tax.wealthTaxTotal} />} />
+                  <Row label={tax.canton.wealthChurch > 0 ? 'Vermögenssteuer Kanton, Gemeinde, Kirche' : 'Vermögenssteuer Kanton + Gemeinde'} value={<Money value={tax.wealthTaxTotal} />} />
                 </>
               )}
             </Collapsible>
           </div>
         </Card>
 
+        <div className="space-y-4">
+        <LocationCard />
         <Card title="Angaben">
           <label className="block text-xs text-muted">
             Arbeitsweg
@@ -109,6 +122,12 @@ export function TaxPage() {
             <span className="text-muted">Weitere Abzüge</span>
             <MoneyInput value={plan.tax.otherDeductions} onChange={(v) => setTax((t) => void (t.otherDeductions = v))} />
           </div>
+          {params?.canton.deductions.rentMax ? (
+            <div className="mt-2 flex items-center justify-between text-sm">
+              <span className="text-muted" title={`Nur Kantonssteuer, max. CHF ${params.canton.deductions.rentMax}`}>Mieterabzug</span>
+              <MoneyInput value={plan.tax.rentDeduction ?? 0} onChange={(v) => setTax((t) => void (t.rentDeduction = v))} />
+            </div>
+          ) : null}
           <div className="mt-2 flex items-center justify-between text-sm">
             <span className="text-muted" title="Konten, Depot, Auto – ohne Säule 3a und Pensionskasse">Vermögen 31.12.</span>
             <MoneyInput value={plan.tax.wealth} onChange={(v) => setTax((t) => void (t.wealth = v))} />
@@ -120,6 +139,7 @@ export function TaxPage() {
             Säule 3a und Versicherungsprämien kommen aus dem Budget (Posten mit Steuer-Markierung). Dividenden: «Weitere Einkünfte» unten.
           </p>
         </Card>
+        </div>
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
@@ -127,10 +147,10 @@ export function TaxPage() {
         <ActualTaxCard />
       </div>
 
-      <ScenarioCard plan={plan} accounts={data.accounts} baseTotal={tax.total} baseExpenses={model.summary.expensesYearly} baseNet={model.salary.totals.net} />
+      <ScenarioCard plan={plan} accounts={data.accounts} profile={data.profile} baseTotal={tax.total} baseExpenses={model.summary.expensesYearly} baseNet={model.salary.totals.net} />
 
       <p className="mt-6 text-xs text-muted">
-        Quellen: {params.sources.join(' · ')}. Die Formel ist gegen den offiziellen ESTV-Steuerrechner getestet (±1 CHF). Provisorische Schätzung – massgebend ist die Veranlagung.
+        Quelle: ESTV-Steuerrechner (Tarife, Abzüge, Steuerfüsse). Die Berechnung ist für alle Kantonshauptorte gegen den ESTV-Rechner getestet. Provisorische Schätzung, massgebend ist die Veranlagung.
       </p>
     </>
   );
@@ -199,7 +219,7 @@ function ActualTaxCard() {
   );
 }
 
-function ScenarioCard({ plan, accounts, baseTotal, baseExpenses, baseNet }: { plan: YearPlan; accounts: Parameters<typeof buildYearModel>[1]; baseTotal: Rappen; baseExpenses: Rappen; baseNet: Rappen }) {
+function ScenarioCard({ plan, accounts, profile, baseTotal, baseExpenses, baseNet }: { plan: YearPlan; accounts: Parameters<typeof buildYearModel>[1]; profile: Profile; baseTotal: Rappen; baseExpenses: Rappen; baseNet: Rappen }) {
   const [raise, setRaise] = useState<Rappen>(0);
   const [bonus, setBonus] = useState<Rappen>(0);
   const [no3a, setNo3a] = useState(false);
@@ -210,8 +230,8 @@ function ScenarioCard({ plan, accounts, baseTotal, baseExpenses, baseNet }: { pl
     p.salary.changes = p.salary.changes.map((c) => ({ ...c, grossMonthly: c.grossMonthly + raise }));
     if (bonus > 0) p.salary.bonuses.push({ month: 3, gross: bonus });
     if (no3a) p.budget = p.budget.filter((b) => b.taxTag !== 'pillar3a');
-    return buildYearModel(p, accounts);
-  }, [plan, accounts, raise, bonus, no3a]);
+    return buildYearModel(p, accounts, profile);
+  }, [plan, accounts, profile, raise, bonus, no3a]);
 
   const dNet = scenario.salary.totals.net - baseNet;
   const dTax = scenario.tax.total - baseTotal;

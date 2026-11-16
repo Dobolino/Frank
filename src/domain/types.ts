@@ -96,7 +96,7 @@ export interface BudgetItem {
   /** Betrag pro Fälligkeit (bei monatlich: pro Monat, bei jährlich: Jahresrechnung). */
   amount: Rappen;
   frequency: Frequency;
-  /** Konto, von dem bezahlt wird. Ein Sparkonto (z. B. YUH) erzeugt einen Dauerauftrag. */
+  /** Konto, von dem bezahlt wird. Ein Sparkonto erzeugt einen Dauerauftrag. */
   accountId?: string;
   /** Aufgliederung, z. B. Streaming-Abos. Ist sie vorhanden, ist amount die Summe. */
   children?: BudgetSubItem[];
@@ -133,11 +133,13 @@ export const COMMUTE_LABELS: Record<CommuteMode, string> = {
 
 export interface TaxProfile {
   commuteMode: CommuteMode;
-  /** Fahrkosten pro Jahr (Velo: Pauschale bis CHF 700, ÖV: Abo-Preis). */
+  /** Fahrkosten pro Jahr (Velo: in BL Pauschale bis CHF 700, ÖV: Abo-Preis). */
   commuteCosts: Rappen;
   meal: MealDeduction;
   /** Weitere Abzüge (Weiterbildung, Spenden, Schuldzinsen …). */
   otherDeductions: Rappen;
+  /** Mieterabzug für die Kantonssteuer (nur ZG und VD). */
+  rentDeduction?: Rappen;
   /** KTG-Beiträge im Lohnausweis unter den Sozialabzügen (Ziffer 9). */
   ktgDeductible: boolean;
   /** Steuerbares Reinvermögen am 31.12. (ohne Säule 3a / Pensionskasse). */
@@ -187,10 +189,15 @@ export interface SavingsGoal {
 }
 
 export interface Profile {
-  canton: 'BL';
+  /** BFS-Gemeindenummer des Wohnorts (bestimmt Kanton und Steuerfüsse). */
+  bfsId?: number;
+  /** Name der Gemeinde, wie ihn die ESTV führt. */
   municipality: string;
+  /** Kantonskürzel, z. B. «ZH». */
+  canton: string;
   civilStatus: 'single';
-  church: 'none';
+  /** Konfession für die Kirchensteuer. */
+  church: 'none' | 'protestant' | 'roman' | 'christ';
 }
 
 /** Einstellungen des Finanz-Radars auf der Übersicht. */
@@ -213,4 +220,4 @@ export interface AppData {
   activeYear: number;
 }
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;

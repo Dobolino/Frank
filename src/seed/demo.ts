@@ -10,7 +10,7 @@ export function demoData(): AppData {
   const s = { accountId: 'savings' };
   return {
     schemaVersion: SCHEMA_VERSION,
-    profile: { canton: 'BL', municipality: 'Aesch BL', civilStatus: 'single', church: 'none' },
+    profile: { bfsId: 351, municipality: 'Bern', canton: 'BE', civilStatus: 'single', church: 'none' },
     accounts: DEFAULT_ACCOUNTS,
     activeYear: 2026,
     goals: [

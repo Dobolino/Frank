@@ -11,7 +11,8 @@ import type { YearModel } from './yearModel';
 export function buildAiSummary(m: YearModel, goals: SavingsGoal[], today: string): string {
   const c = (r: number) => `CHF ${formatChf(r)}`;
   const lines: string[] = [];
-  lines.push(`# Meine Finanzen ${m.plan.year} (Schweiz, Kanton Basel-Landschaft, ledig)`);
+  const canton = m.taxParams ? `Kanton ${m.taxParams.canton.name}, ` : '';
+  lines.push(`# Meine Finanzen ${m.plan.year} (Schweiz, ${canton}ledig)`);
   lines.push('');
   lines.push('## Einkommen');
   lines.push(`- Nettolohn regulär: ${c(m.salary.regularNet)} pro Monat`);

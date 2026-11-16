@@ -1,0 +1,4364 @@
+[
+ {
+  "year": 2026,
+  "canton": "AG",
+  "bfsId": 4001,
+  "city": "Aarau",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35213,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1303,
+  "incomeTaxCity": 1214,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -3800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -130000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AG",
+  "bfsId": 4001,
+  "city": "Aarau",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 70205,
+  "taxableFortune": 120000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4254,
+  "incomeTaxCity": 3965,
+  "fortuneTaxCanton": 91,
+  "fortuneTaxCity": 84,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -3800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -130000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AG",
+  "bfsId": 4001,
+  "city": "Aarau",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 126739,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 9844,
+  "incomeTaxCity": 9175,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -3800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -130000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AG",
+  "bfsId": 4001,
+  "city": "Aarau",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 263539,
+  "taxableFortune": 1370000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 24383,
+  "incomeTaxCity": 22726,
+  "fortuneTaxCanton": 2026,
+  "fortuneTaxCity": 1889,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -3800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -130000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AI",
+  "bfsId": 3101,
+  "city": "Appenzell",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35063,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1603,
+  "incomeTaxCity": 935,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -3050
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2900
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AI",
+  "bfsId": 3101,
+  "city": "Appenzell",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 68579,
+  "taxableFortune": 200000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4313,
+  "incomeTaxCity": 2516,
+  "fortuneTaxCanton": 288,
+  "fortuneTaxCity": 168,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -4814
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2900
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AI",
+  "bfsId": 3101,
+  "city": "Appenzell",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 126639,
+  "taxableFortune": 10000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 9306,
+  "incomeTaxCity": 5429,
+  "fortuneTaxCanton": 14,
+  "fortuneTaxCity": 8,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -5000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2900
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AI",
+  "bfsId": 3101,
+  "city": "Appenzell",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 263439,
+  "taxableFortune": 1450000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 20229,
+  "incomeTaxCity": 11800,
+  "fortuneTaxCanton": 2088,
+  "fortuneTaxCity": 1218,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -5000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2900
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AR",
+  "bfsId": 3001,
+  "city": "Herisau",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35913,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1607,
+  "incomeTaxCity": 1997,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2700
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AR",
+  "bfsId": 3001,
+  "city": "Herisau",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 71193,
+  "taxableFortune": 175000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4467,
+  "incomeTaxCity": 5550,
+  "fortuneTaxCanton": 289,
+  "fortuneTaxCity": 359,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2700
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AR",
+  "bfsId": 3001,
+  "city": "Herisau",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 129439,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 9800,
+  "incomeTaxCity": 12175,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2700
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "AR",
+  "bfsId": 3001,
+  "city": "Herisau",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 266239,
+  "taxableFortune": 1425000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 22838,
+  "incomeTaxCity": 28374,
+  "fortuneTaxCanton": 2545,
+  "fortuneTaxCity": 3162,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2700
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BE",
+  "bfsId": 351,
+  "city": "Bern",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 28813,
+  "taxableFortune": 30000,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 3057,
+  "incomeTaxCity": 1582,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2450
+   },
+   {
+    "id": "TXT_461",
+    "label": "Abzug bescheidene Einkommen",
+    "fed": 0,
+    "canton": -50
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -5300
+   },
+   {
+    "id": "TXT_69",
+    "label": "Abzug für Alleinstehende",
+    "fed": 0,
+    "canton": -2400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BE",
+  "bfsId": 351,
+  "city": "Bern",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 63855,
+  "taxableFortune": 250000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 7729,
+  "incomeTaxCity": 4001,
+  "fortuneTaxCanton": 419,
+  "fortuneTaxCity": 217,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2450
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -5300
+   },
+   {
+    "id": "TXT_69",
+    "label": "Abzug für Alleinstehende",
+    "fed": 0,
+    "canton": -2400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BE",
+  "bfsId": 351,
+  "city": "Bern",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 120389,
+  "taxableFortune": 60000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 16772,
+  "incomeTaxCity": 8682,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2450
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -5300
+   },
+   {
+    "id": "TXT_69",
+    "label": "Abzug für Alleinstehende",
+    "fed": 0,
+    "canton": -2400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BE",
+  "bfsId": 351,
+  "city": "Bern",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 257189,
+  "taxableFortune": 1500000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 41400,
+  "incomeTaxCity": 21430,
+  "fortuneTaxCanton": 4480,
+  "fortuneTaxCity": 2319,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2450
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -5300
+   },
+   {
+    "id": "TXT_69",
+    "label": "Abzug für Alleinstehende",
+    "fed": 0,
+    "canton": -2400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BL",
+  "bfsId": 2829,
+  "city": "Liestal",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 38513,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1989,
+  "incomeTaxCity": 1293,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -90000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BL",
+  "bfsId": 2829,
+  "city": "Liestal",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 73793,
+  "taxableFortune": 160000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 6985,
+  "incomeTaxCity": 4540,
+  "fortuneTaxCanton": 194,
+  "fortuneTaxCity": 126,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -90000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BL",
+  "bfsId": 2829,
+  "city": "Liestal",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 132039,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 16738,
+  "incomeTaxCity": 10879,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -90000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BL",
+  "bfsId": 2829,
+  "city": "Liestal",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 268839,
+  "taxableFortune": 1410000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 41144,
+  "incomeTaxCity": 26744,
+  "fortuneTaxCanton": 4243,
+  "fortuneTaxCity": 2758,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -90000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BS",
+  "bfsId": 2701,
+  "city": "Basel",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 13113,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1376,
+  "incomeTaxCity": 1376,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_464",
+    "label": "Abzug für in Konkubinat Lebende oder Alleinstehende ohne Kinder",
+    "fed": 0,
+    "canton": -19500
+   },
+   {
+    "id": "TXT_107",
+    "label": "Abzug für in Konkubinat Lebende oder Alleinstehende ohne Kinder",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BS",
+  "bfsId": 2701,
+  "city": "Basel",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 48393,
+  "taxableFortune": 175000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 5072,
+  "incomeTaxCity": 5072,
+  "fortuneTaxCanton": 394,
+  "fortuneTaxCity": 394,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_464",
+    "label": "Abzug für in Konkubinat Lebende oder Alleinstehende ohne Kinder",
+    "fed": 0,
+    "canton": -19500
+   },
+   {
+    "id": "TXT_107",
+    "label": "Abzug für in Konkubinat Lebende oder Alleinstehende ohne Kinder",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BS",
+  "bfsId": 2701,
+  "city": "Basel",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 106639,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 11193,
+  "incomeTaxCity": 11193,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_464",
+    "label": "Abzug für in Konkubinat Lebende oder Alleinstehende ohne Kinder",
+    "fed": 0,
+    "canton": -19500
+   },
+   {
+    "id": "TXT_107",
+    "label": "Abzug für in Konkubinat Lebende oder Alleinstehende ohne Kinder",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "BS",
+  "bfsId": 2701,
+  "city": "Basel",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 243439,
+  "taxableFortune": 1425000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 26523,
+  "incomeTaxCity": 26523,
+  "fortuneTaxCanton": 4854,
+  "fortuneTaxCity": 4854,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_464",
+    "label": "Abzug für in Konkubinat Lebende oder Alleinstehende ohne Kinder",
+    "fed": 0,
+    "canton": -19500
+   },
+   {
+    "id": "TXT_107",
+    "label": "Abzug für in Konkubinat Lebende oder Alleinstehende ohne Kinder",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "FR",
+  "bfsId": 2196,
+  "city": "Fribourg",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 33353,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 2052,
+  "incomeTaxCity": 1710,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_466",
+    "label": "Prämienabzug private Versicherungen (K/U)",
+    "fed": 0,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_461",
+    "label": "Abzug bescheidene Einkommen",
+    "fed": 0,
+    "canton": -1100
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -55000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "FR",
+  "bfsId": 2196,
+  "city": "Fribourg",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 69445,
+  "taxableFortune": 250000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 6304,
+  "incomeTaxCity": 5253,
+  "fortuneTaxCanton": 385,
+  "fortuneTaxCity": 308,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_466",
+    "label": "Prämienabzug private Versicherungen (K/U)",
+    "fed": 0,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "FR",
+  "bfsId": 2196,
+  "city": "Fribourg",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 125979,
+  "taxableFortune": 5000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 14054,
+  "incomeTaxCity": 11711,
+  "fortuneTaxCanton": 3,
+  "fortuneTaxCity": 2,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_466",
+    "label": "Prämienabzug private Versicherungen (K/U)",
+    "fed": 0,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -55000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "FR",
+  "bfsId": 2196,
+  "city": "Fribourg",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 262779,
+  "taxableFortune": 1500000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 34046,
+  "incomeTaxCity": 28372,
+  "fortuneTaxCanton": 4350,
+  "fortuneTaxCity": 3480,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_466",
+    "label": "Prämienabzug private Versicherungen (K/U)",
+    "fed": 0,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GE",
+  "bfsId": 6621,
+  "city": "Genève",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35223,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 2018,
+  "incomeTaxCity": 702,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 25,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -1230
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_500",
+    "label": "Prämienabzug Krankenkasse",
+    "fed": 0,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -87872
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GE",
+  "bfsId": 6621,
+  "city": "Genève",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 69916,
+  "taxableFortune": 162128,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 7827,
+  "incomeTaxCity": 2722,
+  "fortuneTaxCanton": 390,
+  "fortuneTaxCity": 118,
+  "personalTax": 25,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -1817
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_500",
+    "label": "Prämienabzug Krankenkasse",
+    "fed": 0,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -87872
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GE",
+  "bfsId": 6621,
+  "city": "Genève",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 128162,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 18552,
+  "incomeTaxCity": 6452,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 25,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -1817
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_500",
+    "label": "Prämienabzug Krankenkasse",
+    "fed": 0,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -87872
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GE",
+  "bfsId": 6621,
+  "city": "Genève",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 264962,
+  "taxableFortune": 1412128,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 46314,
+  "incomeTaxCity": 16107,
+  "fortuneTaxCanton": 6239,
+  "fortuneTaxCity": 1760,
+  "personalTax": 25,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -1817
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_500",
+    "label": "Prämienabzug Krankenkasse",
+    "fed": 0,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -87872
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GL",
+  "bfsId": 1632,
+  "city": "Glarus",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35913,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1556,
+  "incomeTaxCity": 1590,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3100
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -77400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GL",
+  "bfsId": 1632,
+  "city": "Glarus",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 70905,
+  "taxableFortune": 172600,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4503,
+  "incomeTaxCity": 4601,
+  "fortuneTaxCanton": 308,
+  "fortuneTaxCity": 315,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3100
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -77400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GL",
+  "bfsId": 1632,
+  "city": "Glarus",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 127439,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 9707,
+  "incomeTaxCity": 9919,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3100
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -77400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GL",
+  "bfsId": 1632,
+  "city": "Glarus",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 264239,
+  "taxableFortune": 1422600,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 23811,
+  "incomeTaxCity": 24330,
+  "fortuneTaxCanton": 2547,
+  "fortuneTaxCity": 2602,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3100
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -77400
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GR",
+  "bfsId": 3901,
+  "city": "Chur",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 33153,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1026,
+  "incomeTaxCity": 981,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -3300
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -69000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GR",
+  "bfsId": 3901,
+  "city": "Chur",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 68433,
+  "taxableFortune": 181000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4254,
+  "incomeTaxCity": 4069,
+  "fortuneTaxCanton": 187,
+  "fortuneTaxCity": 178,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -3300
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -69000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GR",
+  "bfsId": 3901,
+  "city": "Chur",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 126679,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 10049,
+  "incomeTaxCity": 9612,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -3300
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -69000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "GR",
+  "bfsId": 3901,
+  "city": "Chur",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 263479,
+  "taxableFortune": 1431000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 24186,
+  "incomeTaxCity": 23134,
+  "fortuneTaxCanton": 2238,
+  "fortuneTaxCity": 2141,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -3300
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -69000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "JU",
+  "bfsId": 6711,
+  "city": "Delémont",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 31713,
+  "taxableFortune": 1500,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1972,
+  "incomeTaxCity": 1314,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": 0
+   },
+   {
+    "id": "TXT_506",
+    "label": "Berufsauslagen Haupterwerb Pauschal",
+    "fed": 0,
+    "canton": -4100
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -28500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "JU",
+  "bfsId": 6711,
+  "city": "Delémont",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 66993,
+  "taxableFortune": 221500,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 6425,
+  "incomeTaxCity": 4283,
+  "fortuneTaxCanton": 393,
+  "fortuneTaxCity": 262,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": 0
+   },
+   {
+    "id": "TXT_506",
+    "label": "Berufsauslagen Haupterwerb Pauschal",
+    "fed": 0,
+    "canton": -4100
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -28500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "JU",
+  "bfsId": 6711,
+  "city": "Delémont",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 125239,
+  "taxableFortune": 31500,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 15182,
+  "incomeTaxCity": 10122,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": 0
+   },
+   {
+    "id": "TXT_506",
+    "label": "Berufsauslagen Haupterwerb Pauschal",
+    "fed": 0,
+    "canton": -4100
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -28500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "JU",
+  "bfsId": 6711,
+  "city": "Delémont",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 262039,
+  "taxableFortune": 1471500,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 37226,
+  "incomeTaxCity": 24817,
+  "fortuneTaxCanton": 3916,
+  "fortuneTaxCity": 2611,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": 0
+   },
+   {
+    "id": "TXT_506",
+    "label": "Berufsauslagen Haupterwerb Pauschal",
+    "fed": 0,
+    "canton": -4100
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -28500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "LU",
+  "bfsId": 1061,
+  "city": "Luzern",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 34455,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1274,
+  "incomeTaxCity": 1274,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2600
+   },
+   {
+    "id": "TXT_461",
+    "label": "Abzug bescheidene Einkommen",
+    "fed": 0,
+    "canton": -1958
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -62500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "LU",
+  "bfsId": 1061,
+  "city": "Luzern",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 71405,
+  "taxableFortune": 187500,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 3956,
+  "incomeTaxCity": 3956,
+  "fortuneTaxCanton": 203,
+  "fortuneTaxCity": 203,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2600
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -62500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "LU",
+  "bfsId": 1061,
+  "city": "Luzern",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 127939,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 8117,
+  "incomeTaxCity": 8117,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2600
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -62500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "LU",
+  "bfsId": 1061,
+  "city": "Luzern",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 264739,
+  "taxableFortune": 1437500,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 19221,
+  "incomeTaxCity": 19221,
+  "fortuneTaxCanton": 1563,
+  "fortuneTaxCity": 1563,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2600
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -62500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NE",
+  "bfsId": 6458,
+  "city": "Neuchâtel",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35813,
+  "taxableFortune": 30000,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 3002,
+  "incomeTaxCity": 1574,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -2500
+   },
+   {
+    "id": "TXT_461",
+    "label": "Abzug bescheidene Einkommen",
+    "fed": 0,
+    "canton": -700
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NE",
+  "bfsId": 6458,
+  "city": "Neuchâtel",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 71505,
+  "taxableFortune": 250000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 8549,
+  "incomeTaxCity": 4481,
+  "fortuneTaxCanton": 806,
+  "fortuneTaxCity": 423,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -2500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NE",
+  "bfsId": 6458,
+  "city": "Neuchâtel",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 128039,
+  "taxableFortune": 60000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 18633,
+  "incomeTaxCity": 9767,
+  "fortuneTaxCanton": 37,
+  "fortuneTaxCity": 20,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -2500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NE",
+  "bfsId": 6458,
+  "city": "Neuchâtel",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 264839,
+  "taxableFortune": 1500000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 43553,
+  "incomeTaxCity": 22830,
+  "fortuneTaxCanton": 6696,
+  "fortuneTaxCity": 3510,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": 0,
+    "canton": -2500
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NW",
+  "bfsId": 1509,
+  "city": "Stans",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 37163,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1449,
+  "incomeTaxCity": 1304,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2050
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -35000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NW",
+  "bfsId": 1509,
+  "city": "Stans",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 70679,
+  "taxableFortune": 215000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4038,
+  "incomeTaxCity": 3636,
+  "fortuneTaxCanton": 140,
+  "fortuneTaxCity": 126,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -3814
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -35000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NW",
+  "bfsId": 1509,
+  "city": "Stans",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 126013,
+  "taxableFortune": 25000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 8519,
+  "incomeTaxCity": 7670,
+  "fortuneTaxCanton": 16,
+  "fortuneTaxCity": 15,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -6726
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -35000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "NW",
+  "bfsId": 1509,
+  "city": "Stans",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 262539,
+  "taxableFortune": 1465000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 18830,
+  "incomeTaxCity": 16955,
+  "fortuneTaxCanton": 956,
+  "fortuneTaxCity": 861,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -7000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -35000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "OW",
+  "bfsId": 1407,
+  "city": "Sarnen",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 26045,
+  "taxableFortune": 5000,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1521,
+  "incomeTaxCity": 1806,
+  "fortuneTaxCanton": 3,
+  "fortuneTaxCity": 4,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1700
+   },
+   {
+    "id": "TXT_461",
+    "label": "Abzug bescheidene Einkommen",
+    "fed": 0,
+    "canton": -1268
+   },
+   {
+    "id": "TXT_67",
+    "label": "Sozialabzug",
+    "fed": 0,
+    "canton": -10000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -25000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "OW",
+  "bfsId": 1407,
+  "city": "Sarnen",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 62305,
+  "taxableFortune": 225000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 3645,
+  "incomeTaxCity": 4329,
+  "fortuneTaxCanton": 146,
+  "fortuneTaxCity": 174,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1700
+   },
+   {
+    "id": "TXT_67",
+    "label": "Sozialabzug",
+    "fed": 0,
+    "canton": -10000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -25000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "OW",
+  "bfsId": 1407,
+  "city": "Sarnen",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 118839,
+  "taxableFortune": 35000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 6950,
+  "incomeTaxCity": 8254,
+  "fortuneTaxCanton": 23,
+  "fortuneTaxCity": 27,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1700
+   },
+   {
+    "id": "TXT_67",
+    "label": "Sozialabzug",
+    "fed": 0,
+    "canton": -10000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -25000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "OW",
+  "bfsId": 1407,
+  "city": "Sarnen",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 255639,
+  "taxableFortune": 1475000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 14953,
+  "incomeTaxCity": 17759,
+  "fortuneTaxCanton": 959,
+  "fortuneTaxCity": 1139,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1700
+   },
+   {
+    "id": "TXT_67",
+    "label": "Sozialabzug",
+    "fed": 0,
+    "canton": -10000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -25000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SG",
+  "bfsId": 3203,
+  "city": "St. Gallen",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35213,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1428,
+  "incomeTaxCity": 1877,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SG",
+  "bfsId": 3203,
+  "city": "St. Gallen",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 70493,
+  "taxableFortune": 175000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4512,
+  "incomeTaxCity": 5930,
+  "fortuneTaxCanton": 312,
+  "fortuneTaxCity": 411,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SG",
+  "bfsId": 3203,
+  "city": "St. Gallen",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 128739,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 10207,
+  "incomeTaxCity": 13416,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SG",
+  "bfsId": 3203,
+  "city": "St. Gallen",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 265539,
+  "taxableFortune": 1425000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 23700,
+  "incomeTaxCity": 31149,
+  "fortuneTaxCanton": 2544,
+  "fortuneTaxCity": 3343,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -2400
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3400
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -75000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SH",
+  "bfsId": 2939,
+  "city": "Schaffhausen",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35263,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1163,
+  "incomeTaxCity": 1270,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 60,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3750
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SH",
+  "bfsId": 2939,
+  "city": "Schaffhausen",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 70255,
+  "taxableFortune": 200000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 3585,
+  "incomeTaxCity": 3915,
+  "fortuneTaxCanton": 137,
+  "fortuneTaxCity": 149,
+  "personalTax": 60,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3750
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SH",
+  "bfsId": 2939,
+  "city": "Schaffhausen",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 126789,
+  "taxableFortune": 10000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 8308,
+  "incomeTaxCity": 9074,
+  "fortuneTaxCanton": 7,
+  "fortuneTaxCity": 7,
+  "personalTax": 60,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3750
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SH",
+  "bfsId": 2939,
+  "city": "Schaffhausen",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 263589,
+  "taxableFortune": 1450000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 19824,
+  "incomeTaxCity": 21649,
+  "fortuneTaxCanton": 2386,
+  "fortuneTaxCity": 2606,
+  "personalTax": 60,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3750
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -50000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SO",
+  "bfsId": 2601,
+  "city": "Solothurn",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 36413,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1822,
+  "incomeTaxCity": 1962,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2600
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -60000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SO",
+  "bfsId": 2601,
+  "city": "Solothurn",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 71405,
+  "taxableFortune": 190000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 5523,
+  "incomeTaxCity": 5948,
+  "fortuneTaxCanton": 198,
+  "fortuneTaxCity": 213,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2600
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -60000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SO",
+  "bfsId": 2601,
+  "city": "Solothurn",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 127939,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 11976,
+  "incomeTaxCity": 12897,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2600
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -60000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SO",
+  "bfsId": 2601,
+  "city": "Solothurn",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 264739,
+  "taxableFortune": 1440000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 28337,
+  "incomeTaxCity": 30517,
+  "fortuneTaxCanton": 1681,
+  "fortuneTaxCity": 1810,
+  "personalTax": 50,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2600
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -60000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SZ",
+  "bfsId": 1372,
+  "city": "Schwyz",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 25087,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 564,
+  "incomeTaxCity": 897,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -6900
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_497",
+    "label": "Zusätzlicher Sozialabzug",
+    "fed": 0,
+    "canton": -626
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -125000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SZ",
+  "bfsId": 1372,
+  "city": "Schwyz",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 60993,
+  "taxableFortune": 125000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 1903,
+  "incomeTaxCity": 3027,
+  "fortuneTaxCanton": 83,
+  "fortuneTaxCity": 131,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -6900
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -125000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SZ",
+  "bfsId": 1372,
+  "city": "Schwyz",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 119239,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 4402,
+  "incomeTaxCity": 7003,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -6900
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -125000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "SZ",
+  "bfsId": 1372,
+  "city": "Schwyz",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 256039,
+  "taxableFortune": 1375000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 10270,
+  "incomeTaxCity": 16339,
+  "fortuneTaxCanton": 908,
+  "fortuneTaxCity": 1444,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -6900
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -4200
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -125000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TG",
+  "bfsId": 4566,
+  "city": "Frauenfeld",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 35513,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1279,
+  "incomeTaxCity": 1666,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TG",
+  "bfsId": 4566,
+  "city": "Frauenfeld",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 70505,
+  "taxableFortune": 150000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 3935,
+  "incomeTaxCity": 5126,
+  "fortuneTaxCanton": 180,
+  "fortuneTaxCity": 234,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TG",
+  "bfsId": 4566,
+  "city": "Frauenfeld",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 127039,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 8478,
+  "incomeTaxCity": 11045,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TG",
+  "bfsId": 4566,
+  "city": "Frauenfeld",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 263839,
+  "taxableFortune": 1400000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 20236,
+  "incomeTaxCity": 26362,
+  "fortuneTaxCanton": 1679,
+  "fortuneTaxCity": 2187,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -100000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TI",
+  "bfsId": 5002,
+  "city": "Bellinzona",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 32953,
+  "taxableFortune": 30000,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1246,
+  "incomeTaxCity": 1158,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 20,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TI",
+  "bfsId": 5002,
+  "city": "Bellinzona",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 68233,
+  "taxableFortune": 250000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4948,
+  "incomeTaxCity": 4602,
+  "fortuneTaxCanton": 300,
+  "fortuneTaxCity": 279,
+  "personalTax": 20,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TI",
+  "bfsId": 5002,
+  "city": "Bellinzona",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 126479,
+  "taxableFortune": 60000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 12159,
+  "incomeTaxCity": 11307,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 20,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "TI",
+  "bfsId": 5002,
+  "city": "Bellinzona",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 263279,
+  "taxableFortune": 1500000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 30391,
+  "incomeTaxCity": 28264,
+  "fortuneTaxCanton": 3750,
+  "fortuneTaxCity": 3488,
+  "personalTax": 20,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -3500
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "UR",
+  "bfsId": 1201,
+  "city": "Altdorf UR",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 21913,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1556,
+  "incomeTaxCity": 1478,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 70,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -15300
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -105800
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "UR",
+  "bfsId": 1201,
+  "city": "Altdorf UR",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 56905,
+  "taxableFortune": 144200,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4040,
+  "incomeTaxCity": 3838,
+  "fortuneTaxCanton": 144,
+  "fortuneTaxCity": 137,
+  "personalTax": 70,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -15300
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -105800
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "UR",
+  "bfsId": 1201,
+  "city": "Altdorf UR",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 113439,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 8054,
+  "incomeTaxCity": 7651,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 70,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -15300
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -105800
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "UR",
+  "bfsId": 1201,
+  "city": "Altdorf UR",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 250239,
+  "taxableFortune": 1394200,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 17767,
+  "incomeTaxCity": 16879,
+  "fortuneTaxCanton": 1394,
+  "fortuneTaxCity": 1324,
+  "personalTax": 70,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -1800
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -15300
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -105800
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VD",
+  "bfsId": 5586,
+  "city": "Lausanne",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 22794,
+  "taxableFortune": 30000,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1671,
+  "incomeTaxCity": 891,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_459",
+    "label": "Abzug private Versicherungen",
+    "fed": 0,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_461",
+    "label": "Abzug bescheidene Einkommen",
+    "fed": 0,
+    "canton": -8300
+   },
+   {
+    "id": "TXT_59",
+    "label": "Mieterabzug",
+    "fed": 0,
+    "canton": -3359
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VD",
+  "bfsId": 5586,
+  "city": "Lausanne",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 69445,
+  "taxableFortune": 250000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 7764,
+  "incomeTaxCity": 4139,
+  "fortuneTaxCanton": 592,
+  "fortuneTaxCity": 300,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_459",
+    "label": "Abzug private Versicherungen",
+    "fed": 0,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VD",
+  "bfsId": 5586,
+  "city": "Lausanne",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 125979,
+  "taxableFortune": 60000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 17484,
+  "incomeTaxCity": 9321,
+  "fortuneTaxCanton": 51,
+  "fortuneTaxCity": 26,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_459",
+    "label": "Abzug private Versicherungen",
+    "fed": 0,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VD",
+  "bfsId": 5586,
+  "city": "Lausanne",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 262779,
+  "taxableFortune": 1500000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 45204,
+  "incomeTaxCity": 24099,
+  "fortuneTaxCanton": 6870,
+  "fortuneTaxCity": 3479,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": 0
+   },
+   {
+    "id": "TXT_459",
+    "label": "Abzug private Versicherungen",
+    "fed": 0,
+    "canton": -4560
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VS",
+  "bfsId": 6266,
+  "city": "Sion",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 33088,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1307,
+  "incomeTaxCity": 1363,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3800
+   },
+   {
+    "id": "TXT_461",
+    "label": "Abzug bescheidene Einkommen",
+    "fed": 0,
+    "canton": -2125
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -45000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VS",
+  "bfsId": 6266,
+  "city": "Sion",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 70205,
+  "taxableFortune": 205000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 4701,
+  "incomeTaxCity": 4786,
+  "fortuneTaxCanton": 410,
+  "fortuneTaxCity": 451,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -45000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VS",
+  "bfsId": 6266,
+  "city": "Sion",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 126739,
+  "taxableFortune": 15000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 13438,
+  "incomeTaxCity": 11224,
+  "fortuneTaxCanton": 18,
+  "fortuneTaxCity": 20,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -45000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "VS",
+  "bfsId": 6266,
+  "city": "Sion",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 263539,
+  "taxableFortune": 1455000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 35985,
+  "incomeTaxCity": 27175,
+  "fortuneTaxCanton": 4001,
+  "fortuneTaxCity": 4401,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -3800
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -45000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZG",
+  "bfsId": 1711,
+  "city": "Zug",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 19378,
+  "taxableFortune": 0,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 400,
+  "incomeTaxCity": 267,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_59",
+    "label": "Mieterabzug",
+    "fed": 0,
+    "canton": -3075
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -12000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -204000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZG",
+  "bfsId": 1711,
+  "city": "Zug",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 51724,
+  "taxableFortune": 46000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 1631,
+  "incomeTaxCity": 1088,
+  "fortuneTaxCanton": 15,
+  "fortuneTaxCity": 10,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_59",
+    "label": "Mieterabzug",
+    "fed": 0,
+    "canton": -5721
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -12000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -204000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZG",
+  "bfsId": 1711,
+  "city": "Zug",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 103890,
+  "taxableFortune": 0,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 4691,
+  "incomeTaxCity": 3128,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_59",
+    "label": "Mieterabzug",
+    "fed": 0,
+    "canton": -10089
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -12000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -204000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZG",
+  "bfsId": 1711,
+  "city": "Zug",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 239979,
+  "taxableFortune": 1296000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 13671,
+  "incomeTaxCity": 9114,
+  "fortuneTaxCanton": 1213,
+  "fortuneTaxCity": 809,
+  "personalTax": 0,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -4560
+   },
+   {
+    "id": "TXT_59",
+    "label": "Mieterabzug",
+    "fed": 0,
+    "canton": -10800
+   },
+   {
+    "id": "TXT_60",
+    "label": "Abzug ledige Personen",
+    "fed": 0,
+    "canton": -12000
+   },
+   {
+    "id": "TXT_103",
+    "label": "Abzug alleinstehende Personen",
+    "fed": 0,
+    "canton": -204000
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZH",
+  "bfsId": 261,
+  "city": "Zürich",
+  "gross": 45000,
+  "fortune": 30000,
+  "netWage": 41013,
+  "taxableIncomeFed": 37213,
+  "taxableIncomeCanton": 36113,
+  "taxableFortune": 30000,
+  "incomeTaxFed": 174,
+  "incomeTaxCanton": 1088,
+  "incomeTaxCity": 1363,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2000,
+    "canton": -2000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2900
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZH",
+  "bfsId": 261,
+  "city": "Zürich",
+  "gross": 85000,
+  "fortune": 250000,
+  "netWage": 76293,
+  "taxableIncomeFed": 72205,
+  "taxableIncomeCanton": 71105,
+  "taxableFortune": 250000,
+  "incomeTaxFed": 1034,
+  "incomeTaxCanton": 3441,
+  "incomeTaxCity": 4310,
+  "fortuneTaxCanton": 80,
+  "fortuneTaxCity": 101,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -2288,
+    "canton": -2288
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2900
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZH",
+  "bfsId": 261,
+  "city": "Zürich",
+  "gross": 150000,
+  "fortune": 60000,
+  "netWage": 134539,
+  "taxableIncomeFed": 128739,
+  "taxableIncomeCanton": 127639,
+  "taxableFortune": 60000,
+  "incomeTaxFed": 5014,
+  "incomeTaxCanton": 8385,
+  "incomeTaxCity": 10503,
+  "fortuneTaxCanton": 0,
+  "fortuneTaxCity": 0,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2900
+   }
+  ]
+ },
+ {
+  "year": 2026,
+  "canton": "ZH",
+  "bfsId": 261,
+  "city": "Zürich",
+  "gross": 300000,
+  "fortune": 1500000,
+  "netWage": 271339,
+  "taxableIncomeFed": 265539,
+  "taxableIncomeCanton": 264439,
+  "taxableFortune": 1500000,
+  "incomeTaxFed": 21549,
+  "incomeTaxCanton": 23160,
+  "incomeTaxCity": 29011,
+  "fortuneTaxCanton": 1663,
+  "fortuneTaxCity": 2083,
+  "personalTax": 24,
+  "taxCredit": 0,
+  "deductions": [
+   {
+    "id": "TXT_30",
+    "label": "Übrige Berufsauslagen Haupterwerb",
+    "fed": -4000,
+    "canton": -4000
+   },
+   {
+    "id": "TXT_49",
+    "label": "Abzug private Versicherungen / Sparzinsen",
+    "fed": -1800,
+    "canton": -2900
+   }
+  ]
+ }
+]

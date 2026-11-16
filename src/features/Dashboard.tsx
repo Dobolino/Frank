@@ -6,6 +6,7 @@ import { goalStatus } from '../domain/goalsEngine';
 import { todayYm } from './shared';
 import { RadarCard } from './RadarCard';
 import { BackupReminder } from './BackupReminder';
+import { Pillar3aReminder } from './Pillar3aCard';
 import { ComparePage } from './ComparePage';
 import { summarizePortfolio } from '../domain/investEngine';
 
@@ -20,6 +21,7 @@ export function Dashboard() {
     <>
       <PageHeader title={`Übersicht ${model.plan.year}`} subtitle="Monat, Jahr, Steuern und Sparkonto auf einen Blick." />
       <BackupReminder />
+      <Pillar3aReminder />
       <Warnings items={model.warnings} />
 
       <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">

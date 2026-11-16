@@ -174,6 +174,22 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     }
     optional(plan, 'note', text, p);
   }
+  optional(value, 'transactions', (v, path) => {
+    for (const [i, t] of identified(v, path).entries()) {
+      const date = text(t.date, `${path}[${i}].date`);
+      if (!/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(date)) invalid(`${path}[${i}].date`);
+      text(t.text, `${path}[${i}].text`);
+      integer(t.amount, `${path}[${i}].amount`);
+      optional(t, 'item', text, `${path}[${i}]`);
+    }
+  }, 'data');
+  optional(value, 'rules', (v, path) => {
+    array(v, path).forEach((entry, i) => {
+      const r = object(entry, `${path}[${i}]`);
+      if (!text(r.match, `${path}[${i}].match`)) invalid(`${path}[${i}].match`);
+      text(r.item, `${path}[${i}].item`);
+    });
+  }, 'data');
   optional(value, 'wealthHistory', (v, path) => {
     const months = new Set<string>();
     array(v, path).forEach((entry, i) => {

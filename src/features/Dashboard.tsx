@@ -48,7 +48,7 @@ export function Dashboard() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Card title="Wohin das Geld geht" className="lg:col-span-2">
-          <CategoryDonut categories={summary.categories} />
+          <CategoryDonut categories={summary.categories} items={model.budget} />
           <div className="mt-5 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
             <div>
               <div className="text-muted">Sparquote</div>

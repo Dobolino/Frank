@@ -227,3 +227,47 @@ export function PageHeader({ title, subtitle, action }: { title: string; subtitl
     </div>
   );
 }
+
+/** Umschalter für 2 bis 3 gleichwertige Ansichten. */
+export function Segmented<T extends string>({ value, options, onChange, ariaLabel, className }: { value: T; options: { value: T; label: string }[]; onChange: (v: T) => void; ariaLabel: string; className?: string }) {
+  return (
+    <div role="tablist" aria-label={ariaLabel} className={cx('flex rounded-xl border border-line bg-panel-2 p-1', className)}>
+      {options.map((o) => (
+        <button
+          key={o.value}
+          type="button"
+          role="tab"
+          aria-selected={o.value === value}
+          onClick={() => {
+            if (o.value !== value) haptic();
+            onChange(o.value);
+          }}
+          className={cx('flex-1 rounded-lg px-3 py-1.5 text-sm transition-colors', o.value === value ? 'bg-panel font-semibold text-text shadow' : 'text-muted hover:text-text')}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** Merkt sich eine Ansicht-Auswahl auf diesem Gerät (nur Bedienkomfort, keine Daten). */
+export function usePref<T extends string>(key: string, fallback: T, allowed: readonly T[]): [T, (v: T) => void] {
+  const [value, setValue] = useState<T>(() => {
+    try {
+      const v = localStorage.getItem(`frank.view.${key}`) as T | null;
+      return v && allowed.includes(v) ? v : fallback;
+    } catch {
+      return fallback;
+    }
+  });
+  const set = (v: T) => {
+    setValue(v);
+    try {
+      localStorage.setItem(`frank.view.${key}`, v);
+    } catch {
+      /* privat oder gesperrt: Auswahl gilt nur für diese Sitzung */
+    }
+  };
+  return [value, set];
+}

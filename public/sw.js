@@ -25,6 +25,11 @@ self.addEventListener('install', (event) => {
   })());
 });
 
+// «Neu laden» in der App: wartende Version sofort aktivieren
+self.addEventListener('message', (event) => {
+  if (event.data === 'skipWaiting') self.skipWaiting();
+});
+
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();

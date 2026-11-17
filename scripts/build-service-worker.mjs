@@ -11,7 +11,8 @@ async function collect(directory, relative = '') {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const file = path.posix.join(relative, entry.name);
     if (entry.isDirectory()) result.push(...await collect(path.join(directory, entry.name), file));
-    else if (entry.isFile() && file !== 'sw.js' && !file.endsWith('.map')) result.push(file);
+    // Startbildschirme lädt iOS beim Hinzufügen zum Home-Bildschirm selbst, sie gehören nicht in den Offline-Cache
+    else if (entry.isFile() && file !== 'sw.js' && !file.endsWith('.map') && !file.startsWith('splash/')) result.push(file);
   }
   return result;
 }

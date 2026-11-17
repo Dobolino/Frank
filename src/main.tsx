@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { StoreProvider } from './app/store';
 import { App } from './app/App';
+import { registerServiceWorker } from './app/pwaUpdate';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,11 +20,7 @@ for (const type of ['gesturestart', 'gesturechange', 'gestureend']) {
 
 // Offline-Unterstützung (nur im Build, nicht während der Entwicklung)
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
-  const register = () => {
-    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {
-      /* ohne Service Worker läuft die App einfach online */
-    });
-  };
+  const register = () => registerServiceWorker();
   if (document.readyState === 'complete') register();
   else window.addEventListener('load', register, { once: true });
 }

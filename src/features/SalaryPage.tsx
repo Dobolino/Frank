@@ -1,5 +1,5 @@
 import { useStore } from '../app/store';
-import { Button, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, Select, Toggle, cx } from './shared';
+import { Badge, Button, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, Select, Toggle, cx } from './shared';
 import { MONTHS, monthName, type SalaryInput } from '../domain/types';
 import { totalRate, lohnausweisNet } from '../domain/salaryEngine';
 import { formatPercent } from '../domain/money';
@@ -10,6 +10,7 @@ export function SalaryPage() {
   const { model, updateYear } = useStore();
   const s = model.plan.salary;
   const res = model.salary;
+  const spesen = s.expenseAllowance?.monthly ?? 0;
   const set = (fn: (s: SalaryInput) => void) => updateYear((p) => fn(p.salary));
   const rate = (key: keyof SalaryInput['rates'], label: string) => (
     <div className="flex items-center justify-between gap-3 py-1 text-sm">
@@ -26,7 +27,51 @@ export function SalaryPage() {
 
   return (
     <>
-      <PageHeader title={`Lohn ${model.plan.year}`} subtitle="Brutto → Netto mit Sozialabzügen, BVG, 13. Monatslohn und Bonus." />
+      <PageHeader title={`Lohn ${model.plan.year}`} subtitle="Brutto → Netto mit Sozialabzügen, BVG, 13. Monatslohn, Bonus und Spesen." />
+
+      <div className="mb-4 grid gap-4 lg:grid-cols-2">
+        <Card title="Auszahlung pro Monat">
+          <div className="num text-3xl font-semibold text-accent"><Money value={res.regularNet} /></div>
+          <div className="text-xs text-muted">ohne 13. Lohn und Bonus</div>
+          <div className="mt-3">
+            <Row label="Nettolohn" value={<Money value={res.regularNet - spesen} />} />
+            <Row label="+ Spesen" value={spesen > 0 ? <Money value={spesen} /> : '–'} />
+            <Row strong label="Auszahlung im Jahr" hint="inkl. 13. Lohn, Bonus, Spesen" value={<Money value={res.totals.net} />} />
+          </div>
+        </Card>
+
+        <Card
+          title="Spesen"
+          action={
+            <Badge tone={spesen === 0 ? 'default' : s.expenseAllowance?.taxable ? 'warn' : 'good'}>
+              {spesen === 0 ? 'keine erfasst' : s.expenseAllowance?.taxable ? 'wird versteuert' : 'steuerfrei'}
+            </Badge>
+          }
+        >
+          <div className="flex items-center justify-between gap-3 py-1 text-sm">
+            <span className="text-muted" title="Pauschalspesen gemäss Lohnausweis Ziffer 13.2 – ohne AHV/ALV/BVG">Pauschalspesen pro Monat</span>
+            <MoneyInput
+              value={spesen}
+              onChange={(v) => set((x) => void (x.expenseAllowance = { monthly: v, taxable: x.expenseAllowance?.taxable ?? false }))}
+              ariaLabel="Pauschalspesen"
+            />
+          </div>
+          <Row label="Spesen im Jahr" value={<Money value={res.totals.expenses} />} />
+          {spesen > 0 && (
+            <div className="py-1">
+              <Toggle
+                checked={!s.expenseAllowance!.taxable}
+                onChange={(v) => set((x) => void (x.expenseAllowance = { ...x.expenseAllowance!, taxable: !v }))}
+                label={<span className="text-sm">Spesenreglement genehmigt (steuerfrei)</span>}
+              />
+            </div>
+          )}
+          <p className="mt-2 text-xs text-muted">
+            Pauschalspesen sind ohne AHV, ALV und BVG und stehen im Lohnausweis unter Ziffer 13.2. Ohne genehmigtes Spesenreglement zählen sie zum steuerbaren Einkommen.
+            Effektive Rückerstattungen mit Belegen nicht erfassen, sie gleichen nur Auslagen aus.
+          </p>
+        </Card>
+      </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card title="Grundlohn">
@@ -37,26 +82,6 @@ export function SalaryPage() {
           <div className="flex items-center justify-between gap-3 py-1 text-sm">
             <span className="text-muted">BVG pro Monat</span>
             <MoneyInput value={s.bvgMonthly} onChange={(v) => set((x) => void (x.bvgMonthly = v))} ariaLabel="BVG" />
-          </div>
-          <div className="mt-3 border-t border-line pt-3">
-            <div className="flex items-center justify-between gap-3 py-1 text-sm">
-              <span className="text-muted" title="Pauschalspesen gemäss Lohnausweis Ziffer 13.2 – ohne AHV/ALV/BVG">Pauschalspesen / Monat</span>
-              <MoneyInput
-                value={s.expenseAllowance?.monthly ?? 0}
-                onChange={(v) => set((x) => void (x.expenseAllowance = { monthly: v, taxable: x.expenseAllowance?.taxable ?? false }))}
-                ariaLabel="Pauschalspesen"
-              />
-            </div>
-            {(s.expenseAllowance?.monthly ?? 0) > 0 && (
-              <div className="py-1">
-                <Toggle
-                  checked={!s.expenseAllowance!.taxable}
-                  onChange={(v) => set((x) => void (x.expenseAllowance = { ...x.expenseAllowance!, taxable: !v }))}
-                  label={<span className="text-xs text-muted">Spesenreglement genehmigt (steuerfrei)</span>}
-                />
-              </div>
-            )}
-            <p className="text-xs text-muted">Effektive Rückerstattungen mit Belegen nicht erfassen – sie gleichen nur Auslagen aus.</p>
           </div>
           <div className="mt-3 border-t border-line pt-3">
             <div className="mb-1 text-xs text-muted">Lohnänderungen unter dem Jahr</div>

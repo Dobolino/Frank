@@ -630,6 +630,23 @@ async function main() {
   }
 
   if (data.years.length === 0) throw new Error('Keine Daten erhalten.');
+
+  // Postleitzahlen: alle Ortschaften mit PLZ und BFS-Nummer (Abfrage über die ersten zwei Ziffern)
+  const lastYear = Math.max(...data.years);
+  const seenZip = new Set();
+  data.postcodes = [];
+  for (let prefix = 10; prefix <= 99; prefix++) {
+    const hits = await call('API_searchLocation', { Search: String(prefix), Language: 1, TaxYear: lastYear });
+    for (const h of hits) {
+      const key = `${h.ZipCode}|${h.City}|${h.BfsID}`;
+      if (!h.ZipCode || seenZip.has(key) || !data.municipalities[h.BfsID]) continue;
+      seenZip.add(key);
+      data.postcodes.push([Number(h.ZipCode), h.City, h.BfsID]);
+    }
+    await sleep(100);
+  }
+  data.postcodes.sort((a, b) => a[0] - b[0] || a[1].localeCompare(b[1]));
+  console.log(`  Postleitzahlen: ${data.postcodes.length} Ortschaften`);
   await mkdir(dirname(DATA_FILE), { recursive: true });
   await writeFile(DATA_FILE, JSON.stringify(data) + '\n');
   console.log(`Gespeichert: ${DATA_FILE}`);

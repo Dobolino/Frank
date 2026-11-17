@@ -181,8 +181,9 @@ export function App() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Kopfzeile Handy */}
-      <header className="sticky top-0 z-30 isolate border-b border-line pt-[env(safe-area-inset-top)] md:hidden">
-        {/* Safari zeichnet Text unscharf, wenn er im selben Element wie backdrop-filter liegt: Hintergrund als eigene Ebene */}
+      {/* iOS zeichnet im Vollbild einen Streifen direkt unter der Statusleiste weich (auf dem iPhone getestet).
+          Der Inhalt beginnt deshalb 14px tiefer, sonst wird «Frank» unscharf. */}
+      <header className="sticky top-0 z-30 isolate border-b border-line pt-[calc(env(safe-area-inset-top)+14px)] md:hidden">
         <div aria-hidden className="absolute inset-0 -z-10 bg-panel/95 backdrop-blur" />
         <div className="flex items-center justify-between gap-3 px-4 py-2.5">
           <div className="min-w-0">

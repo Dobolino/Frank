@@ -37,6 +37,16 @@ export function DataPage() {
   return (
     <>
       <PageHeader title="Daten & KI" subtitle="Alles bleibt lokal in deinem Browser. Backups als JSON-Datei." />
+      {/* Vorübergehend: Schrifttest für die Diagnose auf dem iPhone */}
+      <button
+        className="mb-4 text-xs text-muted underline"
+        onClick={() => {
+          window.location.hash = 'schrifttest';
+          window.location.reload();
+        }}
+      >
+        Schrifttest öffnen
+      </button>
       {message && (
         <div className={`mb-4 rounded-xl border px-4 py-2.5 text-sm ${message.ok ? 'border-accent/30 bg-accent/5 text-accent' : 'border-danger/30 bg-danger/5 text-danger'}`}>
           {message.text}

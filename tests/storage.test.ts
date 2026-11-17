@@ -14,6 +14,24 @@ describe('Migration auf Version 2', () => {
   });
 });
 
+describe('Suche nach Postleitzahl', () => {
+  it('findet die Gemeinde zur PLZ statt einer gleichnamigen BFS-Nummer', () => {
+    const hits = searchMunicipalities('4147');
+    expect(hits.length).toBeGreaterThan(0);
+    expect(hits.every((h) => h.bfsId === 2761 && h.zip === 4147)).toBe(true);
+    expect(hits.map((h) => h.place)).toContain('Angenstein');
+  });
+  it('findet Gemeinden über die ersten Ziffern', () => {
+    const hits = searchMunicipalities('840');
+    expect(hits.length).toBeGreaterThan(0);
+    expect(hits.every((h) => String(h.zip).startsWith('840'))).toBe(true);
+    expect(hits.some((h) => h.name === 'Winterthur')).toBe(true);
+  });
+  it('findet Ortschaften, die keine eigene Gemeinde sind', () => {
+    expect(searchMunicipalities('Angenstein')[0]).toMatchObject({ bfsId: 2761, place: 'Angenstein' });
+  });
+});
+
 describe('Gemeindesuche', () => {
   it('findet Gemeinden ohne Akzente und Gross-/Kleinschreibung', () => {
     expect(searchMunicipalities('zurich')[0]?.name).toBe('Zürich');

@@ -78,18 +78,21 @@ export function Onboarding() {
             <>
               <input
                 className="mt-1 w-full rounded-lg border border-line bg-panel-2 px-3 py-2.5"
-                placeholder="Gemeinde suchen"
-                aria-label="Gemeinde suchen"
+                placeholder="PLZ oder Gemeinde"
+                aria-label="PLZ oder Gemeinde suchen"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
               {hits.length > 0 && (
                 <ul className="mt-1 divide-y divide-line rounded-lg border border-line">
                   {hits.map((m) => (
-                    <li key={m.bfsId}>
-                      <button type="button" className="flex w-full justify-between px-3 py-2 text-left text-sm" onClick={() => setBfsId(m.bfsId)}>
-                        <span>{m.name}</span>
-                        <span className="text-muted">{m.canton}</span>
+                    <li key={`${m.bfsId}-${m.zip ?? ''}-${m.place ?? ''}`}>
+                      <button type="button" className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm" onClick={() => setBfsId(m.bfsId)}>
+<span className="min-w-0">
+                    <span className="block truncate">{m.zip ? `${m.zip} ${m.place}` : m.name}</span>
+                    {m.zip && m.place !== m.name && <span className="block truncate text-xs text-muted">Gemeinde {m.name}</span>}
+                  </span>
+                  <span className="shrink-0 text-muted">{m.canton}</span>
                       </button>
                     </li>
                   ))}

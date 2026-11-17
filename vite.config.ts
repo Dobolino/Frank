@@ -7,7 +7,7 @@ export default defineConfig({
   // Relative Pfade: läuft unter https://<user>.github.io/Frank/ und lokal gleichermassen
   base: './',
   plugins: [react(), tailwindcss()],
-  // Steuerdaten aller Gemeinden (~75 kB gzip) machen das Bundle gross, das ist gewollt (offline nutzbar)
-  build: { chunkSizeWarningLimit: 900 },
+  // Steuerdaten und Postleitzahlen aller Gemeinden (~200 kB gzip) machen das Bundle gross, das ist gewollt (offline nutzbar)
+  build: { chunkSizeWarningLimit: 1100 },
   test: { include: ['tests/**/*.test.ts'] },
 });

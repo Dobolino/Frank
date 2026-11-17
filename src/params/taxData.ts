@@ -128,6 +128,8 @@ interface TaxDataFile {
   municipalities: Record<string, [string, string]>;
   federal: Record<string, { income: Scale; family?: FamilyScale | null; deductions: Deductions }>;
   cantons: Record<string, Record<string, CantonYear>>;
+  /** Postleitzahlen: [PLZ, Ortschaft, BFS-Nummer] */
+  postcodes?: [number, string, number][];
   /** Jahr → BFS-Nummer → Steuerfüsse in %: [Kanton, Gemeinde, ref., kath., christkath.] (+ gleich für Vermögen, falls abweichend) */
   rates: Record<string, Record<string, number[]>>;
 }
@@ -164,17 +166,52 @@ export function findMunicipality(bfsId: number): Municipality | undefined {
   return hit ? { bfsId, name: hit[0], canton: hit[1] } : undefined;
 }
 
-/** Suche nach Name oder BFS-Nummer, Treffer am Wortanfang zuerst. */
-export function searchMunicipalities(query: string, limit = 12): Municipality[] {
-  const q = normalize(query);
+/** Treffer der Wohnort-Suche: Gemeinde, bei PLZ- oder Ortschaftssuche mit PLZ und Ortschaft. */
+export type MunicipalityHit = Municipality & { zip?: number; place?: string };
+
+const POSTCODES = DATA.postcodes ?? [];
+
+/**
+ * Suche nach Postleitzahl (Ziffern, auch die ersten Ziffern), Gemeinde oder Ortschaft.
+ * Eine PLZ kann zu mehreren Gemeinden gehören, eine Gemeinde zu mehreren PLZ.
+ */
+export function searchMunicipalities(query: string, limit = 12): MunicipalityHit[] {
+  const raw = query.trim();
+  if (/^\d{1,4}$/.test(raw)) {
+    const hits: MunicipalityHit[] = [];
+    const seen = new Set<string>();
+    for (const [zip, place, bfs] of POSTCODES) {
+      if (!String(zip).startsWith(raw)) continue;
+      const m = findMunicipality(bfs);
+      const key = `${zip}|${bfs}|${place}`;
+      if (!m || seen.has(key)) continue;
+      seen.add(key);
+      hits.push({ ...m, zip, place });
+      if (hits.length >= limit) break;
+    }
+    return hits;
+  }
+  const q = normalize(raw);
   if (!q) return [];
-  const starts: Municipality[] = [];
-  const contains: Municipality[] = [];
+  const starts: MunicipalityHit[] = [];
+  const contains: MunicipalityHit[] = [];
   for (const m of MUNICIPALITIES) {
     const n = normalize(`${m.name} ${m.canton}`);
-    if (n.startsWith(q) || String(m.bfsId) === q) starts.push(m);
+    if (n.startsWith(q)) starts.push(m);
     else if (n.includes(q)) contains.push(m);
     if (starts.length >= limit) break;
+  }
+  // Ortschaften, die keine eigene Gemeinde sind (z. B. Angenstein → Aesch BL)
+  if (starts.length + contains.length < limit) {
+    const known = new Set([...starts, ...contains].map((m) => m.bfsId));
+    for (const [zip, place, bfs] of POSTCODES) {
+      if (known.has(bfs) || !normalize(place).startsWith(q)) continue;
+      const m = findMunicipality(bfs);
+      if (!m) continue;
+      known.add(bfs);
+      contains.push({ ...m, zip, place });
+      if (starts.length + contains.length >= limit) break;
+    }
   }
   return [...starts, ...contains].slice(0, limit);
 }

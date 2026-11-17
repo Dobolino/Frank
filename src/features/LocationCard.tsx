@@ -52,8 +52,8 @@ export function LocationCard() {
       <div className="relative mt-3">
         <input
           className="w-full rounded-lg border border-line bg-panel-2 px-3 py-2 text-sm"
-          placeholder="Gemeinde suchen, z. B. Winterthur"
-          aria-label="Gemeinde suchen"
+          placeholder="PLZ oder Gemeinde, z. B. 8400"
+          aria-label="PLZ oder Gemeinde suchen"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -69,14 +69,17 @@ export function LocationCard() {
           <ul className="absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded-lg border border-line bg-panel shadow-lg">
             {hits.length === 0 && <li className="px-3 py-2 text-sm text-muted">Keine Gemeinde gefunden.</li>}
             {hits.map((m) => (
-              <li key={m.bfsId}>
+              <li key={`${m.bfsId}-${m.zip ?? ''}-${m.place ?? ''}`}>
                 <button
                   type="button"
-                  className={cx('flex w-full justify-between px-3 py-2 text-left text-sm hover:bg-panel-2', m.bfsId === bfsId && 'text-accent')}
+                  className={cx('flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-panel-2', m.bfsId === bfsId && 'text-accent')}
                   onClick={() => choose(m.bfsId)}
                 >
-                  <span>{m.name}</span>
-                  <span className="text-muted">{m.canton}</span>
+<span className="min-w-0">
+                    <span className="block truncate">{m.zip ? `${m.zip} ${m.place}` : m.name}</span>
+                    {m.zip && m.place !== m.name && <span className="block truncate text-xs text-muted">Gemeinde {m.name}</span>}
+                  </span>
+                  <span className="shrink-0 text-muted">{m.canton}</span>
                 </button>
               </li>
             ))}

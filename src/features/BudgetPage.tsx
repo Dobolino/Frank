@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useStore } from '../app/store';
-import { Badge, Button, Card, Money, MoneyInput, PageHeader, Select, TextInput, Toggle, Warnings, cx } from './shared';
-import { MonthlyOutflowChart } from './charts';
+import { Badge, Button, Card, Money, MoneyInput, PageHeader, Segmented, Select, Stat, TextInput, Toggle, Warnings, cx, usePref } from './shared';
+import { CATEGORY_COLORS, MonthlyOutflowChart } from './charts';
 import { ActualsCard } from './ActualsCard';
 import { CATEGORY_LABELS, MONTHS, monthName, type BudgetCategory, type BudgetItem, type Frequency, type Month, type TaxTag } from '../domain/types';
-import { itemAmount, monthlyAmount, yearlyAmount } from '../domain/budgetEngine';
+import { frequencyLabel, itemAmount, monthlyAmount } from '../domain/budgetEngine';
 import { uid } from '../seed/builders';
 
 type FreqKind = Frequency['kind'];
@@ -36,9 +36,14 @@ function changeFrequency(kind: FreqKind, current: Frequency): Frequency {
   }
 }
 
+const VIEWS = ['plan', 'actual', 'year'] as const;
+type View = (typeof VIEWS)[number];
+
 export function BudgetPage() {
   const { model, updateYear, data } = useStore();
+  const [view, setView] = usePref<View>('budget.view', 'plan', VIEWS);
   const [onlyAccount, setOnlyAccount] = useState<string>('');
+  const [openId, setOpenId] = useState<string | null>(null);
 
   const accountOptions = [{ value: '', label: 'Lohnkonto' }, ...data.accounts.filter((a) => a.type !== 'checking').map((a) => ({ value: a.id, label: a.name }))];
 
@@ -48,169 +53,194 @@ export function BudgetPage() {
       if (item) fn(item);
     });
 
-  const addItem = (category: BudgetCategory) =>
+  const addItem = (category: BudgetCategory) => {
+    const id = uid('b');
     updateYear((plan) => {
-      plan.budget.push({ id: uid('b'), category, name: 'Neuer Posten', amount: 0, frequency: { kind: 'monthly' } });
+      plan.budget.push({ id, category, name: 'Neuer Posten', amount: 0, frequency: { kind: 'monthly' } });
     });
+    setOpenId(id);
+  };
 
   const visible = (b: BudgetItem) => !onlyAccount || (b.accountId ?? '') === onlyAccount;
+  const s = model.summary;
 
   return (
     <>
-      <PageHeader
-        title={`Budget ${model.plan.year}`}
-        subtitle="Beträge pro Fälligkeit. Monats- und Jahreswerte werden immer aus denselben Zahlen berechnet."
-        action={
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-muted">Filter Konto</span>
-            <Select value={onlyAccount} onChange={setOnlyAccount} options={[{ value: '', label: 'alle' }, ...accountOptions.slice(1)]} ariaLabel="Nach Konto filtern" />
-          </div>
-        }
+      <PageHeader title={`Budget ${model.plan.year}`} />
+      <Segmented
+        className="mt-4"
+        ariaLabel="Ansicht"
+        value={view}
+        onChange={setView}
+        options={[
+          { value: 'plan', label: 'Plan' },
+          { value: 'actual', label: 'Ist' },
+          { value: 'year', label: 'Jahr' },
+        ]}
       />
       <Warnings items={model.warnings.filter((w) => w.includes('Steuerrückstellung'))} />
 
-      <Card title="Ausgaben übers Jahr" className="mt-4">
-        <MonthlyOutflowChart items={model.budget} />
-      </Card>
+      {view === 'year' && (
+        <Card title="Ausgaben übers Jahr" className="mt-4">
+          <MonthlyOutflowChart items={model.budget} />
+        </Card>
+      )}
 
-      <div className="mt-4">
-        <ActualsCard />
-      </div>
-
-      <div className="mt-4 space-y-4">
-        {model.summary.categories.map((cat) => (
-          <Card
-            key={cat.category}
-            title={CATEGORY_LABELS[cat.category]}
-            action={
-              <div className="num text-sm text-muted">
-                <Money value={cat.monthly} /> / Mt · <Money value={cat.yearly} decimals={false} /> / Jahr
-              </div>
-            }
-          >
-            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={`Budget ${CATEGORY_LABELS[cat.category]}`}>
-              <table className="block w-full table-fixed text-sm sm:table sm:min-w-[1004px]">
-                <thead className="hidden sm:table-header-group">
-                  <tr className="text-left text-xs text-muted">
-                    <th className="sticky left-0 z-10 w-44 bg-panel pb-2 font-normal">Posten</th>
-                    <th className="w-32 pb-2 text-right font-normal">Betrag</th>
-                    <th className="w-56 pb-2 pl-3 font-normal">Fälligkeit</th>
-                    <th className="w-40 pb-2 font-normal">Bezahlt von</th>
-                    <th className="w-24 pb-2 text-right font-normal">pro Monat</th>
-                    <th className="w-20 pb-2 text-right font-normal">pro Jahr</th>
-                    <th className="w-10" />
-                  </tr>
-                </thead>
-                <tbody className="block sm:table-row-group">
-                  {cat.items.filter(visible).map((item) => (
-                    <ItemRow key={item.id} item={item} edit={edit} accountOptions={accountOptions} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <Button variant="ghost" className="mt-2" onClick={() => addItem(cat.category)}>
-              + Posten
-            </Button>
-          </Card>
-        ))}
-      </div>
-
-      <Card className="mt-4">
-        <div className="grid gap-4 text-sm sm:grid-cols-3">
-          <div>
-            <div className="text-muted">Total Ausgaben</div>
-            <div className="num text-xl font-semibold">
-              <Money value={model.summary.expensesMonthly} /> <span className="text-sm text-muted">/ Mt</span>
-            </div>
-            <div className="num text-muted"><Money value={model.summary.expensesYearly} /> / Jahr</div>
-          </div>
-          <div>
-            <div className="text-muted">Einnahmen</div>
-            <div className="num text-xl font-semibold"><Money value={model.summary.incomeMonthly} /> <span className="text-sm text-muted">/ Mt</span></div>
-            <div className="num text-muted"><Money value={model.summary.incomeYearly} /> / Jahr inkl. 13. Lohn</div>
-          </div>
-          <div>
-            <div className="text-muted">Rest</div>
-            <div className={cx('num text-xl font-semibold', model.summary.saldoMonthly >= 0 ? 'text-accent' : 'text-danger')}>
-              <Money value={model.summary.saldoMonthly} /> <span className="text-sm text-muted">/ Mt</span>
-            </div>
-            <div className="num text-muted">Jahresüberschuss <Money value={model.summary.surplusYearly} /></div>
-          </div>
+      {view === 'actual' && (
+        <div className="mt-4">
+          <ActualsCard />
         </div>
-      </Card>
+      )}
+
+      {view === 'plan' && (
+        <>
+          <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
+            <Stat label="Ausgaben" sub="pro Monat" value={<Money value={s.expensesMonthly} decimals={false} />} />
+            <Stat label="Einnahmen" sub="pro Monat" value={<Money value={s.incomeMonthly} decimals={false} />} />
+            <Stat label="Rest" sub="pro Monat" value={<Money value={s.saldoMonthly} decimals={false} />} tone={s.saldoMonthly >= 0 ? 'good' : 'bad'} />
+          </div>
+          <div className="mt-3 flex items-center justify-between gap-2 text-sm">
+            <span className="text-xs text-muted">Beträge pro Monat. Tippe auf einen Posten zum Bearbeiten.</span>
+            <Select value={onlyAccount} onChange={setOnlyAccount} options={[{ value: '', label: 'alle Konten' }, ...accountOptions.slice(1)]} ariaLabel="Nach Konto filtern" />
+          </div>
+
+          <div className="mt-3 space-y-4">
+            {s.categories.map((cat) => {
+              const items = cat.items.filter(visible);
+              if (onlyAccount && items.length === 0) return null;
+              return (
+                <Card
+                  key={cat.category}
+                  title={
+                    <span className="inline-flex items-center gap-2">
+                      <span aria-hidden className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: CATEGORY_COLORS[cat.category] }} />
+                      {CATEGORY_LABELS[cat.category]}
+                    </span>
+                  }
+                  action={
+                    <div className="num text-sm text-muted">
+                      <Money value={cat.monthly} decimals={false} /> / Mt
+                    </div>
+                  }
+                >
+                  <ul className="-mx-2">
+                    {items.map((item) => (
+                      <ItemRow
+                        key={item.id}
+                        item={item}
+                        open={openId === item.id}
+                        toggle={() => setOpenId(openId === item.id ? null : item.id)}
+                        edit={edit}
+                        accountOptions={accountOptions}
+                      />
+                    ))}
+                  </ul>
+                  <Button variant="ghost" className="mt-2" onClick={() => addItem(cat.category)}>
+                    + Posten
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-xs text-muted">
+            Im Jahr: Ausgaben <Money value={s.expensesYearly} decimals={false} />, Einnahmen inkl. 13. Lohn <Money value={s.incomeYearly} decimals={false} />, Überschuss{' '}
+            <Money value={s.surplusYearly} decimals={false} />.
+          </p>
+        </>
+      )}
     </>
   );
 }
 
 function ItemRow({
   item,
+  open,
+  toggle,
   edit,
   accountOptions,
 }: {
   item: BudgetItem;
+  open: boolean;
+  toggle: () => void;
   edit: (id: string, fn: (i: BudgetItem) => void) => void;
   accountOptions: { value: string; label: string }[];
 }) {
   const { updateYear, data, model } = useStore();
-  const [open, setOpen] = useState(false);
   const hasChildren = !!item.children && item.children.length > 0;
   const auto = item.autoFromTax && item.taxTag === 'taxProvision';
   const f = item.frequency;
+  const account = item.accountId ? data.accounts.find((a) => a.id === item.accountId)?.name : undefined;
 
   return (
-    <>
-      <tr className="grid grid-cols-2 gap-x-3 gap-y-2 border-t border-line/60 py-3 align-middle sm:table-row sm:py-0">
-        <td className="col-span-2 min-w-0 bg-panel py-1.5 sm:sticky sm:left-0 sm:z-10 sm:pr-2">
-          <div className="flex items-center gap-2">
-            <TextInput value={item.name} onChange={(v) => edit(item.id, (i) => void (i.name = v))} className="w-full min-w-0 border-transparent bg-transparent hover:border-line" ariaLabel="Name" />
+    <li className="border-t border-line/60 first:border-t-0">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={toggle}
+        className={cx('flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left text-sm hover:bg-panel-2', open && 'bg-panel-2')}
+      >
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-1.5">
+            <span className="truncate">{item.name}</span>
             {item.taxTag === 'pillar3a' && <Badge tone="info">3a</Badge>}
             {item.taxTag === 'insurance' && <Badge tone="info">Abzug</Badge>}
             {auto && <Badge tone="good">auto</Badge>}
             {item.goalId && <Badge tone="good">Ziel</Badge>}
-          </div>
-        </td>
-        <td className="col-span-2 flex items-center justify-between gap-2 py-1.5 text-right sm:table-cell">
-          <span className="text-xs text-muted sm:hidden">Betrag pro Fälligkeit</span>
-          {hasChildren || auto ? (
-            <span className="num pr-2.5 text-muted" title={auto ? 'Aus der Steuerberechnung' : 'Summe der Unterposten'}>
-              <Money value={itemAmount(item)} />
+          </span>
+          {(f.kind !== 'monthly' || account) && (
+            <span className="block truncate text-xs text-muted">
+              {f.kind !== 'monthly' && (
+                <>
+                  {frequencyLabel(f)} · <Money value={itemAmount(item)} decimals={false} />
+                </>
+              )}
+              {f.kind !== 'monthly' && account && ' · '}
+              {account}
             </span>
-          ) : (
-            <MoneyInput value={item.amount} onChange={(v) => edit(item.id, (i) => void (i.amount = v))} ariaLabel={`Betrag ${item.name}`} />
           )}
-        </td>
-        <td className={cx("col-span-2 py-1.5 sm:table-cell sm:pl-3", !open && "hidden")} >
-          <span className="mb-1 block text-xs text-muted sm:hidden">Fälligkeit</span>
-          <div className="flex flex-wrap items-center gap-1">
-            <Select value={f.kind} options={FREQ_OPTIONS} onChange={(k) => edit(item.id, (i) => void (i.frequency = changeFrequency(k, i.frequency)))} ariaLabel="Häufigkeit" />
-            {f.kind === 'yearly' && (
-              <Select
-                value={f.month}
-                options={MONTHS.map((m) => ({ value: m, label: monthName(m) }))}
-                onChange={(m) => edit(item.id, (i) => void (i.frequency = { kind: 'yearly', month: m }))}
-                ariaLabel="Fälligkeitsmonat"
-              />
-            )}
-          </div>
-        </td>
-        <td className={cx("col-span-2 py-1.5 sm:table-cell", !open && "hidden")}>
-          <span className="mb-1 block text-xs text-muted sm:hidden">Bezahlt von</span>
-          <Select className="w-full" value={item.accountId ?? ''} options={accountOptions} onChange={(v) => edit(item.id, (i) => void (i.accountId = v || undefined))} ariaLabel="Konto" />
-        </td>
-        <td className="num hidden py-1.5 text-right sm:table-cell"><Money value={monthlyAmount(item)} /></td>
-        <td className="num hidden py-1.5 text-right text-muted sm:table-cell"><Money value={yearlyAmount(item)} decimals={false} /></td>
-        <td className="col-span-2 flex items-center justify-between gap-2 py-1.5 text-right sm:table-cell">
-          <span className="text-left text-xs text-muted sm:hidden"><Money value={monthlyAmount(item)} /> / Mt<br /><Money value={yearlyAmount(item)} decimals={false} /> / Jahr</span>
-          <Button variant="ghost" onClick={() => setOpen(!open)} title="Details" ariaLabel={`Details ${item.name}`} className="px-2">
-            <span className="sm:hidden">{open ? 'Schliessen' : 'Details'}</span><span className="hidden sm:inline">{open ? '▾' : '⋯'}</span>
-          </Button>
-        </td>
-      </tr>
+        </span>
+        <Money value={monthlyAmount(item)} decimals={false} className="shrink-0" />
+        <span aria-hidden className={cx('shrink-0 text-muted transition-transform', open && 'rotate-90')}>›</span>
+      </button>
       {open && (
-        <tr className="block sm:table-row">
-          <td colSpan={7} className="block pb-3 sm:table-cell">
-            <div className="grid gap-4 rounded-xl bg-panel-2 p-4 md:grid-cols-2">
+            <div className="mx-2 mb-3 grid gap-4 rounded-xl bg-panel-2 p-4 md:grid-cols-2">
               <div className="space-y-3">
+                <label className="block text-xs text-muted">
+                  Name
+                  <TextInput className="mt-1 block w-full" value={item.name} onChange={(v) => edit(item.id, (i) => void (i.name = v))} />
+                </label>
+                <div className="flex flex-wrap items-end gap-3">
+                  <label className="block text-xs text-muted">
+                    Betrag pro Fälligkeit
+                    <div className="mt-1">
+                      {hasChildren || auto ? (
+                        <span className="num inline-block py-1.5 text-sm text-text" title={auto ? 'Aus der Steuerberechnung' : 'Summe der Unterposten'}>
+                          <Money value={itemAmount(item)} />
+                        </span>
+                      ) : (
+                        <MoneyInput value={item.amount} onChange={(v) => edit(item.id, (i) => void (i.amount = v))} ariaLabel={`Betrag ${item.name}`} />
+                      )}
+                    </div>
+                  </label>
+                  <div className="text-xs text-muted">
+                    Fälligkeit
+                    <div className="mt-1 flex flex-wrap items-center gap-1">
+                      <Select value={f.kind} options={FREQ_OPTIONS} onChange={(k) => edit(item.id, (i) => void (i.frequency = changeFrequency(k, i.frequency)))} ariaLabel="Häufigkeit" />
+                      {f.kind === 'yearly' && (
+                        <Select
+                          value={f.month}
+                          options={MONTHS.map((m) => ({ value: m, label: monthName(m) }))}
+                          onChange={(m) => edit(item.id, (i) => void (i.frequency = { kind: 'yearly', month: m }))}
+                          ariaLabel="Fälligkeitsmonat"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <label className="block text-xs text-muted">
+                  Bezahlt von
+                  <Select className="mt-1 block w-full" value={item.accountId ?? ''} options={accountOptions} onChange={(v) => edit(item.id, (i) => void (i.accountId = v || undefined))} ariaLabel="Konto" />
+                </label>
                 {(f.kind === 'custom' || f.kind === 'quarterly') && (
                   <div>
                     <div className="mb-1 text-xs text-muted">Fällig in</div>
@@ -300,9 +330,7 @@ function ItemRow({
                 </div>
               </div>
             </div>
-          </td>
-        </tr>
       )}
-    </>
+    </li>
   );
 }

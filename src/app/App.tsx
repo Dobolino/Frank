@@ -10,6 +10,8 @@ import { InvestPage } from '../features/InvestPage';
 import { SavingsPage } from '../features/SavingsPage';
 import { DataPage } from '../features/DataPage';
 import { Onboarding } from '../features/Onboarding';
+import { haptic } from './haptics';
+import { applyUpdate, useUpdateAvailable } from './pwaUpdate';
 
 const PAGES = [
   { id: 'overview', label: 'Übersicht', short: 'Übersicht', icon: '◎', Component: Dashboard },
@@ -54,6 +56,7 @@ function canSwipeFrom(target: EventTarget | null): boolean {
 
 export function App() {
   const { data, update, saveError, firstRun } = useStore();
+  const updateAvailable = useUpdateAvailable();
   const [{ page, direction }, setNavigation] = useState(() => ({ page: pageFromHash(), direction: 1 }));
   const [drag, setDrag] = useState(0);
   const swipe = useRef<Swipe | null>(null);
@@ -141,7 +144,10 @@ export function App() {
     const dy = touch.clientY - start.y;
     if (Math.abs(dx) < 64 || Math.abs(dy) > Math.abs(dx) * 0.6 || performance.now() - start.started > 900) return;
     const next = PAGES[index + (dx < 0 ? 1 : -1)];
-    if (next) window.location.hash = next.id;
+    if (next) {
+      haptic();
+      window.location.hash = next.id;
+    }
   };
 
   const years = Object.keys(data.years).map(Number).sort();
@@ -244,6 +250,14 @@ export function App() {
         onTouchCancel={cancelSwipe}
       >
         <div className="mx-auto max-w-6xl">
+          {updateAvailable && (
+            <div role="status" className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-accent/30 bg-accent/5 px-4 py-3 text-sm">
+              <span>Neue Version von Frank bereit.</span>
+              <Button variant="primary" onClick={applyUpdate}>
+                Neu laden
+              </Button>
+            </div>
+          )}
           <div className="page-drag" style={{ '--page-drag': `${drag}px`, '--page-opacity': 1 - Math.abs(drag) / 240 } as CSSProperties}>
             <div key={page} className="page-enter" style={{ '--page-direction': direction } as CSSProperties}>
               <Current />
@@ -264,6 +278,7 @@ export function App() {
             href={`#${p.id}`}
             className={cx('relative flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 pt-2 pb-1.5 text-[11px]', page === p.id ? 'text-accent' : 'text-muted')}
             aria-current={page === p.id ? 'page' : undefined}
+            onClick={() => page !== p.id && haptic()}
           >
             <span className="text-lg leading-none" aria-hidden>
               {p.icon}

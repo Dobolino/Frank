@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { formatChf, parseChf, type Rappen } from '../domain/money';
+import { haptic } from '../app/haptics';
 
 export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(' ');
 
@@ -154,7 +155,10 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
           type="checkbox"
           role="switch"
           checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
+          onChange={(e) => {
+            haptic();
+            onChange(e.target.checked);
+          }}
           className="peer sr-only"
         />
         <span aria-hidden className="absolute inset-0 rounded-full bg-line transition-colors peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-panel" />

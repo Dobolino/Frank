@@ -42,6 +42,18 @@ npm run build      # Produktions-Build nach dist/
 - Breite Tabellen scrollen zuerst selbst, am Rand wechselt die Seite.
 - Als App installieren: in Safari «Teilen», dann «Zum Home-Bildschirm».
 
+## iPhone-App (PWA)
+
+- Startbildschirme für alle iPhone-Grössen ab SE (1. Gen.) bis 17 Pro Max: `public/splash/`,
+  neu erzeugen mit `node scripts/generate-splash.mjs` (braucht Playwright, schreibt die Links in `index.html`).
+- Vollbild mit durchscheinender Statusleiste, Safe-Areas, kein Zoom, kein Gummiband-Effekt.
+- Offline: Der Service Worker speichert alle App-Dateien einer Version (`scripts/build-service-worker.mjs`).
+  Kommt die App in den Vordergrund, sucht sie nach einer neuen Version und bietet «Neu laden» an.
+- Haptik: auf iOS 18+ über einen unsichtbaren Systemschalter, auf Android über die Vibration API,
+  sonst ohne Feedback (`src/app/haptics.ts`).
+- Push-Mitteilungen gibt es bewusst nicht: Sie bräuchten einen eigenen Server mit privatem VAPID-Schlüssel,
+  und Frank speichert nichts ausserhalb des Geräts.
+
 ## Kurse für Anlagen
 
 - Gratis-Key bei [Twelve Data](https://twelvedata.com/register) oder [Alpha Vantage](https://www.alphavantage.co/support/#api-key) holen und auf der Seite «Anlagen» eintragen.

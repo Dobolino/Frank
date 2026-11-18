@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { useStore } from '../app/store';
+import { InvestmentImport } from './InvestmentImport';
 import { WealthCard } from './WealthCard';
 import { Badge, Button, Card, Money, MoneyInput, PageHeader, Row, Select, Stat, Warnings, cx } from './shared';
 import { formatPercent } from '../domain/money';
@@ -128,6 +129,7 @@ export function InvestPage() {
         <Stat label="Positionen" value={inv.holdings.length} sub={neededFx(inv).length ? `Währungen: CHF, ${neededFx(inv).join(', ')}` : 'CHF'} />
       </div>
 
+      <InvestmentImport />
       <div className="mt-4">
         <WealthCard />
       </div>

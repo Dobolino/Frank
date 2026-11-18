@@ -252,8 +252,9 @@ export function Segmented<T extends string>({ value, options, onChange, ariaLabe
 }
 
 /** Merkt sich eine Ansicht-Auswahl auf diesem Gerät (nur Bedienkomfort, keine Daten). */
-export function usePref<T extends string>(key: string, fallback: T, allowed: readonly T[]): [T, (v: T) => void] {
+export function usePref<T extends string>(key: string, fallback: T, allowed: readonly T[], initialView?: T): [T, (v: T) => void] {
   const [value, setValue] = useState<T>(() => {
+    if (initialView !== undefined) return initialView;
     try {
       const v = localStorage.getItem(`frank.view.${key}`) as T | null;
       return v && allowed.includes(v) ? v : fallback;

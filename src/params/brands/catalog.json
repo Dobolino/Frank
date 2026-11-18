@@ -1,0 +1,735 @@
+[
+  {
+    "id": "migrosbank",
+    "name": "Migros Bank",
+    "role": "bank",
+    "aliases": [
+      "migros bank"
+    ],
+    "logo": "merchants/migrosbank.png"
+  },
+  {
+    "id": "cooppronto",
+    "name": "Coop Pronto",
+    "role": "merchant",
+    "aliases": [
+      "coop pronto"
+    ],
+    "logo": "merchants/cooppronto.png"
+  },
+  {
+    "id": "cooptankstelle",
+    "name": "Coop Tankstelle",
+    "role": "merchant",
+    "aliases": [
+      "coop tankstelle"
+    ],
+    "logo": "merchants/cooptankstelle.png"
+  },
+  {
+    "id": "yallo",
+    "name": "yallo",
+    "role": "merchant",
+    "aliases": [
+      "yallo"
+    ],
+    "logo": "merchants/yallo.png"
+  },
+  {
+    "id": "ubsfund",
+    "name": "UBS Fund Management",
+    "role": "organisation",
+    "aliases": [
+      "ubs fund management"
+    ],
+    "logo": "merchants/ubsfund.png"
+  },
+  {
+    "id": "digitecgalaxus",
+    "name": "Digitec Galaxus",
+    "role": "merchant",
+    "aliases": [
+      "digitec galaxus"
+    ],
+    "logo": "merchants/digitecgalaxus.png"
+  },
+  {
+    "id": "aeschenparking",
+    "name": "Aeschen-Parking",
+    "role": "merchant",
+    "aliases": [
+      "aeschen parking",
+      "aeschenparking"
+    ]
+  },
+  {
+    "id": "aldi",
+    "name": "ALDI SUISSE",
+    "role": "merchant",
+    "aliases": [
+      "aldi suisse"
+    ],
+    "logo": "merchants/aldi.png"
+  },
+  {
+    "id": "amagleasing",
+    "name": "AMAG Leasing",
+    "role": "merchant",
+    "aliases": [
+      "amag leasing"
+    ],
+    "logo": "merchants/amagleasing.png"
+  },
+  {
+    "id": "amazon",
+    "name": "Amazon",
+    "role": "merchant",
+    "aliases": [
+      "amzn mktp",
+      "amz amazon",
+      "amazon de",
+      "amazon fr"
+    ],
+    "logo": "merchants/amazon.png"
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "role": "merchant",
+    "aliases": [
+      "anthropic"
+    ],
+    "logo": "merchants/anthropic.png"
+  },
+  {
+    "id": "apple",
+    "name": "Apple",
+    "role": "merchant",
+    "aliases": [
+      "apple com bill",
+      "itunes com",
+      "apple com chde"
+    ],
+    "logo": "merchants/apple.png"
+  },
+  {
+    "id": "avia",
+    "name": "AVIA",
+    "role": "merchant",
+    "aliases": [
+      "avia pratteln",
+      "avia tankstelle"
+    ],
+    "logo": "merchants/avia.png"
+  },
+  {
+    "id": "baeckereikuebler",
+    "name": "Bäckerei Kübler",
+    "role": "merchant",
+    "aliases": [
+      "backerei kubler",
+      "baeckerei kuebler",
+      "onlineshop baeckerei kue"
+    ],
+    "logo": "merchants/baeckereikuebler.png"
+  },
+  {
+    "id": "bazg",
+    "name": "Bundesamt für Zoll und Grenzsicherheit",
+    "role": "authority",
+    "aliases": [
+      "bazg via webshop"
+    ],
+    "logo": "merchants/bazg.png"
+  },
+  {
+    "id": "binance",
+    "name": "Binance",
+    "role": "finance",
+    "aliases": [
+      "binance com"
+    ],
+    "logo": "merchants/binance.png"
+  },
+  {
+    "id": "bkb",
+    "name": "Basler Kantonalbank",
+    "role": "bank",
+    "aliases": [
+      "bkb ekz",
+      "bkb messe",
+      "basler kantonalbank"
+    ],
+    "logo": "merchants/bkb.png"
+  },
+  {
+    "id": "brack",
+    "name": "BRACK",
+    "role": "merchant",
+    "aliases": [
+      "brack ch",
+      "brack dein schweizer"
+    ],
+    "logo": "merchants/brack.png"
+  },
+  {
+    "id": "campingmoehlin",
+    "name": "Camping Möhlin",
+    "role": "merchant",
+    "aliases": [
+      "camping moehlin",
+      "camping mohlin"
+    ],
+    "logo": "merchants/campingmoehlin.png"
+  },
+  {
+    "id": "cdiscount",
+    "name": "Cdiscount",
+    "role": "merchant",
+    "aliases": [
+      "cdiscount"
+    ],
+    "logo": "merchants/cdiscount.png"
+  },
+  {
+    "id": "coop",
+    "name": "Coop",
+    "role": "merchant",
+    "aliases": [
+      "coop"
+    ],
+    "logo": "merchants/coop.png"
+  },
+  {
+    "id": "diepost",
+    "name": "Die Post",
+    "role": "merchant",
+    "aliases": [
+      "post ch ag"
+    ],
+    "logo": "merchants/diepost.png"
+  },
+  {
+    "id": "ecostop",
+    "name": "ecostop",
+    "role": "merchant",
+    "aliases": [
+      "ecostop"
+    ],
+    "logo": "merchants/ecostop.png"
+  },
+  {
+    "id": "edeco",
+    "name": "Edeco AG",
+    "role": "organisation",
+    "aliases": [
+      "edeco ag"
+    ],
+    "logo": "merchants/edeco.png"
+  },
+  {
+    "id": "elektrorechner",
+    "name": "Elektro-Rechner",
+    "role": "merchant",
+    "aliases": [
+      "elektro rechner"
+    ],
+    "logo": "merchants/elektrorechner.png"
+  },
+  {
+    "id": "esn",
+    "name": "ESN",
+    "role": "merchant",
+    "aliases": [
+      "esn com"
+    ],
+    "logo": "merchants/esn.png"
+  },
+  {
+    "id": "groupemutuel",
+    "name": "Groupe Mutuel",
+    "role": "merchant",
+    "aliases": [
+      "groupe mutuel"
+    ],
+    "logo": "merchants/groupemutuel.png"
+  },
+  {
+    "id": "hairplanet",
+    "name": "Hair Planet",
+    "role": "merchant",
+    "aliases": [
+      "hair planet"
+    ]
+  },
+  {
+    "id": "healthyourself",
+    "name": "Health Yourself AG",
+    "role": "merchant",
+    "aliases": [
+      "health yourself ag"
+    ],
+    "logo": "merchants/healthyourself.png"
+  },
+  {
+    "id": "hoffmann",
+    "name": "Hoffmann Automobile AG",
+    "role": "merchant",
+    "aliases": [
+      "hoffmann automobile"
+    ],
+    "logo": "merchants/hoffmann.png"
+  },
+  {
+    "id": "ikea",
+    "name": "IKEA",
+    "role": "merchant",
+    "aliases": [
+      "ikea"
+    ],
+    "logo": "merchants/ikea.png"
+  },
+  {
+    "id": "isenzio",
+    "name": "Isenzio AG",
+    "role": "merchant",
+    "aliases": [
+      "isenzio ag"
+    ]
+  },
+  {
+    "id": "jumbo",
+    "name": "JUMBO",
+    "role": "merchant",
+    "aliases": [
+      "jumbo"
+    ],
+    "logo": "merchants/jumbo.png"
+  },
+  {
+    "id": "justeat",
+    "name": "Just Eat",
+    "role": "merchant",
+    "aliases": [
+      "justeat",
+      "just eat"
+    ],
+    "logo": "merchants/justeat.png"
+  },
+  {
+    "id": "kantonaargau",
+    "name": "Kanton Aargau",
+    "role": "authority",
+    "aliases": [
+      "finanzen aargau tresorerie"
+    ],
+    "logo": "merchants/kantonaargau.png"
+  },
+  {
+    "id": "kuesne",
+    "name": "Küsne GmbH",
+    "role": "merchant",
+    "aliases": [
+      "kusne gmbh",
+      "kuesne gmbh"
+    ]
+  },
+  {
+    "id": "lidl",
+    "name": "Lidl",
+    "role": "merchant",
+    "aliases": [
+      "lidl"
+    ],
+    "logo": "merchants/lidl.png"
+  },
+  {
+    "id": "manor",
+    "name": "Manor",
+    "role": "merchant",
+    "aliases": [
+      "manor ag"
+    ],
+    "logo": "merchants/manor.png"
+  },
+  {
+    "id": "mcdonalds",
+    "name": "McDonald’s",
+    "role": "merchant",
+    "aliases": [
+      "mcdonalds",
+      "mc donalds"
+    ],
+    "logo": "merchants/mcdonalds.png"
+  },
+  {
+    "id": "mediamarkt",
+    "name": "MediaMarkt",
+    "role": "merchant",
+    "aliases": [
+      "media markt",
+      "mediamarkt"
+    ],
+    "logo": "merchants/mediamarkt.png"
+  },
+  {
+    "id": "migros",
+    "name": "Migros",
+    "role": "merchant",
+    "aliases": [
+      "migros mm",
+      "migros m parc",
+      "migros mp",
+      "migros",
+      "mmm dreispitz"
+    ],
+    "logo": "merchants/migros.png"
+  },
+  {
+    "id": "mmbill",
+    "name": "MMBILL",
+    "role": "payment",
+    "aliases": [
+      "mmbill com"
+    ]
+  },
+  {
+    "id": "nespresso",
+    "name": "Nespresso",
+    "role": "merchant",
+    "aliases": [
+      "nespresso"
+    ],
+    "logo": "merchants/nespresso.png"
+  },
+  {
+    "id": "netflix",
+    "name": "Netflix",
+    "role": "merchant",
+    "aliases": [
+      "netflix"
+    ],
+    "logo": "merchants/netflix.png"
+  },
+  {
+    "id": "nordvpn",
+    "name": "NordVPN",
+    "role": "merchant",
+    "aliases": [
+      "nordvpn"
+    ],
+    "logo": "merchants/nordvpn.png"
+  },
+  {
+    "id": "onlyfans",
+    "name": "OnlyFans",
+    "role": "merchant",
+    "aliases": [
+      "onlyfans"
+    ],
+    "logo": "merchants/onlyfans.png"
+  },
+  {
+    "id": "paramount",
+    "name": "Paramount+",
+    "role": "merchant",
+    "aliases": [
+      "paramount"
+    ],
+    "logo": "merchants/paramount.png"
+  },
+  {
+    "id": "parkhaeuserbasel",
+    "name": "Parkhäuser Basel-Stadt",
+    "role": "merchant",
+    "aliases": [
+      "parkhauser basel stadt",
+      "parkhaeuser basel stadt"
+    ],
+    "logo": "merchants/parkhaeuserbasel.png"
+  },
+  {
+    "id": "parkhausbuecheli",
+    "name": "Parkhaus Bücheli",
+    "role": "merchant",
+    "aliases": [
+      "parkhaus bucheli",
+      "parkhaus buecheli"
+    ],
+    "logo": "merchants/parkhausbuecheli.png"
+  },
+  {
+    "id": "parkhausclaramatte",
+    "name": "Parkhaus Claramatte",
+    "role": "merchant",
+    "aliases": [
+      "parkhaus claramatte"
+    ],
+    "logo": "merchants/parkhausclaramatte.png"
+  },
+  {
+    "id": "parkingpay",
+    "name": "Parkingpay",
+    "role": "merchant",
+    "aliases": [
+      "parkingpay"
+    ],
+    "logo": "merchants/parkingpay.png"
+  },
+  {
+    "id": "paymonade",
+    "name": "Paymonade",
+    "role": "payment",
+    "aliases": [
+      "paymonade"
+    ],
+    "logo": "merchants/paymonade.png"
+  },
+  {
+    "id": "paysafecard",
+    "name": "PaysafeCard",
+    "role": "payment",
+    "aliases": [
+      "paysafecard"
+    ],
+    "logo": "merchants/paysafecard.png"
+  },
+  {
+    "id": "primecpp",
+    "name": "DF by Prime CPP GmbH",
+    "role": "merchant",
+    "aliases": [
+      "df by prime cpp"
+    ],
+    "logo": "merchants/primecpp.png"
+  },
+  {
+    "id": "regimo",
+    "name": "Regimo Basel AG",
+    "role": "merchant",
+    "aliases": [
+      "regimo basel"
+    ],
+    "logo": "merchants/regimo.png"
+  },
+  {
+    "id": "rhinoshield",
+    "name": "RHINOSHIELD",
+    "role": "merchant",
+    "aliases": [
+      "rhinoshield"
+    ],
+    "logo": "merchants/rhinoshield.png"
+  },
+  {
+    "id": "rolandkemmer",
+    "name": "Roland Kemmer AG",
+    "role": "merchant",
+    "aliases": [
+      "roland kemmer ag"
+    ],
+    "logo": "merchants/rolandkemmer.png"
+  },
+  {
+    "id": "ruediruessel",
+    "name": "Ruedi Rüssel",
+    "role": "merchant",
+    "aliases": [
+      "ruedi russel",
+      "ruedi ruessel"
+    ],
+    "logo": "merchants/ruediruessel.png"
+  },
+  {
+    "id": "sanduam",
+    "name": "Sandu AM GmbH",
+    "role": "merchant",
+    "aliases": [
+      "sandu am gmbh"
+    ]
+  },
+  {
+    "id": "sanitas",
+    "name": "Sanitas",
+    "role": "merchant",
+    "aliases": [
+      "sanitas grundversicherungen",
+      "sanitas"
+    ],
+    "logo": "merchants/sanitas.png"
+  },
+  {
+    "id": "sbb",
+    "name": "SBB",
+    "role": "merchant",
+    "aliases": [
+      "sbb easyride",
+      "sbb mobile",
+      "sbb bahnhof",
+      "sbb cff ffs"
+    ],
+    "logo": "merchants/sbb.png"
+  },
+  {
+    "id": "schweizerarmee",
+    "name": "Schweizer Armee · Truppenrechnungswesen",
+    "role": "authority",
+    "aliases": [
+      "truppenrechnungswesen"
+    ],
+    "logo": "merchants/schweizerarmee.png"
+  },
+  {
+    "id": "shopify",
+    "name": "Shopify",
+    "role": "payment",
+    "aliases": [
+      "shopify"
+    ],
+    "logo": "merchants/shopify.png"
+  },
+  {
+    "id": "sky",
+    "name": "Sky Switzerland",
+    "role": "merchant",
+    "aliases": [
+      "sky"
+    ],
+    "requiresAny": [
+      "neuchatel"
+    ],
+    "logo": "merchants/sky.png"
+  },
+  {
+    "id": "smythstoys",
+    "name": "Smyths Toys",
+    "role": "merchant",
+    "aliases": [
+      "smyths toys"
+    ],
+    "logo": "merchants/smythstoys.png"
+  },
+  {
+    "id": "spotify",
+    "name": "Spotify",
+    "role": "merchant",
+    "aliases": [
+      "spotify"
+    ],
+    "logo": "merchants/spotify.png"
+  },
+  {
+    "id": "steam",
+    "name": "Steam",
+    "role": "merchant",
+    "aliases": [
+      "steam purchase",
+      "steamgames com"
+    ],
+    "logo": "merchants/steam.png"
+  },
+  {
+    "id": "stueckipark",
+    "name": "Stücki Park",
+    "role": "merchant",
+    "aliases": [
+      "einkaufszentrum stucki",
+      "stucki park"
+    ],
+    "logo": "merchants/stueckipark.png"
+  },
+  {
+    "id": "sunrise",
+    "name": "Sunrise",
+    "role": "merchant",
+    "aliases": [
+      "sunrise communications",
+      "sunrise gmbh"
+    ],
+    "logo": "merchants/sunrise.png"
+  },
+  {
+    "id": "swisscom",
+    "name": "Swisscom",
+    "role": "merchant",
+    "aliases": [
+      "swisscom"
+    ],
+    "logo": "merchants/swisscom.png"
+  },
+  {
+    "id": "swisslos",
+    "name": "Swisslos",
+    "role": "merchant",
+    "aliases": [
+      "swisslos"
+    ],
+    "logo": "merchants/swisslos.png"
+  },
+  {
+    "id": "swissquote",
+    "name": "Swissquote",
+    "role": "bank",
+    "aliases": [
+      "swissquote"
+    ],
+    "logo": "banks/swissquote.png"
+  },
+  {
+    "id": "tankstellebaettwil",
+    "name": "Tankstelle Bättwil",
+    "role": "merchant",
+    "aliases": [
+      "tankstelle battwil",
+      "tankstelle baettwil"
+    ],
+    "logo": "merchants/tankstellebaettwil.png"
+  },
+  {
+    "id": "tubble",
+    "name": "Tubble",
+    "role": "merchant",
+    "aliases": [
+      "tubble amsterdam"
+    ],
+    "logo": "merchants/tubble.png"
+  },
+  {
+    "id": "ubs",
+    "name": "UBS",
+    "role": "bank",
+    "aliases": [
+      "ubs basel",
+      "ubs reinach"
+    ],
+    "logo": "banks/ubs.png"
+  },
+  {
+    "id": "viseca",
+    "name": "Viseca",
+    "role": "settlement",
+    "aliases": [
+      "viseca payment services",
+      "viseca card services"
+    ],
+    "logo": "merchants/viseca.png"
+  },
+  {
+    "id": "volenergy",
+    "name": "Volenergy AG",
+    "role": "merchant",
+    "aliases": [
+      "volenergy ag"
+    ],
+    "logo": "merchants/volenergy.png"
+  },
+  {
+    "id": "yuh",
+    "name": "Yuh",
+    "role": "bank",
+    "aliases": [
+      "yuh"
+    ],
+    "logo": "banks/yuh.png"
+  }
+]

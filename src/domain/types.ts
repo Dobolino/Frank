@@ -262,9 +262,20 @@ export interface WealthSnapshot {
   pillar3a: Rappen;
 }
 
+/** Herkunft von Bank-, Karten- oder Depotbuchungen. */
+export interface ImportAccount {
+  id: string;
+  bankId: string;
+  name: string;
+  type: 'bank' | 'card' | 'depot';
+}
+
 /** Buchung aus dem Bank-Import. */
 export interface Transaction {
   id: string;
+  accountId?: string;
+  excludedFromSpend?: boolean;
+  merchantId?: string;
   /** YYYY-MM-DD */
   date: string;
   text: string;
@@ -293,6 +304,10 @@ export interface AppData {
   wealthHistory?: WealthSnapshot[];
   /** Importierte Bankbuchungen für den Soll/Ist-Vergleich. */
   transactions?: Transaction[];
+  importAccounts?: ImportAccount[];
+  customMerchants?: { id: string; name: string; logo?: string }[];
+  merchantRules?: { match: string; merchantId: string }[];
+  investmentTransactions?: import('./investCsv').InvestmentTransaction[];
   /** Zuordnungsregeln für den Bank-Import. */
   rules?: CategoryRule[];
   accounts: Account[];

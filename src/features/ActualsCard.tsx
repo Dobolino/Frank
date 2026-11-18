@@ -1,7 +1,10 @@
 import { useMemo, useRef, useState } from 'react';
 import { useStore } from '../app/store';
 import { Button, Card, Money, Select, cx } from './shared';
-import { guessColumns, parseCsv, toTransactions, type ColumnMap, type CsvTable } from '../domain/bankCsv';
+import { parseCsv, type ParsedTransaction, type CsvTable } from '../domain/bankCsv';
+import { BankImportPreview } from './BankImportPreview';
+import { MerchantActivity } from './MerchantActivity';
+import { bankLabel } from '../domain/importAccounts';
 import { applyRules, compareMonth, merchantKey, mergeTransactions } from '../domain/actuals';
 import { MONTH_NAMES, type Transaction } from '../domain/types';
 import { CATEGORY_COLORS } from './charts';
@@ -11,11 +14,14 @@ const ymLabel = (ym: string) => `${MONTH_NAMES[Number(ym.slice(5, 7)) - 1]} ${ym
 /** Soll/Ist: Bank-CSV importieren, Buchungen Budgetposten zuordnen, pro Monat vergleichen. */
 export function ActualsCard() {
   const { data, update, model } = useStore();
-  const transactions = data.transactions ?? [];
+  const allTransactions = data.transactions ?? [];
+  const [accountFilter, setAccountFilter] = useState('all');
+  const transactions = allTransactions.filter(t => accountFilter === 'all' || (t.accountId ?? 'legacy') === accountFilter);
   const rules = data.rules ?? [];
   const fileRef = useRef<HTMLInputElement>(null);
   const [table, setTable] = useState<CsvTable | null>(null);
-  const [map, setMap] = useState<ColumnMap | null>(null);
+  const [uploadKey, setUploadKey] = useState(0);
+  const revision = useRef(0);
   const [message, setMessage] = useState<string | null>(null);
   const [showOpen, setShowOpen] = useState(false);
 
@@ -26,24 +32,27 @@ export function ActualsCard() {
 
   const onFile = async (file: File) => {
     setMessage(null);
-    const t = parseCsv(await file.text());
-    if (t.rows.length === 0) {
-      setMessage('In der Datei wurden keine Buchungen gefunden.');
-      return;
-    }
-    setTable(t);
-    setMap(guessColumns(t.header));
+    const version = ++revision.current;
+    try {
+      const bytes = await file.arrayBuffer();
+      if (version !== revision.current) return;
+      let text: string;
+      try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
+      catch { text = new TextDecoder('windows-1252').decode(bytes); }
+      const t = parseCsv(text);
+      if (!t.rows.length) { setTable(null); setMessage('In der Datei wurden keine Buchungen gefunden.'); return; }
+      setUploadKey(version);
+      setTable(t);
+    } catch { if (version === revision.current) { setTable(null); setMessage('Die CSV-Datei konnte nicht gelesen werden.'); } }
   };
 
-  const preview = table && map ? toTransactions(table, map) : [];
-
-  const confirmImport = () => {
-    const { added } = mergeTransactions(transactions, preview, rules);
-    update((d) => void (d.transactions = mergeTransactions(d.transactions ?? [], preview, d.rules ?? []).list));
+  const confirmImport = (preview: ParsedTransaction[]) => {
+    const { added } = mergeTransactions(allTransactions, preview, rules);
+    update(d => { d.transactions = mergeTransactions(d.transactions ?? [], preview, d.rules ?? []).list; });
     setTable(null);
-    setMap(null);
     setMonth(null);
-    setMessage(added === 0 ? 'Keine neuen Buchungen, alle waren schon importiert.' : `${added} Buchungen übernommen.`);
+    setAccountFilter('all');
+    setMessage(added === 0 ? 'Keine neuen Buchungen. Vorhandene Kontozuordnungen wurden geprüft.' : `${added} Buchungen übernommen.`);
   };
 
   const assign = (t: Transaction, item: string, remember: boolean) =>
@@ -57,15 +66,15 @@ export function ActualsCard() {
       d.rules = rules;
       d.transactions = (d.transactions ?? []).map((x) => {
         if (x.id === t.id) return { ...x, item };
-        if (!remember || x.item || x.amount >= 0) return x;
+        if (!remember || x.excludedFromSpend || x.item || x.amount >= 0) return x;
         const hit = applyRules(x.text, rules, x.category);
         return hit ? { ...x, item: hit } : x;
       });
     });
 
   const c = ym ? compareMonth(model.budget, transactions, ym) : null;
-  const open = ym ? transactions.filter((t) => t.date.startsWith(ym) && t.amount < 0 && !t.item) : [];
-  const colOptions = (table?.header ?? []).map((h, i) => ({ value: i, label: h || `Spalte ${i + 1}` }));
+  const open = ym ? transactions.filter((t) => t.date.startsWith(ym) && t.amount < 0 && !t.item && !t.excludedFromSpend) : [];
+
 
   return (
     <Card
@@ -92,65 +101,13 @@ export function ActualsCard() {
     >
       {message && <p className="mb-3 text-sm text-accent">{message}</p>}
 
-      {table && map && (
-        <div className="mb-4 space-y-2 rounded-xl bg-panel-2 p-3 text-sm">
-          <div className="font-medium">Spalten prüfen</div>
-          <label className="flex items-center justify-between gap-3">
-            <span className="text-muted">Datum</span>
-            <Select value={map.date} options={colOptions} onChange={(v) => setMap({ ...map, date: v })} />
-          </label>
-          <label className="flex items-center justify-between gap-3">
-            <span className="text-muted">Text</span>
-            <Select value={map.text} options={colOptions} onChange={(v) => setMap({ ...map, text: v })} />
-          </label>
-          <label className="flex items-center justify-between gap-3">
-            <span className="text-muted">Kategorie der Bank</span>
-            <Select
-              value={map.category ?? -1}
-              options={[{ value: -1, label: 'keine' }, ...colOptions]}
-              onChange={(v) => setMap(v < 0 ? { ...map, category: undefined } : { ...map, category: v })}
-            />
-          </label>
-          {map.amount !== undefined ? (
-            <label className="flex items-center justify-between gap-3">
-              <span className="text-muted">Betrag (+/−)</span>
-              <Select value={map.amount} options={colOptions} onChange={(v) => setMap({ ...map, amount: v })} />
-            </label>
-          ) : (
-            <>
-              <label className="flex items-center justify-between gap-3">
-                <span className="text-muted">Belastung</span>
-                <Select value={map.debit ?? 0} options={colOptions} onChange={(v) => setMap({ ...map, debit: v })} />
-              </label>
-              <label className="flex items-center justify-between gap-3">
-                <span className="text-muted">Gutschrift</span>
-                <Select value={map.credit ?? 0} options={colOptions} onChange={(v) => setMap({ ...map, credit: v })} />
-              </label>
-            </>
-          )}
-          <button
-            className="text-xs text-muted underline"
-            onClick={() =>
-              setMap(map.amount !== undefined ? { date: map.date, text: map.text, debit: map.amount, credit: map.amount } : { date: map.date, text: map.text, amount: map.debit ?? 0 })
-            }
-          >
-            {map.amount !== undefined ? 'Belastung und Gutschrift sind getrennte Spalten' : 'Betrag steht in einer Spalte'}
-          </button>
-          <ul className="divide-y divide-line text-xs">
-            {preview.slice(0, 4).map((t, i) => (
-              <li key={i} className="flex justify-between gap-2 py-1">
-                <span className="truncate text-muted">{t.date} · {t.text}</span>
-                <span className={cx('num shrink-0', t.amount < 0 ? 'text-text' : 'text-accent')}><Money value={t.amount} /></span>
-              </li>
-            ))}
-          </ul>
-          <div className="flex justify-end gap-2 pt-1">
-            <Button variant="ghost" onClick={() => setTable(null)}>Abbrechen</Button>
-            <Button variant="primary" onClick={confirmImport}>{preview.length} Buchungen übernehmen</Button>
-          </div>
-        </div>
-      )}
-
+      {table && <BankImportPreview key={uploadKey} table={table} confirm={confirmImport} cancel={() => setTable(null)} />}
+      {allTransactions.length > 0 && <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
+        <span>Konto</span><Select ariaLabel="Buchungen nach Konto filtern" className="max-w-full" value={accountFilter}
+          options={[{ value: 'all', label: 'Alle Konten' }, ...(data.importAccounts ?? []).filter(a => a.type !== 'depot').map(a => ({ value: a.id, label: bankLabel(a.bankId) + ' · ' + a.name })), ...(allTransactions.some(t => !t.accountId) ? [{ value: 'legacy', label: 'Ohne Kontozuordnung' }] : [])]}
+          onChange={setAccountFilter} />
+      </div>}
+      {transactions.length > 0 && <MerchantActivity transactions={transactions} accounts={data.importAccounts ?? []} />}
       {!c ? (
         <p className="text-sm text-muted">
           Exportiere im E-Banking die Kontobewegungen als CSV und importiere sie hier. Frank ordnet sie deinen Budgetposten zu und zeigt pro Monat, wo du darüber liegst. Die Datei bleibt auf dem Gerät.

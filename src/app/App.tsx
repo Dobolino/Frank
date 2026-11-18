@@ -28,7 +28,7 @@ const DATA_PAGE = { id: 'data', label: 'Daten & KI', short: 'Daten', icon: '⤓'
 type PageId = (typeof PAGES)[number]['id'] | typeof DATA_PAGE.id;
 
 /** Frühere Seiten-Adressen (Lesezeichen) zeigen auf die neue Seite. */
-const ALIASES: Record<string, PageId> = { cashflow: 'savings', goals: 'savings', compare: 'overview' };
+const ALIASES: Record<string, PageId> = { 'budget-ist': 'budget', cashflow: 'savings', goals: 'savings', compare: 'overview' };
 
 const pageFromHash = (): PageId => {
   const id = window.location.hash.replace('#', '');

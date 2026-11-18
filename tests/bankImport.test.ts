@@ -111,3 +111,31 @@ describe('UBS-App-Export mit Bank-Kategorien', () => {
     expect(list.find((t) => t.amount > 0)?.item).toBeUndefined();
   });
 });
+
+describe('Konten- und Kartenimport', () => {
+  it('liest mehrzeilige Händlertexte und importiert nur CHF mit richtiger Richtung', () => {
+    const t = parseCsv('Transaktionsdatum,Konto- oder Kartennummer,Beschreibung,Einnahmen oder Ausgaben,Betrag,Währung\r\n01.03.2026,K1,"Test,\nShop",Ausgaben,4.50,CHF\n02.03.2026,K2,Text,Einnahmen,-25.00,CHF\n03.03.2026,K1,Text,Ausgaben,1,EUR');
+    const map = guessColumns(t.header);
+    expect(map).toMatchObject({ source: 1, direction: 3, currency: 5 });
+    expect(toTransactions(t, map)).toEqual([
+      { date: '2026-03-01', text: 'Test, Shop', amount: -450 },
+      { date: '2026-03-02', text: 'Text', amount: 2500 },
+    ]);
+  });
+  it('erhält gleichlautende Zahlungen je Konto und erkennt den erneuten Import', () => {
+    const t = { date: '2026-02-04', text: 'Laden', amount: -300 };
+    const rows = [{ ...t, accountId: 'bank' }, { ...t, accountId: 'karte' }, { ...t, accountId: 'karte' }];
+    const old = mergeTransactions([], [t], []).list;
+    const { added, list } = mergeTransactions(old, rows, []);
+    expect(added).toBe(2);
+    expect(list.map(t => t.accountId).sort()).toEqual(['bank', 'karte', 'karte']);
+    expect(new Set(list.map(t => t.id)).size).toBe(3);
+    expect(mergeTransactions(list, rows, []).added).toBe(0);
+  });
+  it('weist Eigenüberträge und Kartenabrechnungen separat vom Konsum aus', () => {
+    const a = { id: 'a', text: 'Einkauf', date: '2026-10-10', amount: -1200 };
+    const result = compareMonth([], [a, { ...a, id: 'b', excludedFromSpend: true }, { ...a, id: 'c', amount: 1200, excludedFromSpend: true }], '2026-10');
+    expect(result.actualTotal).toBe(1200);
+    expect(result.income).toBe(0);
+  });
+});

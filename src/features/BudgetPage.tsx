@@ -41,7 +41,7 @@ type View = (typeof VIEWS)[number];
 
 export function BudgetPage() {
   const { model, updateYear, data } = useStore();
-  const [view, setView] = usePref<View>('budget.view', 'plan', VIEWS);
+  const [view, setView] = usePref<View>('budget.view', 'plan', VIEWS, window.location.hash === '#budget-ist' ? 'actual' : undefined);
   const [onlyAccount, setOnlyAccount] = useState<string>('');
   const [openId, setOpenId] = useState<string | null>(null);
 

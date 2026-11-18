@@ -70,7 +70,7 @@ export function Dashboard() {
           value={<Money value={standingOrders} decimals={false} />}
           sub={transfers.length === 0 ? 'keine Daueraufträge' : goals.length > 0 ? `Daueraufträge / Mt · ${goalsOk} von ${goals.length} Zielen im Plan` : 'Daueraufträge / Mt'}
         />
-        <Tile href="#salary" label="Lohn" value={<Money value={model.salary.totals.net} decimals={false} />} sub="Auszahlung im Jahr" />
+        <Tile href="#salary" label="Einnahmen & Lohn" value={<Money value={model.salary.totals.net} decimals={false} />} sub="Jahresauszahlung · Lohn & Spesen" />
         {portfolio.positions.length > 0 ? (
           <Tile
             href="#invest"

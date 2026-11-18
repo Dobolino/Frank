@@ -34,16 +34,41 @@ export function applyRules(text: string, rules: CategoryRule[], category?: strin
 
 /** Neue Buchungen übernehmen: Duplikate weglassen, Regeln anwenden. Gibt Liste und Anzahl neu übernommener zurück. */
 export function mergeTransactions(existing: Transaction[], parsed: ParsedTransaction[], rules: CategoryRule[]): { list: Transaction[]; added: number } {
-  const ids = new Set(existing.map((t) => t.id));
-  const added: Transaction[] = [];
-  for (const p of parsed) {
-    const id = transactionId(p);
-    if (ids.has(id)) continue;
-    ids.add(id);
-    const item = p.amount < 0 ? applyRules(p.text, rules, p.category) : undefined;
-    added.push({ id, ...p, ...(item ? { item } : {}) });
+  const identity = (t: ParsedTransaction) => JSON.stringify([t.date, t.amount, t.text]);
+  const key = (t: ParsedTransaction) => JSON.stringify([t.accountId ?? '', identity(t)]);
+  const storedCounts = new Map<string, number>();
+  const legacyRows = new Map<string, number[]>();
+  const ids = new Set(existing.map(t => t.id));
+  const list = [...existing];
+  for (const [index, t] of existing.entries()) {
+    storedCounts.set(key(t), (storedCounts.get(key(t)) ?? 0) + 1);
+    if (!t.accountId) {
+      const same = legacyRows.get(identity(t)) ?? [];
+      same.push(index);
+      legacyRows.set(identity(t), same);
+    }
   }
-  return { list: [...existing, ...added].sort((a, b) => a.date.localeCompare(b.date)), added: added.length };
+  const seen = new Map<string, number>();
+  let added = 0;
+  for (const p of parsed) {
+    const k = key(p);
+    const count = (seen.get(k) ?? 0) + 1;
+    seen.set(k, count);
+    if (count <= (storedCounts.get(k) ?? 0)) continue;
+    const legacy = p.accountId ? legacyRows.get(identity(p))?.pop() : undefined;
+    if (legacy !== undefined) {
+      list[legacy] = { ...list[legacy]!, accountId: p.accountId, ...(p.excludedFromSpend && { excludedFromSpend: true }) };
+      continue;
+    }
+    const base = transactionId(p) + (p.accountId ? '-' + p.accountId : '');
+    let id = base, suffix = count;
+    while (ids.has(id)) id = base + '-' + suffix++;
+    ids.add(id);
+    const item = p.amount < 0 && !p.excludedFromSpend ? applyRules(p.text, rules, p.category) : undefined;
+    list.push({ id, ...p, ...(item ? { item } : {}) });
+    added++;
+  }
+  return { list: list.sort((a, b) => a.date.localeCompare(b.date)), added };
 }
 
 export interface ActualRow {
@@ -66,7 +91,7 @@ export interface MonthComparison {
 /** Soll/Ist für einen Monat (YYYY-MM). Ausgaben sind positiv. */
 export function compareMonth(budget: BudgetItem[], transactions: Transaction[], ym: string): MonthComparison {
   const m = Number(ym.slice(5, 7)) - 1;
-  const inMonth = transactions.filter((t) => t.date.startsWith(ym));
+  const inMonth = transactions.filter((t) => !t.excludedFromSpend && t.date.startsWith(ym));
   const spentBy = new Map<string, Rappen>();
   let unassigned = 0;
   let unassignedCount = 0;

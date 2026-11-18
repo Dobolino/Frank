@@ -183,12 +183,52 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     }
     optional(plan, 'note', text, p);
   }
+  const importAccounts = value.importAccounts === undefined ? [] : identified(value.importAccounts, 'importAccounts');
+  for (const a of importAccounts) {
+    for (const key of ['name', 'bankId']) if (!text(a[key], `importAccounts.${key}`).trim()) invalid(`importAccounts.${key}`);
+    choice(a.type, ['bank', 'card', 'depot'], 'importAccounts.type');
+  }
+  const expenseAccount = reference(new Set(importAccounts.filter(a => a.type !== 'depot').map(a => a.id)));
+  const depot = reference(new Set(importAccounts.filter(a => a.type === 'depot').map(a => a.id)));
+  optional(value, 'investmentTransactions', (v, path) => {
+    array(v, path).forEach((entry, i) => {
+      const p = `${path}[${i}]`;
+      const t = object(entry, p);
+      depot(t.accountId, `${p}.accountId`);
+      choice(t.kind, ['buy', 'sell', 'dividend'], `${p}.kind`);
+      if (!/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(text(t.date, `${p}.date`))) invalid(`${p}.date`);
+      if (!text(t.security, `${p}.security`).trim()) invalid(`${p}.security`);
+      const amount = integer(t.amount, `${p}.amount`);
+      if (t.kind === 'buy' ? amount >= 0 : amount <= 0) invalid(`${p}.amount`);
+      for (const key of ['brokerId', 'isin', 'symbol']) optional(t, key, text, p);
+      optional(t, 'quantity', (n, k) => number(n, k) >= 0 || invalid(k), p);
+    });
+  }, 'data');
+  optional(value, 'customMerchants', (v, path) => {
+    for (const m of identified(v, path)) {
+      if (!text(m.name, `${path}.name`).trim()) invalid(`${path}.name`);
+      optional(m, 'logo', (logo, p) => {
+        const source = text(logo, p);
+        if (source.length > 160000 || !/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(source)) invalid(p);
+      }, path);
+    }
+  }, 'data');
+  optional(value, 'merchantRules', (v, path) => {
+    for (const entry of array(v, path)) {
+      const r = object(entry, path);
+      if (!text(r.match, `${path}.match`).trim()) invalid(`${path}.match`);
+      text(r.merchantId, `${path}.merchantId`);
+    }
+  }, 'data');
   optional(value, 'transactions', (v, path) => {
     for (const [i, t] of identified(v, path).entries()) {
       const date = text(t.date, `${path}[${i}].date`);
       if (!/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(date)) invalid(`${path}[${i}].date`);
       text(t.text, `${path}[${i}].text`);
       integer(t.amount, `${path}[${i}].amount`);
+      optional(t, 'accountId', expenseAccount, `${path}[${i}]`);
+      optional(t, 'merchantId', text, `${path}[${i}]`);
+      optional(t, 'excludedFromSpend', boolean, `${path}[${i}]`);
       optional(t, 'item', text, `${path}[${i}]`);
       optional(t, 'category', text, `${path}[${i}]`);
     }

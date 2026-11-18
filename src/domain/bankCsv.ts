@@ -21,6 +21,9 @@ export interface ColumnMap {
   credit?: number;
   /** Kategorie der Bank (z. B. UBS-App: «Lebensmittel»), optional. */
   category?: number;
+  source?: number;
+  currency?: number;
+  direction?: number;
 }
 
 export interface ParsedTransaction {
@@ -30,27 +33,32 @@ export interface ParsedTransaction {
   /** Negativ = Ausgabe, positiv = Eingang. */
   amount: Rappen;
   category?: string;
+  accountId?: string;
+  excludedFromSpend?: boolean;
 }
 
-/** Eine CSV-Zeile mit Anführungszeichen korrekt aufteilen. */
-function splitLine(line: string, sep: string): string[] {
-  const out: string[] = [];
-  let cur = '';
-  let quoted = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i]!;
+/** Liest auch Zeilenumbrüche und Trennzeichen in einem zitierten Feld. */
+function records(content: string, separator: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [], value = '', quoted = false;
+  for (let i = 0; i < content.length; i++) {
+    const ch = content[i]!;
     if (ch === '"') {
-      if (quoted && line[i + 1] === '"') {
-        cur += '"';
-        i++;
-      } else quoted = !quoted;
-    } else if (ch === sep && !quoted) {
-      out.push(cur.trim());
-      cur = '';
-    } else cur += ch;
+      if (quoted && content[i + 1] === '"') { value += '"'; i++; }
+      else if (quoted || !value.trim()) quoted = !quoted;
+      else value += ch;
+    } else if (!quoted && ch === separator) {
+      row.push(value.trim()); value = '';
+    } else if (!quoted && (ch === '\n' || ch === '\r')) {
+      if (ch === '\r' && content[i + 1] === '\n') i++;
+      row.push(value.trim());
+      if (row.some(Boolean)) rows.push(row);
+      row = []; value = '';
+    } else value += ch;
   }
-  out.push(cur.trim());
-  return out;
+  row.push(value.trim());
+  if (row.some(Boolean)) rows.push(row);
+  return rows;
 }
 
 const KEYWORDS = {
@@ -66,16 +74,15 @@ const norm = (s: string) => s.toLowerCase().replace(/["']/g, '').trim();
 
 /** Text der CSV-Datei in Kopfzeile und Datenzeilen zerlegen. Vorspann (Kontoinfo) wird übersprungen. */
 export function parseCsv(content: string): CsvTable {
-  const lines = content.replace(/^﻿/, '').split(/\r?\n/).filter((l) => l.trim() !== '');
-  const sample = lines.slice(0, 30).join('\n');
-  const sep = [';', ',', '\t'].map((s) => [s, sample.split(s).length] as const).sort((a, b) => b[1] - a[1])[0]![0];
-  const split = lines.map((l) => splitLine(l, sep));
-  // Kopfzeile: erste Zeile mit mindestens drei Spalten, einem Datums-Stichwort und ohne Datumswerte (Vorspann überspringen)
-  let headerIdx = split.findIndex(
-    (r) => r.length >= 3 && r.some((c) => KEYWORDS.date.some((k) => norm(c).startsWith(k))) && !r.some((c) => parseDate(c) !== null),
-  );
-  if (headerIdx < 0) headerIdx = 0;
-  return { header: split[headerIdx]!, rows: split.slice(headerIdx + 1).filter((r) => r.length >= 2) };
+  const clean = content.replace(/^\uFEFF/, '');
+  const candidates = [';', ',', '\t'].map(separator => {
+    const rows = records(clean, separator);
+    const index = rows.findIndex(row => row.length >= 3 && row.some(cell => KEYWORDS.date.some(k => norm(cell).startsWith(k))) && !row.some(cell => parseDate(cell)));
+    return { rows, index, score: index >= 0 ? rows[index]!.length : 0 };
+  });
+  const { rows, index } = candidates.sort((a, b) => b.score - a.score || (b.rows[0]?.length ?? 0) - (a.rows[0]?.length ?? 0))[0]!;
+  const head = Math.max(0, index);
+  return { header: rows[head] ?? [], rows: rows.slice(head + 1).filter(row => row.length >= 2) };
 }
 
 const find = (header: string[], keys: string[], exclude: number[] = []) => {
@@ -90,7 +97,10 @@ const find = (header: string[], keys: string[], exclude: number[] = []) => {
 export function guessColumns(header: string[]): ColumnMap {
   const map = guessAmountColumns(header);
   const category = find(header, KEYWORDS.category, [map.date, map.text]);
-  return category >= 0 ? { ...map, category } : map;
+  const source = header.findIndex(h => ['konto- oder kartennummer', 'kontonummer', 'kartennummer', 'account number', 'card number', 'konto-iban', 'iban'].includes(norm(h)));
+  const currency = find(header, ['währung', 'waehrung', 'currency']);
+  const direction = find(header, ['einnahmen oder ausgaben', 'income or expense']);
+  return { ...map, ...(category >= 0 && { category }), ...(source >= 0 && { source }), ...(currency >= 0 && { currency }), ...(direction >= 0 && { direction }) };
 }
 
 function guessAmountColumns(header: string[]): ColumnMap {
@@ -100,19 +110,21 @@ function guessAmountColumns(header: string[]): ColumnMap {
   const text = Math.max(0, find(header, KEYWORDS.text, [date, debit, credit]));
   if (debit >= 0 && credit >= 0 && debit !== credit) return { date, text, debit, credit };
   const amount = find(header, KEYWORDS.amount, [date, text]);
-  return { date, text, amount: amount >= 0 ? amount : debit >= 0 ? debit : Math.min(header.length - 1, 2) };
+  if (amount < 0 && (debit >= 0 || credit >= 0)) return { date, text, ...(debit >= 0 && { debit }), ...(credit >= 0 && { credit }) };
+  return { date, text, amount: amount >= 0 ? amount : Math.min(header.length - 1, 2) };
 }
 
 /** Datum in den Formaten 31.12.2026, 31.12.26, 2026-12-31, 31/12/2026 → YYYY-MM-DD. */
 export function parseDate(raw: string): string | null {
-  const s = raw.trim().slice(0, 10);
-  let m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (m) return `${m[1]}-${m[2]}-${m[3]}`;
-  m = raw.trim().match(/^(\d{1,2})[./](\d{1,2})[./](\d{2,4})/);
-  if (!m) return null;
-  const year = m[3]!.length === 2 ? `20${m[3]}` : m[3]!;
-  const date = `${year}-${m[2]!.padStart(2, '0')}-${m[1]!.padStart(2, '0')}`;
-  return /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(date) ? date : null;
+  const s = raw.trim();
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|[ T]\d)/);
+  const local = s.match(/^(\d{1,2})[./](\d{1,2})[./](\d{2}|\d{4})(?:$|\s)/);
+  if (!iso && !local) return null;
+  const y = iso ? iso[1]! : local![3]!.length === 2 ? '20' + local![3] : local![3]!;
+  const m = Number(iso ? iso[2] : local![2]);
+  const d = Number(iso ? iso[3] : local![1]);
+  if (m < 1 || m > 12 || d < 1 || d > new Date(Date.UTC(+y, m, 0)).getUTCDate()) return null;
+  return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
 
 /** Betrag wie 1'234.50, -12,30, 1 234.50 CHF → Rappen. */
@@ -123,27 +135,43 @@ export function parseAmount(raw: string | undefined): Rappen | null {
   // Das letzte Trennzeichen ist das Dezimalzeichen, wenn danach 1–2 Ziffern folgen
   if (s.lastIndexOf(',') > s.lastIndexOf('.') && /,\d{1,2}$/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
   else s = s.replace(/,/g, '');
-  const n = Number(s);
-  return Number.isFinite(n) ? Math.round(n * 100) : null;
+  if (!/^[+-]?\d+(?:\.\d{1,2})?$/.test(s)) return null;
+  const cents = Math.round(Number(s) * 100);
+  return Number.isSafeInteger(cents) ? cents : null;
 }
 
-export function toTransactions(table: CsvTable, map: ColumnMap): ParsedTransaction[] {
-  const out: ParsedTransaction[] = [];
+export function inspectBankRows(table: CsvTable, map: ColumnMap) {
+  const entries: { source: string; transaction: ParsedTransaction }[] = [];
+  let foreign = 0;
+  let invalid = 0;
   for (const r of table.rows) {
     const date = parseDate(r[map.date] ?? '');
-    if (!date) continue;
+    const currency = map.currency === undefined ? 'CHF' : r[map.currency]?.trim().toUpperCase();
+    if (currency !== 'CHF') { foreign++; continue; }
+    if (!date) { invalid++; continue; }
     let amount: Rappen | null;
-    if (map.debit !== undefined && map.credit !== undefined) {
-      const d = parseAmount(r[map.debit]);
-      const c = parseAmount(r[map.credit]);
-      if (d === null && c === null) continue;
+    if (map.debit !== undefined || map.credit !== undefined) {
+      const d = parseAmount(r[map.debit ?? -1]);
+      const c = parseAmount(r[map.credit ?? -1]);
+      if (d === null && c === null) { invalid++; continue; }
       amount = (c ?? 0) - Math.abs(d ?? 0);
     } else {
       amount = parseAmount(r[map.amount ?? -1]);
     }
-    if (amount === null || amount === 0) continue;
+    if (amount === null || amount === 0) { invalid++; continue; }
+    if (map.direction !== undefined) {
+      const dir = norm(r[map.direction] ?? '');
+      if (['ausgabe', 'ausgaben', 'expense', 'debit'].includes(dir)) amount = -Math.abs(amount);
+      else if (['einnahme', 'einnahmen', 'income', 'credit'].includes(dir)) amount = Math.abs(amount);
+      else { invalid++; continue; }
+    }
     const category = map.category !== undefined ? (r[map.category] ?? '').trim() : '';
-    out.push({ date, text: (r[map.text] ?? '').replace(/\s+/g, ' ').trim(), amount, ...(category ? { category } : {}) });
+    const source = map.source === undefined ? '' : (r[map.source] ?? '').replace(/\s+/g, '').toUpperCase();
+    entries.push({ source, transaction: { date, text: (r[map.text] ?? '').replace(/\s+/g, ' ').trim(), amount, ...(category ? { category } : {}) } });
   }
-  return out;
+  return { entries, invalid, foreign };
+}
+
+export function toTransactions(table: CsvTable, map: ColumnMap): ParsedTransaction[] {
+  return inspectBankRows(table, map).entries.map(entry => entry.transaction);
 }

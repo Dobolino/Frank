@@ -5,6 +5,8 @@ import { downloadJson, downloadRaw, latestRecovery, parseAppData } from '../stor
 import { initialData, hasPersonalSeed } from '../seed';
 import { buildAiSummary } from '../domain/aiSummary';
 import { lastBackup, saveBackup } from '../storage/backup';
+import { accountTypeLabel, bankLabel } from '../domain/importAccounts';
+import { BankMark } from './AccountTargetSelect';
 
 export function DataPage() {
   const { data, replaceAll, model } = useStore();
@@ -43,6 +45,24 @@ export function DataPage() {
         </div>
       )}
       <div className="grid gap-4 md:grid-cols-2">
+        <Card title="Konten & Karten" className="md:col-span-2">
+          {(data.importAccounts?.length ?? 0) > 0 ? (
+            <ul className="mb-3 grid gap-x-6 sm:grid-cols-2">
+              {data.importAccounts!.map(account => (
+                <li key={account.id} className="flex min-w-0 items-center gap-3 border-b border-line py-2">
+                  <BankMark bankId={account.bankId} size={36} />
+                  <div className="min-w-0"><div className="break-words text-sm font-semibold">{account.name}</div>
+                    <div className="break-words text-xs text-muted">{bankLabel(account.bankId)} · {accountTypeLabel(account.type)}</div></div>
+                </li>
+              ))}
+            </ul>
+          ) : <p className="mb-3 text-sm text-muted">Beim ersten CSV-Import kannst du dein Bankkonto, Kartenkonto oder Depot anlegen.</p>}
+          <div className="flex flex-wrap gap-2">
+            <a className="rounded-lg border border-line bg-panel-2 px-3 py-2 text-sm hover:bg-line" href="#budget-ist">Konto- oder Karten-CSV importieren</a>
+            <a className="rounded-lg border border-line bg-panel-2 px-3 py-2 text-sm hover:bg-line" href="#invest">Depot-CSV importieren</a>
+          </div>
+        </Card>
+
         <Card title="Backup">
           <p className="mb-2 text-sm text-muted">
             Die Daten liegen nur auf diesem Gerät. Auf dem iPhone: «Sichern», dann «In Dateien sichern» und einen Ordner in iCloud Drive wählen.

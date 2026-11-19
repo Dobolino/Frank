@@ -1,3 +1,4 @@
+import { isExcludedFromActuals } from './importAccounts';
 import catalog from '../params/brands/catalog.json';
 import type { AppData, Transaction } from './types';
 
@@ -45,7 +46,7 @@ export function merchantDirectory(data: Pick<AppData, 'customMerchants' | 'merch
 export function merchantRanking(rows: { transaction: Transaction; merchant?: Merchant }[], order: 'amount' | 'count') {
   const totals = new Map<string, { merchant: Merchant; count: number; amount: number }>();
   for (const { transaction, merchant } of rows) {
-    if (!merchant || merchant.role !== 'merchant' || transaction.amount >= 0 || transaction.excludedFromSpend) continue;
+    if (!merchant || merchant.role !== 'merchant' || transaction.amount >= 0 || isExcludedFromActuals(transaction)) continue;
     const row = totals.get(merchant.id) ?? { merchant, count: 0, amount: 0 };
     row.count += 1;
     row.amount -= transaction.amount;

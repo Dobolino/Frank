@@ -1,3 +1,4 @@
+import { isExcludedFromActuals } from './importAccounts';
 import { dueMonths, itemAmount } from './budgetEngine';
 import { merchantDirectory, merchantText } from './merchants';
 import { uid } from '../seed/builders';
@@ -15,7 +16,7 @@ function kindFromLabel(label: string): ContractKind | undefined {
   return undefined;
 }
 
-const eligible = (tx: Transaction) => tx.amount < 0 && !tx.excludedFromSpend;
+const eligible = (tx: Transaction) => tx.amount < 0 && !isExcludedFromActuals(tx);
 
 export function plannedContracts(budget: BudgetItem[], transactions: Transaction[], year: number) {
   const byItem = new Map<string, Transaction[]>();

@@ -39,6 +39,7 @@ export interface ParsedTransaction {
   category?: string;
   accountId?: string;
   sourceFingerprint?: string;
+  counterparty?: string;
   excludedFromSpend?: boolean;
 }
 
@@ -171,6 +172,12 @@ export function yuhChfAmount(row: string[], cols: YuhColumns): { amount: Rappen 
 
 type BankEntry = { source: string; transaction: ParsedTransaction; movement?: string };
 
+/** Use name words as evidence. Account numbers and card numbers do not belong in this field. */
+function yuhCounterparty(value: string | undefined): string | undefined {
+  const words = value?.normalize('NFC').match(/[\p{L}\p{M}\p{N}]+/gu);
+  return words?.filter(word => !/\p{N}/u.test(word)).join(' ').slice(0, 160).trim() || undefined;
+}
+
 function inspectYuhRows(table: CsvTable, cols: YuhColumns) {
   const entries: BankEntry[] = [];
   const skipped = { invalid: 0, foreign: 0, nonCash: 0, unbooked: 0 };
@@ -183,7 +190,12 @@ function inspectYuhRows(table: CsvTable, cols: YuhColumns) {
     if ('skip' in cash) { skipped[cash.skip]++; continue; }
     const movement = yuhMovement(row,cols);
     const text = (row[cols.name] ?? '').replace(/\s+/g, ' ').trim();
-    entries.push({ source: '', movement, transaction: { date, text, amount: cash.amount, ...(movement && { category: movement }) } });
+    let counterparty: string | undefined;
+    if (activity === 'PAYMENT_TRANSACTION_IN' && cash.amount > 0) counterparty = yuhCounterparty(row[cols.sender]);
+    if (activity === 'PAYMENT_TRANSACTION_OUT' && cash.amount < 0) counterparty = yuhCounterparty(row[cols.recipient]);
+    entries.push({ source: '', movement, transaction: {
+      date, text, amount: cash.amount, ...(movement && { category: movement }), ...(counterparty && { counterparty }),
+    } });
   }
   return { entries, ...skipped };
 }

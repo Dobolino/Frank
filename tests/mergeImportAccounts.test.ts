@@ -46,6 +46,23 @@ describe('Verwaltung der Importkonten', () => {
     expect(parseAppData(JSON.stringify(data)).transactions).toEqual(data.transactions);
   });
 
+  it('löst bei einer Zusammenführung genau die Umbuchungen auf, deren Seiten dasselbe Konto erhalten', () => {
+    const data = bankAccounts();
+    const outgoing = data.transactions![0]!, incoming = data.transactions![1]!;
+    incoming.amount = -outgoing.amount;
+    outgoing.transferPeerId = incoming.id;
+    incoming.transferPeerId = outgoing.id;
+    outgoing.excludedFromSpend = true;
+    expect(previewAccountMerge(data, 'bank', ['other']).released.size).toBe(0);
+    expect(previewAccountMerge(data, 'bank', ['card']).released).toEqual(new Set([outgoing.id, incoming.id]));
+    mergeImportAccounts(data, 'bank', ['card']);
+    expect(outgoing.transferPeerId).toBeUndefined();
+    expect(incoming.transferPeerId).toBeUndefined();
+    expect(outgoing.excludedFromSpend).toBe(true);
+    expect(incoming.excludedFromSpend).toBeUndefined();
+    expect(parseAppData(JSON.stringify(data)).transactions).toHaveLength(3);
+  });
+
   it('hält nicht belegte Herkunft offen, auch wenn mehrere Quellen zum alten Konto gehören', () => {
     const data = bankAccounts();
     data.accountRecognition!.bindings['c'.repeat(64)] = 'card';

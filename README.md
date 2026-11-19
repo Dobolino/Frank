@@ -30,6 +30,7 @@ npm run build      # Produktions-Build nach dist/
 - Buchungen ohne Posten einmal zuordnen, Frank merkt sich den Händler und die Kategorie der Bank
   (z. B. UBS-App: «Lebensmittel»). Konto- und Kartennummern übernimmt Frank nicht.
 - iPhone: Öffnet sich der Export in Numbers, dort «Teilen» → «Exportieren» → «CSV» wählen.
+- Unter «Ausgaben → Umbuchungen» lassen sich passende Gegenbuchungen zweier eigener Bankkonten prüfen. Die Vorschläge berücksichtigen Buchungstag, CHF-Betrag und Hinweise zur Gegenpartei. Nach dem Bestätigen bleiben beide Buchungen auf ihrem Konto sichtbar und sind aus den Einnahmen und Ausgaben ausgeklammert. Die Verknüpfung lässt sich dort wieder lösen.
 - Mit «Diesen Monat» öffnest du den laufenden Kalendermonat. Das Auge blendet Beträge und Prozentwerte aus. Farben, Balken, Geldfluss und Kalender bleiben sichtbar.
 - Yuh-Aktivitäten werden einem benannten Konto zugeordnet. Der Auszug unterscheidet Belastungs- und Gutschriftswährung. Frank übernimmt die ausgewiesene CHF-Seite. Abgelehnte Aufträge, Aktivitäten ohne Geldbetrag und reine Fremdwährungsbuchungen erscheinen in der Importvorschau als übersprungen.
 - Die Datei verlässt das Gerät nicht.

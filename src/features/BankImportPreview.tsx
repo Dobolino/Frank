@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react';
 import { useStore } from '../app/store';
 import { guessColumns, inspectBankRows, type ColumnMap, type CsvTable, type ParsedTransaction } from '../domain/bankCsv';
 import { describeAccountSources } from '../domain/accountRecognition';
+import { transferSuggestions } from '../domain/accountTransfers';
 import { mergeTransactions } from '../domain/actuals';
 import { saveImportTargets, targetProblem, useImportTargets, unknownBank, type ImportTarget } from './useImportTargets';
-import { accountDisplayName, movementType, sourceLabel } from '../domain/importAccounts';
+import { accountDisplayName, collapsedTransferIds, movementType, sourceLabel } from '../domain/importAccounts';
 import type { ImportAccount, Transaction } from '../domain/types';
 import { AccountTargetSelect } from './AccountTargetSelect';
 import { Button, Money, Select } from './shared';
@@ -86,6 +87,12 @@ export function BankImportPreview({ table, cancel, confirm, hiddenAmounts = fals
   }
   const existing = data.transactions ?? [];
   const result = valid ? mergeTransactions(existing, txs, data.rules ?? [], data.accountRecognition?.bindings, reviewedMovements) : null;
+  const savedRows = new Set(existing);
+  const possibleTransfers = result ? transferSuggestions({
+    ...data, transactions: result.list,
+    importAccounts: [...(data.importAccounts ?? []), ...enabled.flatMap(t => t.selected ? [t.selected] : [])],
+  }).filter(pair => !savedRows.has(pair.outgoing) || !savedRows.has(pair.incoming)).length : 0;
+  const released = result ? collapsedTransferIds(result.list).size / 2 : 0;
   const duplicates = result ? txs.length - result.added : 0;
   const moved = enabled.some(t=> t.matchedId && t.selected && t.matchedId !== t.selected.id);
   const overlap = !!result?.added && hasUnclearOverlap(existing, result.list, enabled, data.importAccounts ?? []);
@@ -96,6 +103,10 @@ export function BankImportPreview({ table, cancel, confirm, hiddenAmounts = fals
     update(draft => {
       const {list, added} = mergeTransactions(draft.transactions ?? [], txs, draft.rules ?? [], draft.accountRecognition?.bindings, reviewedMovements);
       saveImportTargets(draft, recognition, enabled);
+      const releasedIds = collapsedTransferIds(list);
+      for (const row of list) {
+        if (releasedIds.has(row.id)) delete row.transferPeerId;
+      }
       draft.transactions = list;
       confirm(txs, added);
     });
@@ -143,6 +154,8 @@ export function BankImportPreview({ table, cancel, confirm, hiddenAmounts = fals
       </div>; })}
       {valid && <p className="text-xs font-medium">{selectedIds.size === 1 ? 'Zielkonto · ' + accountDisplayName(enabled[0]!.selected!) : selectedIds.size + ' Zielkonten'} · {newCount === 1 ? '1 Konto wird neu angelegt' : newCount > 0 ? newCount + ' Konten werden neu angelegt' : 'vorhanden'}</p>}
       {moved && valid && <p className="text-xs text-muted">Bereits erfasste Buchungen aus diesem Auszug werden dem gewählten Ziel zugeordnet. Weitere Buchungen eines alten Kontos kannst du unter <a href="#accounts" className="underline">Konten &amp; Karten</a> zusammenführen.</p>}
+      {possibleTransfers > 0 && <p className="text-xs text-accent">{possibleTransfers === 1 ? 'Eine mögliche Umbuchung' : possibleTransfers + ' mögliche Umbuchungen'} zwischen deinen Konten. Nach dem Import kannst du die Gegenbuchungen unter «Umbuchungen» prüfen.</p>}
+      {released > 0 && <p className="text-xs text-warn">Beide Seiten liegen künftig auf demselben Konto. Beim Übernehmen {released === 1 ? 'wird eine bestätigte Verknüpfung gelöst' : 'werden ' + released + ' bestätigte Verknüpfungen gelöst'}.</p>}
       {overlap && <div className="rounded-lg border border-warn/40 p-2 text-sm">
         <p>Gleichlautende Buchungen sind bereits unter einem anderen Konto vorhanden. Falls es dasselbe Konto ist, führe die Konten unter <a href="#accounts" className="underline">Konten &amp; Karten</a> zusammen.</p>
         <label className="mt-2 flex items-center gap-2"><input type="checkbox" checked={acceptedOverlap === selectionKey}

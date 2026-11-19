@@ -2,7 +2,7 @@ import { Fragment, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useStore } from '../app/store';
 import { merchantDirectory, merchantRanking, merchantText, type Merchant } from '../domain/merchants';
 import type { AppData, ImportAccount, Transaction } from '../domain/types';
-import { accountDisplayName, bankLabel } from '../domain/importAccounts';
+import { accountDisplayName, bankLabel, isExcludedFromActuals } from '../domain/importAccounts';
 import { BankMark } from './AccountTargetSelect';
 import { Button, Money, Select } from './shared';
 
@@ -128,7 +128,7 @@ export function MerchantActivity({
   const ranking = merchantRanking(matched, sort);
   const list = matched
     .filter(({ merchant, transaction }) => {
-      if (filter === 'open') return transaction.amount < 0 && !transaction.item && !transaction.excludedFromSpend;
+      if (filter === 'open') return transaction.amount < 0 && !transaction.item && !isExcludedFromActuals(transaction);
       if (filter === 'unmatched') return !merchant;
       return !filter || merchant?.id === filter;
     })
@@ -244,7 +244,7 @@ export function MerchantActivity({
                   <b>{name}</b>
                   <small>
                     {account && <BankMark bankId={account.bankId} size={12} />}
-                    {t.excludedFromSpend
+                    {t.transferPeerId ? 'Umbuchung zwischen eigenen Konten' : t.excludedFromSpend
                       ? 'Geldbewegung · ausgeklammert'
                       : t.item || t.category || (t.amount > 0 ? 'Eingang' : 'Ausgabe')}
                   </small>
@@ -253,7 +253,7 @@ export function MerchantActivity({
                   <b className={t.amount > 0 ? 'text-accent' : ''}>
                     {hidden ? '••••' : <Money value={t.amount} signed />}
                   </b>
-                  {!hidden && t.amount < 0 && !t.excludedFromSpend && hourly > 0 && (
+                  {!hidden && t.amount < 0 && !isExcludedFromActuals(t) && hourly > 0 && (
                     <small>{workTime(-t.amount, hourly)}</small>
                   )}
                 </span>
@@ -265,7 +265,7 @@ export function MerchantActivity({
                       {bankLabel(account.bankId)} · {accountDisplayName(account)}
                     </p>
                   )}
-                  {t.amount < 0 && !t.excludedFromSpend && budgetNames.length > 0 && (
+                  {t.amount < 0 && !isExcludedFromActuals(t) && budgetNames.length > 0 && (
                     <label className="ex-assign">
                       Budgetposten
                       <Select

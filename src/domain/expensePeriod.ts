@@ -1,3 +1,4 @@
+import { isExcludedFromActuals } from './importAccounts';
 import { outflowsByMonth, yearlyAmount } from './budgetEngine';
 import type { BudgetCategory, BudgetItem, Transaction } from './types';
 
@@ -13,7 +14,7 @@ export function expensePeriod(budget: BudgetItem[], transactions: Transaction[],
   const monthly = period.length === 7;
   const monthIndex = Number(period.slice(5)) - 1;
   const entries = transactions.filter((t) => t.date.startsWith(period));
-  const spending = entries.filter((t) => t.amount < 0 && !t.excludedFromSpend);
+  const spending = entries.filter((t) => t.amount < 0 && !isExcludedFromActuals(t));
   const assignedNames = new Set(spending.map((t) => t.item));
   const items = new Map<string, ExpenseItem>();
   for (const b of budget) {
@@ -39,6 +40,6 @@ export function expensePeriod(budget: BudgetItem[], transactions: Transaction[],
   }
   const rows = [...items.values()].filter((r) => r.planned || r.spent);
   const planned = rows.reduce((sum, row) => sum + row.planned, 0);
-  const income = entries.reduce((sum, t) => sum + (!t.excludedFromSpend && t.amount > 0 ? t.amount : 0), 0);
+  const income = entries.reduce((sum, t) => sum + (!isExcludedFromActuals(t) && t.amount > 0 ? t.amount : 0), 0);
   return { entries, spending, rows, spent, unassigned, planned, income };
 }

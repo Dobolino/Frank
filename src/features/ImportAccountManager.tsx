@@ -73,7 +73,7 @@ function MergeAccounts({close, saved}: {close: () => void; saved: (name:string) 
     update(draft => {
       try {
         const current = previewAccountMerge(draft, targetId, sourceIds);
-        if (current.moves !== preview.moves || current.trades !== preview.trades || current.links !== preview.links || current.sharedTrades.size !== preview.sharedTrades.size) {
+        if (current.moves !== preview.moves || current.trades !== preview.trades || current.links !== preview.links || current.released.size !== preview.released.size || current.sharedTrades.size !== preview.sharedTrades.size) {
           setError('Die Buchungen haben sich geändert. Prüfe die Vorschau erneut.');
           return;
         }
@@ -104,6 +104,7 @@ function MergeAccounts({close, saved}: {close: () => void; saved: (name:string) 
     </fieldset>}
     {preview && target && <div aria-live="polite" className="space-y-1 rounded-lg bg-bg p-3">
       <p><strong>{count} {count === 1 ? 'Buchung' : 'Buchungen'}</strong> und {preview.links} gespeicherte {preview.links === 1 ? 'CSV-Zuordnung' : 'CSV-Zuordnungen'} gehen auf «{accountDisplayName(target)}» über.</p>
+      {preview.released.size > 0 && <p className="text-warn">Verknüpfte Umbuchungen auf dasselbe Konto werden gelöst ({preview.released.size / 2}). Beide Buchungen bleiben erhalten und zählen wieder gemäss ihrer Importkategorie.</p>}
       {preview.sharedTrades.size > 0 && <p>{preview.sharedTrades.size === 1 ? 'Eine identische Depotbuchung mit derselben Broker-ID zählt danach einmal.' : preview.sharedTrades.size + ' identische Depotbuchungen mit derselben Broker-ID zählen danach je einmal.'}</p>}
       <p className="text-xs text-muted">Name und Endziffern des Zielkontos bleiben erhalten. Die ausgewählten Quellkonten verschwinden aus der Kontenliste.</p>
     </div>}

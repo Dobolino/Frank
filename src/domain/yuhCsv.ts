@@ -7,6 +7,7 @@ export function yuhColumns(header: string[]) {
     date: find('DATE'), activity: find('ACTIVITY TYPE'), name: find('ACTIVITY NAME'),
     debit: find('DEBIT'), debitCurrency: find('DEBIT CURRENCY'),
     credit: find('CREDIT'), creditCurrency: find('CREDIT CURRENCY'),
+    sender: find('SENDER'), recipient: find('RECIPIENT'),
     side: find('BUY/SELL'), quantity: find('QUANTITY'), asset: find('ASSET'),
   };
   if ([cols.date, cols.name, cols.activity, cols.debit, cols.debitCurrency, cols.credit, cols.creditCurrency].some(i => i < 0)) return;

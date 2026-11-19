@@ -3,7 +3,7 @@ import { useStore } from '../app/store';
 import { applyRules, merchantKey } from '../domain/actuals';
 import { parseCsv, type ParsedTransaction, type CsvTable } from '../domain/bankCsv';
 import { expensePeriod } from '../domain/expensePeriod';
-import { accountDisplayName, bankLabel } from '../domain/importAccounts';
+import { accountDisplayName, bankLabel, isExcludedFromActuals } from '../domain/importAccounts';
 import { MONTHS, type Transaction } from '../domain/types';
 import { ExpenseChart, periodLabel, type ExpenseChartMode } from './ExpenseChart';
 import { MerchantActivity } from './MerchantActivity';
@@ -11,6 +11,8 @@ import { Select, todayYm, usePref } from './shared';
 import './expenses.css';
 
 const BankImportPreview = lazy(() => import('./BankImportPreview').then(m => ({ default: m.BankImportPreview })));
+
+const TransferReview = lazy(() => import('./TransferReview').then(m => ({ default: m.TransferReview })));
 
 function ExpenseIcon({ type }: { type: 'visible' | 'hidden' | 'import' }) {
   return (
@@ -51,7 +53,7 @@ function ExpensePeriodView() {
   const years = [...new Set([calendarYear, ...Object.keys(data.years), ...all.map((t) => t.date.slice(0, 4))])].sort().reverse();
   const currentYear = String(data.activeYear);
   const latest = all
-    .filter((t) => !t.excludedFromSpend && t.date.startsWith(currentYear))
+    .filter((t) => !isExcludedFromActuals(t) && t.date.startsWith(currentYear))
     .map((t) => t.date.slice(0, 7))
     .sort()
     .at(-1);
@@ -119,7 +121,7 @@ function ExpensePeriodView() {
       d.rules = rules;
       d.transactions = (d.transactions ?? []).map((row) => {
         if (row.id === t.id) return { ...row, item };
-        if (row.excludedFromSpend || row.item || row.amount >= 0) return row;
+        if (isExcludedFromActuals(row) || row.item || row.amount >= 0) return row;
         const hit = applyRules(row.text, rules, row.category);
         return hit ? { ...row, item: hit } : row;
       });
@@ -183,6 +185,9 @@ function ExpensePeriodView() {
             cancel={() => setTable(null)}
           />
         </Suspense>
+      )}
+      {!table && all.length > 0 && (data.importAccounts?.length ?? 0) > 1 && (
+        <Suspense fallback={null}><TransferReview hiddenAmounts={hidden} /></Suspense>
       )}
       <div className="ex-filters">
         <div className="ex-period-controls">

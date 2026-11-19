@@ -1,3 +1,4 @@
+import { isExcludedFromActuals } from '../domain/importAccounts';
 import type { ReactNode } from 'react';
 import { useStore } from '../app/store';
 import { FrankIcon } from '../components/FrankIcon';
@@ -69,7 +70,7 @@ export function Dashboard() {
   const currentYear = Number(today.slice(0,4));
   const year = plan.year;
   const start = year === currentYear ? today : year + '-01';
-  const yearTransactions = (data.transactions ?? []).filter(t => !t.excludedFromSpend && t.date.startsWith(year + '-'));
+  const yearTransactions = (data.transactions ?? []).filter(t => !isExcludedFromActuals(t) && t.date.startsWith(year + '-'));
   const latest = yearTransactions.reduce((last, t) => t.date > last ? t.date : last, '');
   const observed = latest.slice(0,7) || start;
   const transactions = yearTransactions.filter(t => t.date.startsWith(observed));

@@ -1,5 +1,6 @@
 import type { Rappen } from './money';
 import { expensePeriod } from './expensePeriod';
+import { isExcludedFromActuals } from './importAccounts';
 import type { BudgetCategory, BudgetItem, CategoryRule, Transaction } from './types';
 import type { ParsedTransaction } from './bankCsv';
 
@@ -55,6 +56,19 @@ export function mergeTransactions(
     else add(olderByAccount, key, index);
   });
 
+  // Equal date, amount and memo can occur twice. Keep any existing counterparties
+  // and only enrich a legacy booking when there is one row on each side.
+  const repeated = new Set<string>();
+  if (parsed.some(row => row.counterparty)) {
+    for (const [key, indices] of byAccount) if (indices.length > 1) repeated.add(key);
+    const seen = new Set<string>();
+    for (const row of parsed) {
+      const key = bucketKey(row.accountId ?? '', row);
+      if (seen.has(key)) repeated.add(key);
+      seen.add(key);
+    }
+  }
+
   const consumed = new Set<number>();
   const matched = new Map<number, number>();
   const take = (inputIndex: number, bucket?: number[]) => {
@@ -92,11 +106,15 @@ export function mergeTransactions(
     if (oldIndex !== undefined) {
       const old = list[oldIndex]!;
       const freshCategory = !old.category && !old.item ? row.category : undefined;
+      const counterparty = !old.counterparty && row.counterparty &&
+        !repeated.has(bucketKey(old.accountId ?? '', old)) && !repeated.has(bucketKey(row.accountId ?? '', row))
+        ? row.counterparty : undefined;
       const excluded = reviewedMovements.get(row);
       const reclassify = excluded !== undefined && excluded !== Boolean(old.excludedFromSpend);
-      if (freshCategory || reclassify || (row.accountId && row.accountId !== old.accountId) || (row.sourceFingerprint && !old.sourceFingerprint)) {
+      if (freshCategory || counterparty || reclassify || (row.accountId && row.accountId !== old.accountId) || (row.sourceFingerprint && !old.sourceFingerprint)) {
         const updated = { ...old, accountId: row.accountId ?? old.accountId,
           ...(freshCategory && { category: freshCategory }),
+          ...(counterparty && { counterparty }),
           ...(row.sourceFingerprint && { sourceFingerprint: row.sourceFingerprint }),
           ...(row.excludedFromSpend && { excludedFromSpend: true }) };
         if (excluded === false) delete updated.excludedFromSpend;
@@ -111,7 +129,7 @@ export function mergeTransactions(
     while (ids.has(id)) id = base + '-' + suffix++;
     nextSuffix.set(base, suffix);
     ids.add(id);
-    const item = row.amount < 0 && !row.excludedFromSpend ? applyRules(row.text, rules, row.category) : undefined;
+    const item = row.amount < 0 && !isExcludedFromActuals(row) ? applyRules(row.text, rules, row.category) : undefined;
     list.push({ id, ...row, ...(item ? { item } : {}) });
     added++;
   });
@@ -148,7 +166,7 @@ export function compareMonth(budget: BudgetItem[], transactions: Transaction[], 
     planTotal: period.planned,
     actualTotal: period.spent,
     unassigned: period.unassigned,
-    unassignedCount: period.entries.filter(t => !t.excludedFromSpend && t.amount <= 0 && !t.item).length,
+    unassignedCount: period.entries.filter(t => !isExcludedFromActuals(t) && t.amount <= 0 && !t.item).length,
     income: period.income,
   };
 }

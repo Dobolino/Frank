@@ -1,3 +1,4 @@
+import { collapsedTransferIds } from './importAccounts';
 import { investmentFingerprint } from './investCsv';
 import type { AppData, ImportAccount } from './types';
 
@@ -35,12 +36,14 @@ export function previewAccountMerge(data: AppData, targetId: string, sourceIds: 
       } else seen.set(fill.brokerId, fingerprint);
     });
   }
-  return { moves, trades, links, sharedTrades };
+  const released = collapsedTransferIds(data.transactions ?? [], tx =>
+    tx.accountId && sources.has(tx.accountId) ? targetId : tx.accountId);
+  return { moves, trades, links, sharedTrades, released };
 }
 
 /** Move all references in one store update. Bank rows keep their original IDs, assignments and multiplicity. */
 export function mergeImportAccounts(data: AppData, targetId: string, sourceIds: readonly string[]) {
-  const { sharedTrades } = previewAccountMerge(data, targetId, sourceIds);
+  const { sharedTrades, released } = previewAccountMerge(data, targetId, sourceIds);
   const sources = new Set(sourceIds);
   const affected = new Set([targetId, ...sources]);
   const bindings = data.accountRecognition?.bindings ?? {};
@@ -51,6 +54,7 @@ export function mergeImportAccounts(data: AppData, targetId: string, sourceIds: 
     if (affected.has(id)) unique.set(id, unique.has(id) ? null : fingerprint);
   }
   for (const row of data.transactions ?? []) {
+    if (released.has(row.id)) delete row.transferPeerId;
     if (!row.accountId || !affected.has(row.accountId)) continue;
     const original = unique.get(row.accountId);
     if (!row.sourceFingerprint && original) row.sourceFingerprint = original;

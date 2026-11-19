@@ -281,6 +281,10 @@ export interface Transaction {
   accountId?: string;
   /** Local HMAC of the statement source, independent of its grouping in the UI. */
   sourceFingerprint?: string;
+  /** Counterparty from a payment export, used locally to suggest matching transfers. */
+  counterparty?: string;
+  /** Reciprocal booking ID, set only after the user confirms an own-account transfer. */
+  transferPeerId?: string;
   excludedFromSpend?: boolean;
   merchantId?: string;
   /** YYYY-MM-DD */

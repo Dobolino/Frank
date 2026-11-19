@@ -234,11 +234,22 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     }
   }, 'data');
   optional(value, 'transactions', (v, path) => {
-    for (const [i, t] of identified(v, path).entries()) {
+    const rows = identified(v, path);
+    const byId = new Map(rows.map(row => [row.id, row]));
+    for (const [i, t] of rows.entries()) {
       const date = text(t.date, `${path}[${i}].date`);
       if (!/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(date)) invalid(`${path}[${i}].date`);
       text(t.text, `${path}[${i}].text`);
-      integer(t.amount, `${path}[${i}].amount`);
+      const amount = integer(t.amount, `${path}[${i}].amount`);
+      optional(t, 'counterparty', (v, p) => {
+        const name = text(v, p);
+        return (name.trim().length > 0 && name.length <= 160) || invalid(p);
+      }, `${path}[${i}]`);
+      optional(t, 'transferPeerId', (v, p) => {
+        const peer = byId.get(text(v, p));
+        if (!peer || peer.transferPeerId !== t.id || !t.accountId || !peer.accountId ||
+            peer.accountId === t.accountId || peer.date !== date || amount === 0 || peer.amount !== -amount) invalid(p);
+      }, `${path}[${i}]`);
       optional(t, 'accountId', expenseAccount, `${path}[${i}]`);
       optional(t, 'sourceFingerprint', (v, p) => /^[a-f0-9]{64}$/.test(text(v,p)) || invalid(p), `${path}[${i}]`);
       optional(t, 'merchantId', text, `${path}[${i}]`);

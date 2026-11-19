@@ -36,6 +36,11 @@ export function reconcile(base: AppData, local: AppData, peer: AppData, preferen
   const merge = (ancestor: Json | undefined, a: Json | undefined, b: Json | undefined, path: string[]): Json | undefined => {
     if (same(a,b) || same(ancestor,b)) return a;
     if (same(ancestor,a)) return b;
+    // Each month's amounts were confirmed together from one statement.
+    if (path.length === 4 && path[0] === 'years' && path[2] === 'monthlyPayslips') {
+      conflicts.add('Monatsabrechnung ' + path[3]);
+      return preference === 'local' ? a : b;
+    }
     if (path.length === 1 && path[0] === 'accountRecognition' && record(a) && record(b) && a.key !== b.key) {
       conflicts.add('CSV-Kontozuordnungen');
       return preference === 'local' ? a : b;

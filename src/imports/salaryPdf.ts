@@ -1,7 +1,9 @@
-import { getDocument, GlobalWorkerOptions, Util } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { getDocument, GlobalWorkerOptions, OPS, Util } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 import type { PDFPageProxy } from 'pdfjs-dist';
-import { parseSalaryCertificateText } from '../domain/salaryCertificate';
+import { isMonthlyPayslip, parseMonthlyPayslip } from '../domain/monthlyPayslip';
+import type { SalaryDocument, SalaryReadOptions } from './readSalaryCertificate';
+import { isAnnualSalaryCertificate, parseSalaryCertificateText } from '../domain/salaryCertificate';
 
 GlobalWorkerOptions.workerSrc = workerUrl;
 type Cell = { x: number; y: number; text: string };
@@ -44,28 +46,52 @@ async function pageData(page: PDFPageProxy) {
   return {lines, form};
 }
 
-export async function readSalaryCertificatePdf(data: Uint8Array) {
+function readPage(lines: string[], form: Field[], fromScan = false): SalaryDocument | undefined {
+  if (form.length || isAnnualSalaryCertificate(lines)) return parseSalaryCertificateText(lines, form, fromScan);
+  if (isMonthlyPayslip(lines)) return parseMonthlyPayslip(lines);
+}
+
+// A scanner can leave a long but unusable OCR layer over the page image.
+async function hasLargePageImage(page: PDFPageProxy): Promise<boolean> {
+  const ops = await page.getOperatorList();
+  return ops.fnArray.some((op, i) => {
+    if (op !== OPS.paintImageXObject) return false;
+    const [, width, height] = ops.argsArray[i];
+    return width >= 600 && height >= 600;
+  });
+}
+
+export async function readSalaryCertificatePdf(data: Uint8Array, options: SalaryReadOptions = {}): Promise<SalaryDocument> {
+  const { signal, onOcr } = options;
+  signal?.throwIfAborted();
   const task = getDocument({data, useWasm: false, useWorkerFetch: false, disableFontFace: true, useSystemFonts: true});
   try {
     const doc = await task.promise;
-    if (doc.numPages > 30) throw new Error('Bitte nur die Seiten eines einzelnen Lohnausweises auswählen.');
-    let certificate: Awaited<ReturnType<typeof pageData>> | undefined;
-    let hasText = false;
+    if (doc.numPages > 30) throw new Error('Bitte nur die Seiten eines einzelnen Lohndokuments auswählen.');
+    let result: SalaryDocument | undefined;
     for (let number = 1; number <= doc.numPages; number++) {
+      signal?.throwIfAborted();
       const page = await doc.getPage(number);
-      const {lines, form} = await pageData(page);
-      page.cleanup();
-      hasText ||= lines.length > 0;
-      const titled = lines.some(line => /lohnausweis|certificat de salaire|certificato di salario|salary certificate/i.test(line));
-      const section = lines.some(line => /bruttolohn|salaire brut|salario lordo|nettolohn|salaire net|salario netto/i.test(line));
-      if (!form.length && !(titled && section)) continue;
-      if (certificate) throw new Error('Das PDF enthält mehrere Lohnausweise. Bitte jeden Ausweis einzeln importieren.');
-      certificate = {lines, form};
+      try {
+        const {lines, form} = await pageData(page);
+        let parsed = readPage(lines, form);
+        // A scan can have a small text layer for a page number or watermark.
+        if (!parsed && (lines.join(' ').length < 200 || await hasLargePageImage(page))) {
+          onOcr?.(number, doc.numPages);
+          const { recognizeSalaryPage } = await import('./salaryOcr');
+          const recognized = await recognizeSalaryPage(page, signal);
+          parsed = readPage(recognized, [], true);
+        }
+        if (!parsed) continue;
+        if (result) throw new Error('Mehrere Lohndokumente im PDF erkannt. Bitte jeden Ausweis oder jede Monatsabrechnung einzeln importieren.');
+        result = parsed;
+      } finally {
+        page.cleanup();
+      }
     }
-    if (!certificate) throw new Error(hasText
-      ? 'Keinen Schweizer Lohnausweis mit lesbaren Ziffern erkannt. Bitte den Ausweis prüfen.'
-      : 'Dieser PDF-Scan enthält keinen auslesbaren Text. Verwende ein PDF mit Textebene, eine CSV oder erfasse die Werte von Hand.');
-    return parseSalaryCertificateText(certificate.lines, certificate.form);
+    signal?.throwIfAborted();
+    if (!result) throw new Error('Die Lohnpositionen liessen sich keinem Jahresausweis oder Monatsbeleg zuordnen. Prüfe, ob Titel, Beschriftungen und Beträge auf der Seite sichtbar sind.');
+    return result;
   } catch (error) {
     if (error instanceof Error && error.name === 'PasswordException') {
       throw new Error('Das PDF ist passwortgeschützt. Bitte eine bereits entsperrte Kopie wählen.');

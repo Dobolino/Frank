@@ -1,4 +1,5 @@
 import type { AppData } from '../domain/types';
+import { isPlanMonth, validMonthlyPayslipRecord } from '../domain/monthlyPayslipRecord';
 import { validSalaryCertificateRecord } from '../domain/salaryCertificateRecord';
 
 const invalid = (path: string): never => { throw new Error(`Ungültiges Feld im Backup: ${path}.`); };
@@ -102,6 +103,11 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     const year = integer(plan.year, `${p}.year`);
     if (year < 1 || year > 9999 || key !== String(year)) invalid(`${p}.year`);
     optional(plan, 'salaryCertificate', (v, path) => validSalaryCertificateRecord(v) || invalid(path), p);
+    optional(plan, 'monthlyPayslips', (v, path) => {
+      for (const [period, slip] of Object.entries(object(v, path))) {
+        if (!isPlanMonth(period, year) || !validMonthlyPayslipRecord(slip)) invalid(path + '.' + period);
+      }
+    }, p);
     const salary = object(plan.salary, `${p}.salary`);
     integer(salary.grossMonthly, `${p}.salary.grossMonthly`);
     integer(salary.bvgMonthly, `${p}.salary.bvgMonthly`);

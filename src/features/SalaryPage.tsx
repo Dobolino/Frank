@@ -4,6 +4,7 @@ import { Badge, Button, Card, Collapsible, Money, MoneyInput, NumberInput, PageH
 import { MONTHS, monthName, type Month, type SalaryInput } from '../domain/types';
 import { totalRate, lohnausweisNet } from '../domain/salaryEngine';
 import { formatChf, formatPercent } from '../domain/money';
+import { monthlyPayslipFields } from '../domain/monthlyPayslipRecord';
 const SalaryCertificateImport = lazy(() => import('./SalaryCertificateImport').then(m => ({ default: m.SalaryCertificateImport })));
 
 const monthOptions = MONTHS.map((m) => ({ value: m, label: monthName(m) }));
@@ -14,10 +15,19 @@ export function SalaryPage() {
   const res = model.salary;
   const spesen = s.expenseAllowance?.monthly ?? 0;
   const [period, setPeriod] = useState<'month' | 'year'>('month');
-  const [month, setMonth] = useState<Month>(() => (new Date().getMonth() + 1) as Month);
+  const payslips = model.plan.monthlyPayslips ?? {};
+  const savedPeriods = Object.keys(payslips).sort().reverse();
+  const [month, setMonth] = useState<Month>(() => (savedPeriods[0] ? Number(savedPeriods[0].slice(5)) : new Date().getMonth() + 1) as Month);
   const editor = useRef<HTMLDetailsElement>(null);
   const selected = res.months[month - 1]!;
   const annual = period === 'year';
+  const selectedPeriod = `${model.plan.year}-${String(month).padStart(2, '0')}`;
+  const actual = annual ? undefined : payslips[selectedPeriod];
+  function showPayslip(ym: string) {
+    if (!ym) return;
+    setMonth(Number(ym.slice(5)) as Month);
+    setPeriod('month');
+  }
   const payout = annual ? res.totals.net : selected.net;
   const expenses = annual ? res.totals.expenses : selected.expenses;
   const minimum = Math.min(0, ...res.months.map(m => m.net));
@@ -54,7 +64,7 @@ export function SalaryPage() {
       </div>
       <div className="grid items-start gap-3 md:grid-cols-2">
         <Card>
-          <h2 className="text-sm text-muted">{annual ? 'Auszahlung im Jahr' : `Auszahlung im ${selectedMonth}`}</h2>
+          <h2 className="text-sm text-muted">{annual ? 'Auszahlung im Jahr' : actual ? `Geplante Auszahlung im ${selectedMonth}` : `Auszahlung im ${selectedMonth}`}</h2>
           <p className="my-2 flex flex-wrap items-baseline gap-2 text-accent">
             <strong className="break-all text-4xl font-semibold tracking-tight"><Money value={payout} /></strong>
             <span className="text-sm font-semibold">CHF</span>
@@ -89,8 +99,22 @@ export function SalaryPage() {
           </div>
         </Card>
       </div>
-      <Suspense fallback={<p role="status" className="py-3 text-sm text-muted">Lohnausweis wird geöffnet …</p>}>
-        <SalaryCertificateImport key={model.plan.year} />
+      {savedPeriods.length > 0 && (
+        <Card title="Gespeicherte Monatsabrechnung" className="mt-4" action={
+          <Select ariaLabel="Gespeicherte Monatsabrechnung wählen" value={actual ? selectedPeriod : ''} onChange={showPayslip}
+            options={[
+              ...(!actual ? [{ value: '', label: 'Monat wählen …' }] : []),
+              ...savedPeriods.map(ym => ({ value: ym, label: monthName(Number(ym.slice(5)) as Month) + ' ' + model.plan.year })),
+            ]}/>
+        }>
+          {actual ? <div className="text-sm">
+            {monthlyPayslipFields.map(({key, label}) => actual[key] !== undefined &&
+              <Row key={key} label={label} strong={key === 'payout'} value={<span><Money value={actual[key]}/> CHF</span>}/>)}
+          </div> : <p className="text-sm text-muted">Wähle eine gespeicherte Abrechnung, um ihre Beträge zu sehen.</p>}
+        </Card>
+      )}
+      <Suspense fallback={<p role="status" className="py-3 text-sm text-muted">Lohnimport wird geöffnet …</p>}>
+        <SalaryCertificateImport key={model.plan.year} onMonthlySaved={showPayslip} />
       </Suspense>
       <details ref={editor} className="mt-4 scroll-mt-24 rounded-2xl border border-line bg-panel">
         <summary className="flex min-h-12 cursor-pointer items-center justify-between px-4 py-3 text-sm font-semibold">
@@ -148,7 +172,7 @@ export function SalaryPage() {
             )}
             <p className="mt-2 text-xs text-muted">
               Frank führt Pauschalspesen separat vom Monatslohn. Die steuerliche Behandlung richtet sich nach deiner Abrechnung und den geltenden Spesenregeln.
-              Effektive Rückerstattungen mit Belegen siehst du im importierten Lohnausweis unter Ziffer 13.1.
+              Erfasste effektive Spesen siehst du in der gespeicherten Monatsabrechnung oder im Lohnausweis unter Ziffer 13.1.
             </p>
           </Card>
           <Card title="Sozialabzüge">

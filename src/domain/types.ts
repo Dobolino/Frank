@@ -1,5 +1,6 @@
 import type { Rappen } from './money';
 import type { SalaryCertificateRecord } from './salaryCertificateRecord';
+import type { MonthlyPayslipRecord } from './monthlyPayslipRecord';
 
 export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export const MONTHS: readonly Month[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -171,6 +172,8 @@ export interface YearPlan {
   year: number;
   /** Geprüfte Jahreswerte des Lohnausweises zum Vergleich mit dem Lohnplan. */
   salaryCertificate?: SalaryCertificateRecord;
+  /** Bestätigte Monatsabrechnungen in Rappen, nach YYYY-MM. */
+  monthlyPayslips?: Record<string, MonthlyPayslipRecord>;
   salary: SalaryInput;
   otherIncome: OtherIncome[];
   budget: BudgetItem[];

@@ -13,6 +13,19 @@ const codes = new Set([...positions.keys(), '13.1.1', '13.1.2', '13.2.1', '13.2.
 type Entry = { key: string; value: string };
 
 const fold = (text: string) => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+
+/** The standard Swiss form prints its title and the gross/net salary sections
+ * in several languages. An isolated mention of the certificate also occurs on payslips. */
+export function isAnnualSalaryCertificate(lines: readonly string[]): boolean {
+  const folded = lines.map(line => fold(line).replace(/\s+/g, ' '));
+  const title = /^(?:form(?:ular)?\s*11[\s.:–-]+)?(?:a\b[\s.:[\]|x☒✓–-]*)?(?:(?:schweizer(?:ischer)?\s+)?lohnausweis|certificat de salaire|certificato di salario|(?:swiss\s+)?salary certificate)\b/;
+  if (!folded.some(line => title.test(line))) return false;
+  if (folded.some(line => /^(?:lohnabrechnung|gehaltsabrechnung|payslip|bulletin de (?:paie|salaire))\b/.test(line))) {
+    if (!folded.some(line => /^8[.\s]+(?:bruttolohn|salaire brut|salario lordo|gross salary)\b/.test(line)) ||
+        !folded.some(line => /^11[.\s]+(?:nettolohn|salaire net|salario netto|net salary)\b/.test(line))) return false;
+  }
+  return folded.some(line => /\b(?:bruttolohn|nettolohn|salaire (?:brut|net)|salario (?:lordo|netto)|(?:gross|net) salary)\b/.test(line));
+}
 const names: [RegExp, string][] = [
   [/^(?:d\s+)?(?:jahr|lohnjahr|annee|anno|year)\b/, 'year'],
   [/^(?:von|du|dal|from)$/, 'from'], [/^(?:bis|au|al|to)$/, 'to'],
@@ -51,7 +64,7 @@ function isoDate(text: string) {
   return Number.isFinite(test.getTime()) && test.toISOString().slice(0,10) === iso ? iso : undefined;
 }
 
-function buildCertificate(entries: Entry[]): SalaryCertificate {
+function buildCertificate(entries: Entry[], fromScan = false): SalaryCertificate {
   const certificate: SalaryCertificate = { warnings: [] };
   const numbers = new Map<string, Set<number>>();
   const years = new Set<number>(), starts = new Set<string>(), ends = new Set<string>();
@@ -79,10 +92,13 @@ function buildCertificate(entries: Entry[]): SalaryCertificate {
   }
   const [from] = starts, [to] = ends;
   certificate.year = [...years][0];
-  if (from && to && from <= to && from.slice(0,4) === to.slice(0,4) &&
-      (!certificate.year || certificate.year === Number(to.slice(0,4)))) {
+  const datedYear = from && to && from <= to && from.slice(0,4) === to.slice(0,4) ? Number(to.slice(0,4)) : undefined;
+  if (from && to && datedYear && (fromScan || !certificate.year || certificate.year === datedYear)) {
+    if (fromScan && entries.some(entry => entry.key === 'year' && entry.value.trim() && Number(entry.value) !== datedYear)) {
+      certificate.warnings.push('Das gescannte Jahresfeld weicht vom Jahr der beiden Periodendaten ab. Frank zeigt das Jahr der Lohnperiode. Bitte mit dem Ausweis vergleichen.');
+    }
     certificate.period = {from, to};
-    certificate.year ??= Number(to.slice(0,4));
+    certificate.year = datedYear;
   } else if (from || to) {
     certificate.warnings.push('Die Lohnperiode ist unvollständig oder passt nicht zum Jahr. Bitte mit dem Ausweis vergleichen.');
   }
@@ -114,34 +130,57 @@ function buildCertificate(entries: Entry[]): SalaryCertificate {
 const dateToken = '(?:\\d{4}-\\d{2}-\\d{2}|\\d{1,2}[./]\\d{1,2}[./]\\d{4})';
 const labelYear = /\b(?:Jahr|Année|Anno|Year)\s*[:=]?\s*((?:19|20)\d{2})\b/i;
 const labelDates = new RegExp('(?:von|du|dal|from|Periode|Zeitraum)\\s*:?\\s*(' + dateToken + ')\\s*(?:bis|au|al|to|[-–])\\s*(' + dateToken + ')', 'i');
-const headerDates = new RegExp('^(?:D\\s+)?((?:19|20)\\d{2})\\s+(?:E\\s+)?(' + dateToken + ')\\s+(' + dateToken + ')(?:\\s+G)?(?:\\s+[xX])?$');
+const headerDates = new RegExp('^(?:D\\s+[|\\[]?\\s*)?(\\d{4})\\s+(?:E\\s+[|\\[]?\\s*)?(' + dateToken + ')\\s+(' + dateToken + ')(?:\\s+G\\b.*|\\s+[xX])?$');
 const endValue = /(?:^|\s|[=:])((?:CHF\s*)?[+-]?(?:\d{1,3}(?:['’\u202f\u00a0 ]\d{3})+|\d+)(?:[.,](?:\d{1,2}|[-–]))?(?:\s*CHF)?|[xX☒✓])$/i;
 
+// The official form places a section and a subposition on the same line.
+export function salaryPosition(line: string): string | undefined {
+  const nested = /(?:^|\s)((?:13\.[12]\.[123]|10\.[12])\b)\s+(?=[^\d])/.exec(line);
+  const leading = /^(\d+)\b/.exec(line.trim())?.[1];
+  if (leading && nested && leading !== nested[1]!.split('.')[0]) return undefined;
+  const key = nested?.[1] ?? fieldCode(line);
+  return key && codes.has(key) ? key : undefined;
+}
+
 /** Liest nummerierte Positionen, ergänzt sie um explizite Formularfelder der ESTV. */
-export function parseSalaryCertificateText(lines: string[], formEntries: Entry[] = []): SalaryCertificate {
+export function parseSalaryCertificateText(lines: string[], formEntries: Entry[] = [], fromScan = false): SalaryCertificate {
   const entries: Entry[] = [...formEntries];
+  if (lines.some(line => /^b\s*[|\[.(]*\s*[x☒✓]+[|.)\]\s]*(?:rentenbescheinigung|attestation de rentes|attestazione delle rendite)/i.test(line.trim()))) {
+    throw new Error('Dieses Formular ist als Rentenbescheinigung markiert. Bitte einen Lohnausweis wählen.');
+  }
   for (const raw of lines) {
-    const line = raw.trim().replace(/[\x00-\x1f]/g, ' ');
+    const line = raw.trim().replace(/[\x00-\x1f]/g, ' ')
+      // The raised Swiss thousands separator can appear as a prime or degree
+      // sign. Normalize it only inside a well-formed group of three digits.
+      .replace(/(\d)[°′‘ʼ]\s*(?=\d{3}(?:\D|$))/g, "$1'");
     const year = labelYear.exec(line)?.[1] ?? /^D\s+((?:19|20)\d{2})(?:\s+E|$)/.exec(line)?.[1];
     if (year) entries.push({key:'year', value:year});
     const dates = labelDates.exec(line);
-    const datesRow = headerDates.exec(line);
+    const header = headerDates.exec(line);
+    const datesRow = header && (fromScan || /^(?:19|20)\d{2}$/.test(header[1]!)) ? header : undefined;
     if (datesRow) entries.push({key:'year', value:datesRow[1]!});
     if (dates || datesRow) entries.push(
       {key:'from', value:dates ? dates[1]! : datesRow![2]!},
       {key:'to', value:dates ? dates[2]! : datesRow![3]!},
     );
-    // The official form prints 13.2 and 13.2.1 on the same line. Take the
-    // detail code. Similar typography is used for the two pension lines.
-    const nested = /(?:^|\s)((?:13\.[12]\.[123]|10\.[12])\b)\s+(?=[^\d])/.exec(line);
-    const candidate = nested ? line.slice(nested.index).trim() : line;
-    const key = fieldCode(candidate);
-    if (!key || !codes.has(key)) continue;
-    const body = candidate.replace(/^\d+(?:\.\d+)*\.?\s*/, '');
+    const key = salaryPosition(line);
+    if (!key) continue;
+    const body = line.replace(/^\d+(?:\.\d+)*\.?\s*/, '');
     const val = endValue.exec(body)?.[1];
     if (val) entries.push({key, value:val});
   }
-  return buildCertificate(entries);
+  const certificate = buildCertificate(entries, fromScan);
+  if (fromScan) {
+    const { gross, social, pension, pensionPurchase, net } = certificate;
+    if (gross !== undefined && social !== undefined && pension !== undefined && net !== undefined &&
+        Math.abs(gross - social - pension - (pensionPurchase ?? 0) - net) > 100) {
+      // The printed form defines 11 = 8 − 9 − 10.1 − 10.2. There is no
+      // reliable way to decide which of several OCR values caused the mismatch.
+      for (const key of ['gross', 'social', 'pension', 'pensionPurchase', 'net'] as const) delete certificate[key];
+      certificate.warnings.push('Die gescannten Ziffern 8 bis 11 stimmen rechnerisch nicht überein. Trage diese Beträge aus dem Ausweis ein.');
+    }
+  }
+  return certificate;
 }
 
 /** Long form (Ziffer;Betrag;Jahr), or a single record with named columns. */

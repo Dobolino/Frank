@@ -48,11 +48,13 @@ Die CSV-Vorschau zeigt für jede erkennbare Quelle das Konto und das Bild der Ba
 
 Der Geräteabgleich überträgt den Frank-Datenstand direkt über eine verschlüsselte WebRTC-Verbindung. CSV- und PDF-Originaldateien, Kursschlüssel und gerätespezifische Anzeigeoptionen bleiben auf ihrem Gerät.
 
-## Schweizer Lohnausweis importieren
+## Lohnausweis oder Monatsabrechnung importieren
 
-Unter «Mehr → Einnahmen & Lohn» in der Karte «Lohnausweis» ein PDF oder eine CSV auswählen. Frank liest Text-PDFs und ausgefüllte PDF-Formulare lokal. Für einen Bildscan braucht es zuerst eine PDF-Texterkennung. Eine CSV kann beispielsweise die Spalten `Ziffer;Betrag;Jahr` enthalten.
+Unter «Mehr → Einnahmen & Lohn → Lohnausweis & Monatsabrechnung» ein einzelnes PDF wählen. Frank liest Text und Formularfelder direkt aus. Bei gescannten Seiten läuft eine deutsche Texterkennung auf dem Gerät. Jahreswerte lassen sich auch als CSV mit den Spalten `Ziffer;Betrag;Jahr` importieren.
 
-Vor dem Speichern lassen sich Brutto- und Nettolohn, Sozialabzüge, Pensionskassenbeiträge und bezifferte Spesen prüfen. Effektive Spesen (Ziffer 13.1) und Pauschalspesen (13.2) erscheinen getrennt. Eine vereinbarte Monatspauschale lässt sich mit ihrer steuerlichen Behandlung ausdrücklich in den Lohnplan übernehmen.
+Beim Jahreslohnausweis lassen sich vor dem Speichern Brutto- und Nettolohn, Sozialabzüge, Pensionskassenbeiträge und bezifferte Spesen prüfen. Effektive Spesen (Ziffer 13.1) und Pauschalspesen (13.2) erscheinen getrennt. Eine vereinbarte Monatspauschale lässt sich mit ihrer steuerlichen Behandlung ausdrücklich in den Lohnplan übernehmen.
+
+Bei einer Monatsabrechnung speichert Frank die bestätigten Beträge beim gewählten Monat. Effektive Spesen, Nettolohn und Auszahlung sind dort als Abrechnungswerte sichtbar. Grundlohn, BVG und vereinbarte Pauschalspesen lassen sich zusätzlich gezielt in den Lohnplan übernehmen.
 
 ## Bedienung auf dem Handy
 

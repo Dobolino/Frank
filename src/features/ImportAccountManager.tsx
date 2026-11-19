@@ -4,7 +4,7 @@ import type { ImportAccount } from '../domain/types';
 import { accountDisplayName, accountTypeLabel, bankLabel } from '../domain/importAccounts';
 import { canMergeImportAccounts, mergeImportAccounts, previewAccountMerge } from '../domain/mergeImportAccounts';
 import { BankMark, AccountEditor } from './AccountTargetSelect';
-import { Button, Card } from './shared';
+import { Button, Card, Select } from './shared';
 
 const inputClass = 'w-full min-h-11 rounded-lg border border-line bg-bg px-3 py-2 text-sm';
 
@@ -12,6 +12,7 @@ function EditAccount({account, close, saved}: {account: ImportAccount; close: ()
   const { update } = useStore();
   const [original] = useState(account);
   const [name, setName] = useState(account.name);
+  const [type, setType] = useState(account.type);
   const [ending, setEnding] = useState(account.lastFour ?? '');
   const [error, setError] = useState('');
   function submit(event: FormEvent) {
@@ -19,17 +20,18 @@ function EditAccount({account, close, saved}: {account: ImportAccount; close: ()
     if (!name.trim() || (ending && !/^[0-9]{4}$/.test(ending))) return;
     update(draft => {
       const row = draft.importAccounts?.find(a => a.id === account.id);
-      if (!row || row.name !== original.name || row.lastFour !== original.lastFour) {
+      if (!row || row.name !== original.name || row.type !== original.type || row.lastFour !== original.lastFour) {
         setError('Das Konto wurde inzwischen geändert. Öffne es erneut.');
         return;
       }
-      const duplicate = draft.importAccounts?.some(a => a.id !== row.id && a.bankId === row.bankId && a.type === row.type &&
+      const duplicate = draft.importAccounts?.some(a => a.id !== row.id && a.bankId === row.bankId && a.type === type &&
         a.name.toLocaleLowerCase() === name.trim().toLocaleLowerCase() && (a.lastFour ?? '') === ending);
       if (duplicate) {
         setError('Dieses Konto ist unter demselben Namen und denselben Endziffern vorhanden. Wähle einen anderen Namen oder führe die Konten zusammen.');
         return;
       }
       row.name = name.trim();
+      row.type = type;
       if (ending) row.lastFour = ending;
       else delete row.lastFour;
       saved();
@@ -39,6 +41,10 @@ function EditAccount({account, close, saved}: {account: ImportAccount; close: ()
     <label className="block text-sm">Kontoname
       <input autoFocus required className={inputClass} value={name} onChange={e => setName(e.target.value)}/>
     </label>
+    {original.type !== 'depot' && <label className="block text-sm">Kontoart
+      <Select className="block min-h-11 w-full" value={type} onChange={setType}
+        options={(['bank', 'card'] as const).map(value => ({ value, label: accountTypeLabel(value) }))} />
+    </label>}
     <label className="block text-sm">Letzte vier Ziffern (optional)
       <input className={inputClass} type="text" inputMode="numeric" pattern="[0-9]{4}" maxLength={4} autoComplete="off"
         value={ending} onChange={e => setEnding(e.target.value)} placeholder="z. B. 0123"/>

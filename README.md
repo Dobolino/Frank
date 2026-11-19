@@ -37,7 +37,7 @@ npm run build      # Produktions-Build nach dist/
 
 ### Automatische Kontozuordnung
 
-Die CSV-Vorschau zeigt für jede erkennbare Quelle das Konto und das Bild der Bank. Ein neues Konto wird zusammen mit den ausgewählten Buchungen angelegt. Beim nächsten Auszug erkennt Frank die bestätigte Quelle anhand eines lokal erzeugten Prüfwerts. Bei fehlenden oder mehrdeutigen Kennungen wählst du das Konto selbst. Mehrere Quellen eines Auszugs lassen sich auch auf einem gemeinsamen Konto verbuchen. Unter «Mehr → Konten & Karten» kannst du vorhandene Konten umbenennen, ihre letzten vier Ziffern ergänzen und getrennte Einträge mit einer Vorschau zusammenführen. Bei Yuh bleibt die Kontoendung leer, sofern du sie nicht selbst einträgst.
+Die CSV-Vorschau zeigt für jede erkennbare Quelle das Konto und das Bild der Bank. Ein neues Konto wird zusammen mit den ausgewählten Buchungen angelegt. Beim nächsten Auszug erkennt Frank die bestätigte Quelle anhand eines lokal erzeugten Prüfwerts. Bei fehlenden oder mehrdeutigen Kennungen wählst du das Konto selbst. Mehrere Quellen eines Auszugs lassen sich auch auf einem gemeinsamen Konto verbuchen. Unter «Mehr → Konten & Karten → Bearbeiten» kannst du ein Bankkonto auf Kartenkonto umstellen oder umgekehrt, den Namen ändern und die letzten vier Ziffern ergänzen. Buchungen und gespeicherte CSV-Zuordnungen bleiben beim Wechsel der Kontoart erhalten. Getrennte Konteneinträge lassen sich mit einer Vorschau zusammenführen. Bei Yuh bleibt die Kontoendung leer, sofern du sie nicht selbst einträgst.
 
 ## PC und iPhone abgleichen
 

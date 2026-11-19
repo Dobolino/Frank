@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useStore } from '../app/store';
 import { merchantDirectory, merchantRanking, merchantText, type Merchant } from '../domain/merchants';
 import type { AppData, ImportAccount, Transaction } from '../domain/types';
@@ -90,39 +90,218 @@ function BrandAssignment({ transaction, current, directory, done }: { transactio
   </div>;
 }
 
-export function MerchantActivity({ transactions, accounts }: { transactions: Transaction[]; accounts: ImportAccount[] }) {
+interface ActivityProps {
+  transactions: Transaction[];
+  accounts: ImportAccount[];
+  hidden: boolean;
+  hourly: number;
+  budgetNames: string[];
+  assign: (transaction: Transaction, item: string) => void;
+  chart: ReactNode;
+}
+function workTime(amount: number, hourly: number) {
+  const minutes = Math.round((60 * amount) / hourly);
+  if (minutes < 60) return minutes + ' min';
+  return Math.floor(minutes / 60) + ' h' + (minutes % 60 ? ' ' + (minutes % 60) + ' min' : '');
+}
+
+export function MerchantActivity({
+  transactions,
+  accounts,
+  hidden,
+  hourly,
+  budgetNames,
+  assign,
+  chart,
+}: ActivityProps) {
   const { data } = useStore();
   const directory = useMemo(() => merchantDirectory(data), [data.customMerchants, data.merchantRules]);
-  const [period, setPeriod] = useState('');
   const [sort, setSort] = useState<'amount' | 'count'>('amount');
   const [filter, setFilter] = useState('');
   const [editId, setEditId] = useState('');
-  const [limit, setLimit] = useState(20);
-  const years = [...new Set(transactions.map(t => t.date.slice(0,4)))].sort().reverse();
-  const preferred = years.includes(String(data.activeYear)) ? String(data.activeYear) : years[0];
-  const year = period === 'all' || years.includes(period) ? period : preferred;
-  const matched = useMemo(() => transactions.filter(t => year === 'all' || t.date.startsWith(year ?? '')).map(transaction => ({ transaction, merchant: directory.find(transaction) })), [transactions, year, directory]);
+  const [limit, setLimit] = useState(25);
+  const ledgerTitle = useRef<HTMLHeadingElement>(null);
+  const matched = useMemo(
+    () => transactions.map((transaction) => ({ transaction, merchant: directory.find(transaction) })),
+    [transactions, directory],
+  );
   const ranking = merchantRanking(matched, sort);
-  const list = matched.filter(({merchant}) => filter === '' || (filter === 'unmatched' ? !merchant : merchant?.id === filter)).sort((a,b) => b.transaction.date.localeCompare(a.transaction.date));
-  const brands = Array.from(new Map(matched.flatMap(({merchant}) => merchant ? [[merchant.id,merchant] as const] : [])).values()).sort((a,b) => a.name.localeCompare(b.name));
-  if (!transactions.length) return null;
-  return <section className="mt-5 space-y-3 border-t border-line pt-4" aria-label="Marken und Buchungen">
-    <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-semibold">Top-Marken</h3>
-      <div className="flex flex-wrap gap-2"><Select ariaLabel="Marken-Zeitraum" value={year ?? 'all'} onChange={v => {setPeriod(v);setFilter('');setLimit(20);}} options={[...years.map(y => ({value:y,label:y})),{value:'all',label:'Alle Jahre'}]}/>
-      <Select ariaLabel="Top-Marken sortieren" value={sort} onChange={setSort} options={[{ value: 'amount', label: 'Nach Ausgaben' },{ value: 'count', label: 'Nach Häufigkeit' }]} /></div></div>
-    <ol className="divide-y divide-line">{ranking.slice(0,5).map(({merchant,count,amount},i) => <li key={merchant.id}><button className="flex min-h-12 w-full items-center gap-2 text-left text-sm" onClick={() => {setFilter(merchant.id);setEditId('');setLimit(20);}}>
-      <span className="w-3 text-xs text-muted">{i+1}</span><MerchantMark brand={merchant} label={merchant.name} /><span className="min-w-0 flex-1 truncate">{merchant.name}<small className="block text-muted">{count} {count === 1 ? 'Buchung' : 'Buchungen'}</small></span><Money value={amount} />
-    </button></li>)}</ol>
-    {!ranking.length && <p className="text-sm text-muted">In dieser Auswahl sind noch keine Ausgaben einer Marke zugeordnet.</p>}
-    <div className="flex flex-wrap items-center justify-between gap-2"><h4 className="text-sm font-semibold">Buchungen ({list.length})</h4><Select ariaLabel="Buchungen nach Marke" className="max-w-full" value={filter} onChange={v => {setFilter(v);setLimit(20);setEditId('');}} options={[{value:'',label:'Alle Firmen'},{value:'unmatched',label:'Ohne Zuordnung'},...brands.map(b => ({value:b.id,label:b.name}))]}/></div>
-    <ul className="divide-y divide-line">{list.slice(0,limit).map(({transaction:t,merchant}) => {
-      const account=accounts.find(a => a.id===t.accountId);
-      return <li key={t.id}><button className="flex min-h-12 w-full items-center gap-2 text-left" onClick={() => setEditId(editId===t.id?'':t.id)} aria-expanded={editId===t.id}>
-        <MerchantMark brand={merchant} label={t.text}/><span className="min-w-0 flex-1"><b className="block truncate text-sm">{merchant?.name || t.text || 'Ohne Buchungstext'}</b>
-        <small className="flex items-center gap-1 text-xs text-muted">{t.date.split('-').reverse().join('.')}{account && <><BankMark bankId={account.bankId} size={14}/><span className="truncate">{bankLabel(account.bankId)} · {account.name}</span></>}</small></span><span className="shrink-0 text-sm"><Money value={t.amount} signed/></span></button>
-        {editId===t.id && <BrandAssignment transaction={t} current={merchant} directory={directory} done={() => setEditId('')}/>}
-      </li>;
-    })}</ul>
-    {list.length>limit && <Button onClick={() => setLimit(limit+30)}>Weitere Buchungen</Button>}
-  </section>;
+  const list = matched
+    .filter(({ merchant, transaction }) => {
+      if (filter === 'open') return transaction.amount < 0 && !transaction.item && !transaction.excludedFromSpend;
+      if (filter === 'unmatched') return !merchant;
+      return !filter || merchant?.id === filter;
+    })
+    .sort((a, b) => b.transaction.date.localeCompare(a.transaction.date));
+  const brands = Array.from(
+    new Map(matched.flatMap(({ merchant }) => (merchant ? [[merchant.id, merchant] as const] : []))).values(),
+  ).sort((a, b) => a.name.localeCompare(b.name));
+  const changeFilter = (value: string) => {
+    setFilter(value);
+    setLimit(25);
+    setEditId('');
+  };
+  const dayLabel = (date: string) =>
+    new Date(date + 'T12:00:00Z').toLocaleDateString('de-CH', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'long',
+      timeZone: 'UTC',
+    });
+  return (
+    <div className="ex-layout">
+      <div className="ex-aside">
+        {chart}
+        {ranking.length > 0 && (
+          <details className="ex-card ex-rank">
+            <summary>
+              <span>
+                <strong>Top-Marken</strong>
+                <small>
+                  {ranking.length} {ranking.length === 1 ? 'Marke' : 'Marken'} im Zeitraum
+                </small>
+              </span>
+              <span aria-hidden="true">⌄</span>
+            </summary>
+            <Select
+              ariaLabel="Top-Marken sortieren"
+              value={sort}
+              onChange={setSort}
+              options={[
+                { value: 'amount', label: 'Nach Ausgaben' },
+                { value: 'count', label: 'Nach Häufigkeit' },
+              ]}
+            />
+            <ol>
+              {ranking.slice(0, 5).map(({ merchant, count, amount }, i) => (
+                <li key={merchant.id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      changeFilter(merchant.id);
+                      ledgerTitle.current?.focus();
+                    }}
+                  >
+                    <small>{i + 1}</small>
+                    <MerchantMark brand={merchant} label={merchant.name} />
+                    <span className="ex-name">
+                      <b>{merchant.name}</b>
+                      <small>
+                        {count} {count === 1 ? 'Buchung' : 'Buchungen'}
+                      </small>
+                    </span>
+                    <b className="ex-sum">{hidden ? '••••' : <Money value={amount} />}</b>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </details>
+        )}
+      </div>
+      <section className="ex-card ex-ledger">
+        <header className="ex-card-head">
+          <div>
+            <h2 ref={ledgerTitle} tabIndex={-1}>
+              Buchungen
+            </h2>
+            <small>{list.length} im Zeitraum · CHF</small>
+          </div>
+          <Select
+            ariaLabel="Buchungen nach Marke"
+            className="ex-brandselect"
+            value={filter}
+            onChange={changeFilter}
+            options={[
+              { value: '', label: 'Alle Händler' },
+              { value: 'unmatched', label: 'Ohne Marke' },
+              { value: 'open', label: 'Ohne Budgetposten' },
+              ...brands.map((b) => ({ value: b.id, label: b.name })),
+            ]}
+          />
+        </header>
+        {list.length === 0 && (
+          <p className="ex-empty">
+            {filter
+              ? 'Keine Buchungen für diese Auswahl.'
+              : 'Für diesen Zeitraum sind keine Buchungen erfasst. Über CSV kannst du einen Konto- oder Kartenauszug importieren.'}
+          </p>
+        )}
+        {list.slice(0, limit).map(({ transaction: t, merchant }, i) => {
+          const account = accounts.find((a) => a.id === t.accountId);
+          const name = merchant?.name || (hidden ? 'Buchung' : t.text) || 'Ohne Buchungstext';
+          return (
+            <Fragment key={t.id}>
+              {list[i - 1]?.transaction.date !== t.date && <h3 className="ex-day">{dayLabel(t.date)}</h3>}
+              <button
+                className="ex-booking"
+                type="button"
+                aria-expanded={editId === t.id && !hidden}
+                disabled={hidden}
+                onClick={() => setEditId(editId === t.id ? '' : t.id)}
+              >
+                <MerchantMark brand={merchant} label={name} />
+                <span className="ex-name">
+                  <b>{name}</b>
+                  <small>
+                    {account && <BankMark bankId={account.bankId} size={12} />}
+                    {t.excludedFromSpend
+                      ? 'Geldbewegung · ausgeklammert'
+                      : t.item || t.category || (t.amount > 0 ? 'Eingang' : 'Ausgabe')}
+                  </small>
+                </span>
+                <span className="ex-book-amount">
+                  <b className={t.amount > 0 ? 'text-accent' : ''}>
+                    {hidden ? '••••' : <Money value={t.amount} signed />}
+                  </b>
+                  {!hidden && t.amount < 0 && !t.excludedFromSpend && hourly > 0 && (
+                    <small>{workTime(-t.amount, hourly)}</small>
+                  )}
+                </span>
+              </button>
+              {editId === t.id && !hidden && (
+                <div className="ex-edit">
+                  {account && (
+                    <p className="ex-caption">
+                      {bankLabel(account.bankId)} · {account.name}
+                    </p>
+                  )}
+                  {t.amount < 0 && !t.excludedFromSpend && budgetNames.length > 0 && (
+                    <label className="ex-assign">
+                      Budgetposten
+                      <Select
+                        ariaLabel="Budgetposten"
+                        value={t.item ?? ''}
+                        onChange={(value) => {
+                          if (value) assign(t, value);
+                        }}
+                        options={[
+                          { value: '', label: 'Posten wählen …' },
+                          ...Array.from(new Set([...(t.item ? [t.item] : []), ...budgetNames])).map((n) => ({
+                            value: n,
+                            label: n,
+                          })),
+                        ]}
+                      />
+                      <small>Frank merkt sich den Händler und die Kategorie für weitere Buchungen.</small>
+                    </label>
+                  )}
+                  <BrandAssignment
+                    transaction={t}
+                    current={merchant}
+                    directory={directory}
+                    done={() => setEditId('')}
+                  />
+                </div>
+              )}
+            </Fragment>
+          );
+        })}
+        {list.length > limit && (
+          <button className="ex-more" type="button" onClick={() => setLimit(limit + 35)}>
+            Weitere Buchungen ({list.length - limit})
+          </button>
+        )}
+      </section>
+    </div>
+  );
 }

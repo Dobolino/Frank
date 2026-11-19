@@ -1,0 +1,52 @@
+.frank-shell { min-height: 100vh; }
+.frank-top {
+  position: sticky; top: 0; z-index: 25; background: #0b0d12;
+  padding-top: env(safe-area-inset-top); border-bottom: 1px solid #222732;
+}
+.frank-top-inner, .frank-main { max-width: 1064px; margin-inline: auto; padding-inline: 34px; }
+.frank-top-inner { min-height: 66px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.frank-logo { display: inline-flex; align-items: center; min-height: 44px; font-size: 32px; font-weight: 760; line-height: 1; letter-spacing: -.077em; color: var(--color-text); }
+.frank-logo span { color: var(--color-accent); }
+.frank-location { font-size: .82rem; font-weight: 500; color: var(--color-muted); text-align: right; }
+.frank-main { min-width: 0; overflow-x: clip; padding-block: 30px calc(124px + env(safe-area-inset-bottom)); }
+.frank-back { display: inline-flex; align-items: center; gap: 3px; min-height: 42px; color: var(--color-accent); font-size: .85rem; font-weight: 600; }
+.frank-back:hover { text-decoration: underline; }
+.frank-dock {
+  display: flex; position: fixed; z-index: 30; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+  width: min(520px,100%); border: 1px solid #323743; background: #151920; border-radius: 24px; padding: 5px 7px;
+  box-shadow: 0 6px 30px #0007;
+}
+.frank-dock a { display: flex; flex: 1; min-width: 0; height: 54px; align-items: center; justify-content: center;
+  flex-direction: column; gap: 4px; color: #aab4c4; font-size: 11px; line-height: 1.2; font-weight: 550; border-radius: 17px; }
+.frank-dock a[aria-current] { color: var(--color-accent); background-color: #1c2c24; }
+.frank-dock a:hover { color: var(--color-text); }
+.frank-dock a[aria-current]:hover { color: var(--color-accent); }
+.year-picker { flex: none; }
+.year-select { position: relative; display: inline-flex; align-items: center; border: 1px solid var(--color-line); border-radius: 12px; background: var(--color-panel); }
+.year-select svg { position: absolute; left: 11px; color: #acb7c4; pointer-events: none; }
+.year-select svg:last-child { left: auto; right: 8px; }
+.year-select select { appearance: none; cursor: pointer; padding-inline: 33px 22px; width: 6.2rem; min-height: 44px; font-size: .9rem; font-weight: 600; font-variant-numeric: tabular-nums; border-radius: inherit; }
+.year-select option { background-color: var(--color-panel); color: var(--color-text); }
+.year-dialog { position: fixed; inset: 0; margin: auto; width: min(360px,calc(100% - 28px)); padding: 20px; border-radius: 20px; border: 1px solid #39414f; color: var(--color-text); background: var(--color-panel); box-shadow: 0 10px 70px #0008; }
+.year-dialog::backdrop { background-color: #050609b3; }
+.year-dialog h2 { font-size: 1.2rem; font-weight: 650; margin-bottom: 16px; }
+.year-dialog label { display: grid; gap: .35rem; font-weight: 550; }
+.year-dialog input { width: 100%; border-radius: 8px; padding: .55rem .7rem; border: 1px solid var(--color-line); background: var(--color-bg); }
+.year-dialog p { margin: .65rem 0 1rem; color: var(--color-muted); font-size: .8rem; }
+.year-dialog form>div { display: flex; justify-content: flex-end; gap: 8px; }
+.year-dialog button { min-height: 42px; padding: 6px 12px; background: var(--color-panel-2); font-weight: 550; font-size: .85rem; border-radius: 9px; }
+.year-dialog button[type=submit] { background: var(--color-accent); color: var(--color-bg); }
+@media (max-width: 740px) {
+  .frank-main,.frank-top-inner { padding-inline: 16px; }
+  .frank-top { padding-top: calc(env(safe-area-inset-top) + 4px); }
+  .frank-top-inner { min-height: 52px; }
+  .frank-logo { font-size: 26px; }
+  .frank-main { padding-block: 18px calc(88px + env(safe-area-inset-bottom)); }
+  .frank-dock { left: 0; right: 0; bottom: 0; transform: none; width: 100%; border-radius: 0; border: 0; border-top: 1px solid var(--color-line); padding: 3px 3px max(4px,env(safe-area-inset-bottom)); background: var(--color-panel); box-shadow: none; }
+  .frank-dock a { height: 51px; }
+  .frank-dock a[aria-current] { background-color: transparent; }
+}
+@media (max-width: 740px) and (display-mode: standalone) {
+  /* Keep the wordmark below the softened edge of the iOS status bar. */
+  .frank-top { padding-top: calc(env(safe-area-inset-top) + 14px); }
+}

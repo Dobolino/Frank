@@ -1,4 +1,4 @@
-import { sum, type Rappen } from './money';
+import { chf, sum, type Rappen } from './money';
 import { dueMonths, itemAmount, outflowsByMonth, standingOrders } from './budgetEngine';
 import { addMonths } from './goalsEngine';
 import type { MonthlySalary } from './salaryEngine';
@@ -10,6 +10,21 @@ import type { Account, BudgetItem, ExtrasAllocation, Month } from './types';
  */
 
 export type RadarLevel = 'green' | 'yellow' | 'red';
+
+export const DEFAULT_RADAR_BUFFER = chf(500);
+
+/** Ohne explizite Wahl nimmt der Radar das Sparkonto mit den meisten Budgetposten. */
+export function radarAccount(accounts: Account[], items: BudgetItem[], preferredId?: string): Account | undefined {
+  const savings = accounts.filter(account => account.type === 'savings');
+  const preferred = savings.find(account => account.id === preferredId);
+  if (preferred) return preferred;
+  const counts = new Map<string, number>();
+  for (const item of items) {
+    if (item.accountId) counts.set(item.accountId, (counts.get(item.accountId) ?? 0) + 1);
+  }
+  return savings.sort((a, b) => (counts.get(b.id) ?? 0) - (counts.get(a.id) ?? 0))[0];
+}
+
 
 /** Was die Vorschau pro Jahr braucht (aus dem Jahresmodell). */
 export interface RadarYear {

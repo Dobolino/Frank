@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
+import { FrankIcon } from '../components/FrankIcon';
 import { useStore } from '../app/store';
 import { Card, Money, MoneyInput, Select, cx, todayYm } from './shared';
 import { chf, formatChf, type Rappen } from '../domain/money';
 import { addMonths, monthsBetween } from '../domain/goalsEngine';
-import { onlyMonthlyItems, runRadar, upcomingBills, type RadarLevel, type RadarYear } from '../domain/radarEngine';
+import { DEFAULT_RADAR_BUFFER, radarAccount, onlyMonthlyItems, runRadar, upcomingBills, type RadarLevel, type RadarYear } from '../domain/radarEngine';
 import { MONTH_NAMES, type RadarSettings } from '../domain/types';
-
-const DEFAULT_BUFFER = chf(500);
 
 const ymLabel = (ym: string, withYear = false): string => {
   const [y, m] = ym.split('-').map(Number) as [number, number];
@@ -25,10 +24,12 @@ const LEVEL_COLOR: Record<RadarLevel, string> = {
   red: 'var(--color-danger)',
 };
 
-export function RadarCard() {
+export function RadarCard({ compact = false }: { compact?: boolean }) {
   const { data, update, modelFor, model } = useStore();
-  const today = todayYm();
-  const settings: RadarSettings = data.settings?.radar ?? { buffer: DEFAULT_BUFFER };
+  const currentMonth = todayYm();
+  const startAtNewYear = compact && model.plan.year !== Number(currentMonth.slice(0, 4));
+  const today = startAtNewYear ? model.plan.year + '-01' : currentMonth;
+  const settings: RadarSettings = data.settings?.radar ?? { buffer: DEFAULT_RADAR_BUFFER };
   const savingsAccounts = data.accounts.filter((a) => a.type === 'savings');
 
   const [oneOff, setOneOff] = useState<Rappen>(0);
@@ -40,21 +41,18 @@ export function RadarCard() {
     return m ? { year, items: m.budget, salaryMonths: m.salary.months, allocations: m.plan.extrasAllocation } : null;
   };
 
-  // Standard: Sparkonto mit den meisten zugeordneten Posten
-  const account =
-    savingsAccounts.find((a) => a.id === settings.accountId) ??
-    [...savingsAccounts].sort(
-      (a, b) => model.budget.filter((i) => i.accountId === b.id).length - model.budget.filter((i) => i.accountId === a.id).length,
-    )[0];
+  const account = radarAccount(data.accounts, model.budget, settings.accountId);
 
   const setRadar = (patch: Partial<RadarSettings>) =>
     update((d) => {
-      d.settings = { ...d.settings, radar: { ...(d.settings?.radar ?? { buffer: DEFAULT_BUFFER }), ...patch } };
+      d.settings = { ...d.settings, radar: { ...(d.settings?.radar ?? { buffer: DEFAULT_RADAR_BUFFER }), ...patch } };
     });
 
   const computed = useMemo(() => {
     if (!account) return null;
-    const known = settings.balance !== undefined && settings.asOfYm !== undefined && settings.asOfYm <= today;
+    // Historische und zukünftige Jahrespläne beginnen mit dem Startguthaben dieses Plans.
+    const known = settings.balance !== undefined && settings.asOfYm !== undefined &&
+      (startAtNewYear ? settings.asOfYm === today : settings.asOfYm <= today);
     let startYm = today;
     let startBalance = 0;
     if (known) {
@@ -75,9 +73,15 @@ export function RadarCard() {
         ? runRadar({ ...base, oneOffs: [{ ym: oneOffYm, amount: oneOff, accountId: account.id }] })
         : null;
     return { known, main: slice(main), alt: alt ? slice(alt) : null };
-  }, [account, settings, today, data.accounts, oneOff, oneOffYm, paidFrom, modelFor]);
+  }, [account, settings, today, startAtNewYear, data.accounts, oneOff, oneOffYm, paidFrom, modelFor]);
 
   if (!account || !computed) {
+    if (compact) return (
+      <a href="#savings" className="home-panel home-link">
+        <div className="home-panel-title"><h2>Finanz-Radar</h2><FrankIcon name="forward" size={15}/></div>
+        <p className="home-caption">Unter Sparen ein Sparkonto für die Prognose einrichten.</p>
+      </a>
+    );
     return (
       <Card title="Finanz-Radar">
         <p className="text-sm text-muted">Lege ein Sparkonto an und ordne ihm Budgetposten zu, dann zeigt der Radar die nächsten 12 Monate.</p>
@@ -99,6 +103,21 @@ export function RadarCard() {
   const currentOrder = model.transfers.find((t) => t.account.id === account.id)?.standingOrder ?? 0;
   // Ohne echten Kontostand keine Ampel und keine Tipps – sonst wäre jede Aussage geraten.
   const hasBalance = computed.known || (model.plan.startBalances[account.id] ?? 0) !== 0;
+  if (compact) {
+    const minLabel = ymLabel(minPoint.ym, true);
+    return (
+      <a className="home-panel home-radar home-link" href="#savings">
+        <div className="home-panel-title"><h2>Finanz-Radar</h2><FrankIcon name="forward" size={15}/></div>
+        <p className="home-caption">{account.name} · Vorschau ab {ymLabel(today, true)}</p>
+        {hasBalance && <Sparkline points={main.points} buffer={settings.buffer} level={mainLevel} altLevel={level} />}
+        <p className="home-radar-status" style={{ color: hasBalance ? LEVEL_COLOR[mainLevel] : undefined }}>
+          {hasBalance
+            ? <>{mainMin < settings.buffer ? 'Unter Puffer' : 'Tiefster Planstand'} im {minLabel} · <Money value={mainMin} /></>
+            : startAtNewYear ? 'Startguthaben für die Prognose erfassen' : 'Kontostand für die Prognose erfassen'}
+        </p>
+      </a>
+    );
+  }
   // Rot: Rate, damit das Konto im Plus bleibt. Gelb: einmalig aufstocken bis zum Puffer.
   const tipMonthly = hasBalance && mainLevel === 'red' ? main.catchUpMonthly : 0;
   const tipOnce = hasBalance && mainLevel === 'yellow' ? settings.buffer - mainMin : 0;

@@ -17,20 +17,16 @@ npm run build      # Produktions-Build nach dist/
 
 | Bereich | Was es macht |
 |---|---|
-| **Übersicht** | Netto, Ausgaben, Rest pro Monat, Jahresüberschuss, Sparquote, Steuern, Daueraufträge |
-| **Budget** | Posten mit Häufigkeit (monatlich, quartalsweise, jährlich, bestimmte Monate), Konto-Zuordnung, Unterposten (z. B. Streaming-Abos), Steuer-Markierung |
-| **Lohn** | Brutto → Netto mit AHV/ALV/NBUV/KTG, BVG, 13. Lohn (Juni/Dezember), Bonus, Lohnerhöhungen unter dem Jahr, Lohnausweis-Werte |
-| **Steuern** | Wohnort frei wählbar: Bund, Kanton, Gemeinde, Kirche, Vermögenssteuer, Abzüge, Grenzsteuersatz, Szenario-Simulator, Vergleich mit Veranlagung |
-| **Anlagen** | Aktien, ETFs und Fonds mit Depotwert in CHF, Gewinn/Verlust, Tagesveränderung. Kurse über eigenen API-Key (Twelve Data oder Alpha Vantage) oder von Hand |
-| **Sparkonto** | Dauerauftrag pro Sparkonto und Kontoverlauf Monat für Monat inkl. Jahresrechnungen |
-| **Sparziele** | Reisen & Co. mit nötiger Monatsrate, Prognose und Übernahme ins Budget |
-| **Jahresvergleich** | Lohn, Steuern, Sparen über mehrere Jahre |
-| **Daten & KI** | JSON-Backup (Export/Import) und anonymisierte Zusammenfassung zum Einfügen in einen KI-Assistenten |
+| **Übersicht** | Planjahr wechseln oder anlegen, Monats- und Jahresrest, Lohn und Spesen, Finanz-Radar, Steuervorschau und anstehende Rechnungen |
+| **Budget** | Posten nach Kategorie aufklappen und bearbeiten, Ring- oder Balkengrafik, monatliche Abflüsse und Kontozuordnung |
+| **Ausgaben** | Bank- und Karten-CSV importieren, Händler und Buchungen durchsuchen, Soll/Ist und Ausgabenkalender ansehen |
+| **Sparen / Anlagen** | Kontoverlauf, Daueraufträge, Säule 3a und Sparziele. Über den Titel zu Depot, Wertpapieren und Anlage-CSV wechseln |
+| **Mehr** | Einnahmen und Spesen bearbeiten, Steuern simulieren, Verträge prüfen, Konten verwalten und Backups erstellen |
 
 ## Soll/Ist mit Bank-Import
 
-- Seite «Budget», Karte «Soll / Ist»: CSV-Export der Bank importieren. Frank erkennt Trennzeichen,
-  Kopfzeile und Spalten; vor dem Import lassen sie sich prüfen und ändern.
+- Im Tab «Ausgaben» auf «CSV» tippen und den Konto- oder Kartenexport auswählen. Frank erkennt Trennzeichen,
+  Kopfzeile und Spalten. In der Vorschau lassen sie sich prüfen und ändern.
 - Buchungen ohne Posten einmal zuordnen, Frank merkt sich den Händler und die Kategorie der Bank
   (z. B. UBS-App: «Lebensmittel»). Konto- und Kartennummern übernimmt Frank nicht.
 - iPhone: Öffnet sich der Export in Numbers, dort «Teilen» → «Exportieren» → «CSV» wählen.
@@ -39,7 +35,7 @@ npm run build      # Produktions-Build nach dist/
 ## Bedienung auf dem Handy
 
 - Tab-Leiste unten, Wischen nach links oder rechts wechselt zur nächsten Seite.
-- Breite Tabellen scrollen zuerst selbst, am Rand wechselt die Seite.
+- In breiten Tabellen verschiebt Wischen die Tabelle horizontal.
 - Als App installieren: in Safari «Teilen», dann «Zum Home-Bildschirm».
 
 ## iPhone-App (PWA)

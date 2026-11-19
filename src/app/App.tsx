@@ -1,42 +1,29 @@
-import { useEffect, useRef, useState, type CSSProperties, type TouchEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type TouchEvent } from 'react';
 import { useStore } from './store';
-import { Button, Select, cx } from '../components/ui';
-import { emptyYear } from '../seed/builders';
+import { Button } from '../components/ui';
+import { FrankIcon } from '../components/FrankIcon';
+import { YearPicker } from '../components/YearPicker';
+import { tabs, activeTab, pageFromHash, type PageId } from './navigation';
+import { ExpensesPage } from '../features/ExpensesPage';
+import { MorePage } from '../features/MorePage';
+import { ContractsPage } from '../features/ContractsPage';
 import { Dashboard } from '../features/Dashboard';
 import { BudgetPage } from '../features/BudgetPage';
 import { SalaryPage } from '../features/SalaryPage';
 import { TaxPage } from '../features/TaxPage';
 import { InvestPage } from '../features/InvestPage';
 import { SavingsPage } from '../features/SavingsPage';
-import { DataPage } from '../features/DataPage';
+import { DataPage, AccountsPage } from '../features/DataPage';
 import { Onboarding } from '../features/Onboarding';
 import { haptic } from './haptics';
 import { applyUpdate, useUpdateAvailable } from './pwaUpdate';
 
-const PAGES = [
-  { id: 'overview', label: 'Übersicht', short: 'Übersicht', icon: '◎', Component: Dashboard },
-  { id: 'budget', label: 'Budget', short: 'Budget', icon: '▤', Component: BudgetPage },
-  { id: 'salary', label: 'Lohn', short: 'Lohn', icon: '₣', Component: SalaryPage },
-  { id: 'tax', label: 'Steuern', short: 'Steuern', icon: '§', Component: TaxPage },
-  { id: 'invest', label: 'Anlagen', short: 'Anlagen', icon: '↗', Component: InvestPage },
-  { id: 'savings', label: 'Sparen', short: 'Sparen', icon: '⇄', Component: SavingsPage },
-] as const;
+const pages = {
+  overview: Dashboard, budget: BudgetPage, expenses: ExpensesPage, savings: SavingsPage, more: MorePage,
+  invest: InvestPage, salary: SalaryPage, tax: TaxPage, data: DataPage, accounts: AccountsPage, contracts: ContractsPage,
+} satisfies Record<PageId, React.ComponentType>;
 
-/** Nicht in der Tab-Leiste: über das Symbol in der Kopfzeile erreichbar. */
-const DATA_PAGE = { id: 'data', label: 'Daten & KI', short: 'Daten', icon: '⤓', Component: DataPage } as const;
-
-type PageId = (typeof PAGES)[number]['id'] | typeof DATA_PAGE.id;
-
-/** Frühere Seiten-Adressen (Lesezeichen) zeigen auf die neue Seite. */
-const ALIASES: Record<string, PageId> = { 'budget-ist': 'budget', cashflow: 'savings', goals: 'savings', compare: 'overview' };
-
-const pageFromHash = (): PageId => {
-  const id = window.location.hash.replace('#', '');
-  if (id === DATA_PAGE.id) return DATA_PAGE.id;
-  return ALIASES[id] ?? (PAGES.find((p) => p.id === id)?.id ?? 'overview');
-};
-
-const orderOf = (id: PageId) => (id === DATA_PAGE.id ? PAGES.length : PAGES.findIndex((p) => p.id === id));
+const tabIndex = (page: PageId) => tabs.findIndex(tab => tab.id === activeTab(page));
 
 interface Swipe {
   x: number;
@@ -46,52 +33,55 @@ interface Swipe {
 
 // Text fields, buttons and horizontal tables keep their own touch gestures.
 function canSwipeFrom(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false;
-  if (target.closest('input, select, textarea, button, a, label, summary, [role="switch"], [role="slider"], [contenteditable="true"], [data-no-swipe]')) return false;
-  for (let element: HTMLElement | null = target; element && element.tagName !== 'MAIN'; element = element.parentElement) {
+  if (!(target instanceof Element)) return false;
+  if (target.closest('input, select, textarea, button, label, summary, [role="switch"], [role="slider"], [contenteditable="true"], [data-no-swipe]')) return false;
+  for (let element: Element | null = target; element && element.tagName !== 'MAIN'; element = element.parentElement) {
     if (element.scrollWidth > element.clientWidth + 1 && /auto|scroll/.test(getComputedStyle(element).overflowX)) return false;
   }
   return !window.getSelection()?.toString();
 }
 
 export function App() {
-  const { data, update, saveError, firstRun } = useStore();
+  const { data, saveError, firstRun } = useStore();
   const updateAvailable = useUpdateAvailable();
-  const [{ page, direction }, setNavigation] = useState(() => ({ page: pageFromHash(), direction: 1 }));
+  const [{ page, direction }, setNavigation] = useState(() => ({ page: pageFromHash(window.location.hash), direction: 1 }));
   const [drag, setDrag] = useState(0);
   const swipe = useRef<Swipe | null>(null);
-  const nav = useRef<HTMLElement>(null);
+  const lastPage = useRef(page);
+  const scrollPositions = useRef(new Map<PageId, number>());
   const main = useRef<HTMLElement>(null);
-  const index = PAGES.findIndex((p) => p.id === page);
+  const section = activeTab(page);
+  const index = tabIndex(page);
 
   useEffect(() => {
+    const previousRestoration = history.scrollRestoration;
+    history.scrollRestoration = 'manual';
     const onHash = () => {
-      const next = pageFromHash();
+      const next = pageFromHash(window.location.hash);
+      if (lastPage.current === next) return;
+      scrollPositions.current.set(lastPage.current, window.scrollY);
+      lastPage.current = next;
       // A swipe/history change does not naturally blur a focused amount field.
       // Commit its draft before unmounting the current page.
       const focused = document.activeElement;
       if (focused instanceof HTMLElement && focused.matches('input, textarea, select, [contenteditable="true"]')) focused.blur();
       setNavigation((previous) => ({
         page: next,
-        direction: orderOf(next) >= orderOf(previous.page) ? 1 : -1,
+        direction: tabIndex(next) >= tabIndex(previous.page) ? 1 : -1,
       }));
       swipe.current = null;
       setDrag(0);
-      window.scrollTo(0, 0);
     };
     window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
+    return () => {
+      window.removeEventListener('hashchange', onHash);
+      history.scrollRestoration = previousRestoration;
+    };
   }, []);
 
-  useEffect(() => {
-    const strip = nav.current;
-    const active = strip?.querySelector<HTMLAnchorElement>('[aria-current="page"]');
-    if (!strip || !active || window.matchMedia('(min-width: 768px)').matches) return;
-    strip.scrollTo({
-      left: active.offsetLeft - strip.offsetLeft - (strip.clientWidth - active.offsetWidth) / 2,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-    });
-  }, [page]);
+  useLayoutEffect(() => {
+    window.scrollTo(0, scrollPositions.current.get(page) ?? 0);
+  }, [page, firstRun]);
 
   useEffect(() => {
     const surface = main.current;
@@ -108,7 +98,7 @@ export function App() {
     };
     surface.addEventListener('touchmove', preventHorizontalScroll, { passive: false });
     return () => surface.removeEventListener('touchmove', preventHorizontalScroll);
-  }, []);
+  }, [firstRun]);
 
   const cancelSwipe = () => {
     swipe.current = null;
@@ -117,7 +107,7 @@ export function App() {
   const onTouchStart = (event: TouchEvent<HTMLElement>) => {
     cancelSwipe();
     const touch = event.touches[0];
-    if (!touch || index < 0 || event.touches.length !== 1 || window.innerWidth >= 768 || !canSwipeFrom(event.target)) return;
+    if (!touch || section !== page || event.touches.length !== 1 || window.innerWidth >= 768 || !canSwipeFrom(event.target)) return;
     // Leave the screen edges to the browser's back/forward gestures.
     if (touch.clientX < 24 || touch.clientX > window.innerWidth - 24) return;
     swipe.current = { x: touch.clientX, y: touch.clientY, started: performance.now() };
@@ -133,7 +123,7 @@ export function App() {
       return;
     }
     const nextIndex = index + (dx < 0 ? 1 : -1);
-    setDrag(nextIndex >= 0 && nextIndex < PAGES.length ? Math.max(-54, Math.min(54, dx * 0.25)) : 0);
+    setDrag(nextIndex >= 0 && nextIndex < tabs.length ? Math.max(-54, Math.min(54, dx * 0.25)) : 0);
   };
   const onTouchEnd = (event: TouchEvent<HTMLElement>) => {
     const start = swipe.current;
@@ -143,114 +133,36 @@ export function App() {
     const dx = touch.clientX - start.x;
     const dy = touch.clientY - start.y;
     if (Math.abs(dx) < 64 || Math.abs(dy) > Math.abs(dx) * 0.6 || performance.now() - start.started > 900) return;
-    const next = PAGES[index + (dx < 0 ? 1 : -1)];
+    const next = tabs[index + (dx < 0 ? 1 : -1)];
     if (next) {
       haptic();
       window.location.hash = next.id;
     }
   };
 
-  const years = Object.keys(data.years).map(Number).sort();
-  const Current = page === DATA_PAGE.id ? DATA_PAGE.Component : PAGES.find((p) => p.id === page)!.Component;
-
-  const addYear = () => {
-    const last = Math.max(...years);
-    update((d) => {
-      d.years[String(last + 1)] = emptyYear(last + 1, d.years[String(last)]);
-      d.activeYear = last + 1;
-    });
-  };
-
-  const yearControls = (
-    <div className="flex items-center gap-2">
-      <Select
-        ariaLabel="Jahr wählen"
-        value={data.activeYear}
-        options={years.map((y) => ({ value: y, label: String(y) }))}
-        onChange={(y) => update((d) => void (d.activeYear = y))}
-        className="md:flex-1"
-      />
-      <Button variant="ghost" title="Neues Jahr aus dem letzten Jahr anlegen" onClick={addYear}>
-        + Jahr
-      </Button>
-    </div>
-  );
-
+  const Current = pages[page];
   if (firstRun) return <Onboarding />;
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
-      {/* Kopfzeile Handy */}
-      {/* iOS zeichnet im Vollbild einen Streifen direkt unter der Statusleiste weich (auf dem iPhone getestet).
-          Der Inhalt beginnt deshalb 14px tiefer, sonst wird «Frank» unscharf. */}
-      <header className="sticky top-0 z-30 isolate border-b border-line pt-[calc(env(safe-area-inset-top)+14px)] md:hidden">
-        <div aria-hidden className="absolute inset-0 -z-10 bg-panel/95 backdrop-blur" />
-        <div className="flex items-center justify-between gap-3 px-4 py-2.5">
-          <div className="min-w-0">
-            <div className="text-base leading-tight font-semibold tracking-tight">
-              Frank<span className="text-accent">.</span>
-            </div>
-            <div className="truncate text-[11px] text-muted">{data.profile.municipality}</div>
-          </div>
-          <div className="flex items-center gap-1">
-            {yearControls}
-            <a
-              href={`#${DATA_PAGE.id}`}
-              aria-label="Daten, Backup und KI"
-              aria-current={page === DATA_PAGE.id ? 'page' : undefined}
-              className={cx('flex h-9 w-9 items-center justify-center rounded-lg text-lg', page === DATA_PAGE.id ? 'bg-panel-2 text-accent' : 'text-muted')}
-            >
-              {DATA_PAGE.icon}
-            </a>
-          </div>
-        </div>
-        {/* Fortschritt: wo in der Seitenfolge du bist */}
-        <div className="flex gap-1 px-4 pb-2" aria-hidden>
-          {PAGES.map((p) => (
-            <span key={p.id} className={cx('h-0.5 flex-1 rounded-full transition-colors', p.id === page ? 'bg-accent' : 'bg-line')} />
-          ))}
+    <div className="frank-shell">
+      <header className="frank-top">
+        <div className="frank-top-inner">
+          <a href="#overview" className="frank-logo" aria-label="Frank – Übersicht">Frank<span>.</span></a>
+          {page === 'overview'
+            ? <span className="frank-location">{data.profile.municipality}</span>
+            : <YearPicker />}
         </div>
       </header>
-
-      {/* Seitenleiste Desktop */}
-      <aside className="hidden md:sticky md:top-0 md:block md:h-screen md:w-60 md:shrink-0 md:border-r md:border-line md:bg-panel">
-        <div className="px-5 py-4">
-          <div className="text-lg font-semibold tracking-tight">
-            Frank<span className="text-accent">.</span>
-          </div>
-          <div className="text-xs text-muted">Finanzen · {data.profile.municipality}</div>
-          <div className="mt-5">{yearControls}</div>
-        </div>
-        <nav aria-label="Hauptnavigation" className="flex flex-col gap-1 px-3 pb-3">
-          {[...PAGES, DATA_PAGE].map((p) => (
-            <a
-              key={p.id}
-              href={`#${p.id}`}
-              aria-current={page === p.id ? 'page' : undefined}
-              className={cx(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-                page === p.id ? 'bg-panel-2 text-text' : 'text-muted hover:bg-panel-2/60 hover:text-text',
-              )}
-            >
-              <span className={cx('w-4 text-center', page === p.id && 'text-accent')} aria-hidden>
-                {p.icon}
-              </span>
-              {p.label}
-            </a>
-          ))}
-        </nav>
-        {saveError && <p className="px-5 pb-4 text-xs text-danger">Speichern im Browser fehlgeschlagen – bitte Export nutzen.</p>}
-      </aside>
-
       <main
         ref={main}
-        className="min-w-0 flex-1 overflow-x-clip px-4 pt-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:px-10 md:py-8"
+        id="frank-main" className="frank-main"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
         onTouchCancel={cancelSwipe}
       >
-        <div className="mx-auto max-w-6xl">
+        <div>
+          {saveError && <p role="alert" className="mb-3 text-sm text-danger">Speichern fehlgeschlagen. Unter <a className="underline" href="#data">Daten &amp; Backup</a> kannst du deine Eingaben sichern.</p>}
           {updateAvailable && (
             <div role="status" className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-accent/30 bg-accent/5 px-4 py-3 text-sm">
               <span>Neue Version von Frank bereit.</span>
@@ -259,33 +171,23 @@ export function App() {
               </Button>
             </div>
           )}
-          <div className="page-drag" style={{ '--page-drag': `${drag}px`, '--page-opacity': 1 - Math.abs(drag) / 240 } as CSSProperties}>
+          <div className={drag ? 'page-drag is-dragging' : 'page-drag'} style={{ '--page-drag': `${drag}px`, '--page-opacity': 1 - Math.abs(drag) / 240 } as CSSProperties}>
             <div key={page} className="page-enter" style={{ '--page-direction': direction } as CSSProperties}>
+              {section === 'more' && page !== 'more' && (
+                <a className="frank-back" href="#more"><FrankIcon name="back" size={15} />Mehr</a>
+              )}
               <Current />
             </div>
           </div>
         </div>
       </main>
 
-      {/* Tab-Leiste Handy */}
-      <nav
-        ref={nav}
-        className="page-tabs fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t border-line bg-panel/95 pb-[env(safe-area-inset-bottom)] backdrop-blur select-none md:hidden"
-        aria-label="Seiten"
-      >
-        {PAGES.map((p) => (
-          <a
-            key={p.id}
-            href={`#${p.id}`}
-            className={cx('relative flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 pt-2 pb-1.5 text-[11px]', page === p.id ? 'text-accent' : 'text-muted')}
-            aria-current={page === p.id ? 'page' : undefined}
-            onClick={() => page !== p.id && haptic()}
-          >
-            <span className="text-lg leading-none" aria-hidden>
-              {p.icon}
-            </span>
-            {p.short}
-            {page === p.id && <span aria-hidden className="tab-indicator absolute inset-x-3 top-0 h-0.5 rounded-full bg-accent" />}
+      <nav className="frank-dock" aria-label="Hauptnavigation">
+        {tabs.map(tab => (
+          <a key={tab.id} href={`#${tab.id}`} aria-current={section === tab.id ? (page === tab.id ? 'page' : 'location') : undefined}
+            onClick={() => { if (page !== tab.id) haptic(); else window.scrollTo(0, 0); }}>
+            <FrankIcon name={tab.id} />
+            <span>{tab.label}</span>
           </a>
         ))}
       </nav>

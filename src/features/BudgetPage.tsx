@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useStore } from '../app/store';
-import { Badge, Button, Card, Money, MoneyInput, PageHeader, Segmented, Select, Stat, TextInput, Toggle, Warnings, cx, usePref } from './shared';
+import { Badge, Button, Money, MoneyInput, Segmented, Select, TextInput, Toggle, Warnings, cx, usePref } from './shared';
 import { CATEGORY_COLORS, MonthlyOutflowChart } from './charts';
-import { ActualsCard } from './ActualsCard';
+import { formatPercent, sum } from '../domain/money';
+import './budgetPage.css';
 import { CATEGORY_LABELS, MONTHS, monthName, type BudgetCategory, type BudgetItem, type Frequency, type Month, type TaxTag } from '../domain/types';
-import { frequencyLabel, itemAmount, monthlyAmount } from '../domain/budgetEngine';
+import { frequencyLabel, itemAmount, monthlyAmount, totalsByCategory, yearlyAmount, yearlyByTaxTag, type CategoryTotal } from '../domain/budgetEngine';
 import { uid } from '../seed/builders';
+import { useDeletionNotice } from './DeletionNotice';
 
 type FreqKind = Frequency['kind'];
 
@@ -36,136 +38,205 @@ function changeFrequency(kind: FreqKind, current: Frequency): Frequency {
   }
 }
 
-const VIEWS = ['plan', 'actual', 'year'] as const;
-type View = (typeof VIEWS)[number];
+const PERIODS = ['month', 'year'] as const;
+const CHARTS = ['bar', 'ring'] as const;
+
+function BudgetAllocation({ categories }: { categories: CategoryTotal[] }) {
+  const [chart, setChart] = usePref('budget.allocation', 'bar' as 'bar' | 'ring', CHARTS);
+  const included = categories.filter(category => category.yearly > 0);
+  const total = sum(categories.map(category => category.yearly));
+  const available = total > 0 && !categories.some(category => category.yearly < 0);
+  // Every segment is drawn from its share of the unrounded yearly total.
+  let offset = 0;
+  const parts = included.map(({ category, yearly }) => {
+    const start = offset;
+    const share = available ? yearly / total : 0;
+    offset += share;
+    return { category, start, share };
+  });
+
+  return (
+    <section aria-label="Budgetaufteilung" className="budget-allocation">
+      <div className="budget-allocation-head">
+        <h3>Budgetaufteilung</h3>
+        <Select ariaLabel="Grafik zur Budgetaufteilung" value={chart} onChange={setChart}
+          options={[{ value: 'bar', label: 'Balken' }, { value: 'ring', label: 'Ring' }]} />
+      </div>
+      {available ? (
+        <div key={chart} className={cx('budget-share', chart === 'ring' && 'budget-share-ring')}>
+          {chart === 'ring' ? (
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              {parts.map(({ category, share, start }) => (
+                <circle key={category} cx="50" cy="50" r="37" fill="none" pathLength="100" strokeWidth="12"
+                  stroke={CATEGORY_COLORS[category]} transform="rotate(-90 50 50)"
+                  strokeDasharray={`${100 * share} ${100 * (1 - share)}`} strokeDashoffset={-100 * start} />
+              ))}
+            </svg>
+          ) : (
+            <div className="budget-share-track" aria-hidden="true">
+              {parts.map(({ category, share }) => <span key={category} style={{ flex: share, backgroundColor: CATEGORY_COLORS[category] }} />)}
+            </div>
+          )}
+          <ul className="budget-share-legend">
+            {parts.map(({ category, share }) => (
+              <li key={category}>
+                <i aria-hidden style={{ backgroundColor: CATEGORY_COLORS[category] }} />
+                {CATEGORY_LABELS[category]} <span>{formatPercent(share, 0)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : <p className="text-xs text-muted">{total === 0 && included.length === 0 ? 'Lege deinen ersten Budgetposten an.' : 'Eine Anteilsgrafik erfordert positive Kategoriesummen.'}</p>}
+    </section>
+  );
+}
+
+const ALL_ACCOUNTS = 'all';
+const CHECKING = 'checking-account';
 
 export function BudgetPage() {
   const { model, updateYear, data } = useStore();
-  const [view, setView] = usePref<View>('budget.view', 'plan', VIEWS, window.location.hash === '#budget-ist' ? 'actual' : undefined);
-  const [onlyAccount, setOnlyAccount] = useState<string>('');
+  const [period, setPeriod] = usePref('budget.period', 'month' as 'month' | 'year', PERIODS);
+  const [onlyAccount, setOnlyAccount] = useState(ALL_ACCOUNTS);
   const [openId, setOpenId] = useState<string | null>(null);
-
-  const accountOptions = [{ value: '', label: 'Lohnkonto' }, ...data.accounts.filter((a) => a.type !== 'checking').map((a) => ({ value: a.id, label: a.name }))];
+  const { notice, remember } = useDeletionNotice(model.plan.year);
+  const accountOptions = [{ value: '', label: 'Lohnkonto' }, ...data.accounts.filter(a => a.type !== 'checking').map(a => ({ value: a.id, label: a.name }))];
+  const filterOptions = [{ value: ALL_ACCOUNTS, label: 'Alle Konten' }, { value: CHECKING, label: 'Lohnkonto' }, ...accountOptions.slice(1)];
+  const defaultAccount = onlyAccount === ALL_ACCOUNTS || onlyAccount === CHECKING ? undefined : onlyAccount;
+  const checkingIds = new Set(data.accounts.filter(a => a.type === 'checking').map(a => a.id));
+  const visibleItems = onlyAccount === ALL_ACCOUNTS ? model.budget : model.budget.filter(item => onlyAccount === CHECKING
+    ? !item.accountId || checkingIds.has(item.accountId)
+    : item.accountId === onlyAccount);
+  const groups = totalsByCategory(visibleItems);
+  const annual = period === 'year';
+  const s = model.summary;
+  const allowance = annual ? model.salary.totals.expenses : (model.plan.salary.expenseAllowance?.monthly ?? 0);
+  const payout = annual ? model.salary.totals.net : model.salary.regularNet;
+  const income = (annual ? s.incomeYearly : s.incomeMonthly) - allowance;
+  const planned = annual ? s.expensesYearly : s.expensesMonthly;
+  const provision = yearlyByTaxTag(model.budget, 'taxProvision');
 
   const edit = (id: string, fn: (item: BudgetItem) => void) =>
-    updateYear((plan) => {
-      const item = plan.budget.find((b) => b.id === id);
+    updateYear(plan => {
+      const item = plan.budget.find(b => b.id === id);
       if (item) fn(item);
     });
 
   const addItem = (category: BudgetCategory) => {
     const id = uid('b');
-    updateYear((plan) => {
-      plan.budget.push({ id, category, name: 'Neuer Posten', amount: 0, frequency: { kind: 'monthly' } });
+    updateYear(plan => {
+      plan.budget.push({ id, category, name: 'Neuer Posten', amount: 0, frequency: { kind: 'monthly' }, ...(defaultAccount && { accountId: defaultAccount }) });
     });
     setOpenId(id);
   };
 
-  const visible = (b: BudgetItem) => !onlyAccount || (b.accountId ?? '') === onlyAccount;
-  const s = model.summary;
+  const removeItem = (item: BudgetItem) => {
+    updateYear(plan => {
+      if (plan.year !== model.plan.year) return;
+      const index = plan.budget.findIndex(entry => entry.id === item.id);
+      if (index < 0) return;
+      // Keep the stored item, including the inputs of an automatic tax provision.
+      const [removed] = plan.budget.splice(index, 1);
+      if (!removed) return;
+      const year = plan.year;
+      remember(removed.name, draft => {
+        const budget = draft.years[year]?.budget;
+        if (!budget || budget.some(entry => entry.id === removed.id)) return;
+        const restored = { ...removed };
+        if (restored.goalId && !draft.goals.some(goal => goal.id === restored.goalId)) delete restored.goalId;
+        if (restored.accountId && !draft.accounts.some(account => account.id === restored.accountId)) delete restored.accountId;
+        budget.splice(index, 0, restored);
+      });
+      setOpenId(null);
+    });
+  };
 
   return (
-    <>
-      <PageHeader title={`Budget ${model.plan.year}`} />
-      <Segmented
-        className="mt-4"
-        ariaLabel="Ansicht"
-        value={view}
-        onChange={setView}
-        options={[
-          { value: 'plan', label: 'Plan' },
-          { value: 'actual', label: 'Ist' },
-          { value: 'year', label: 'Jahr' },
-        ]}
-      />
-      <Warnings items={model.warnings.filter((w) => w.includes('Steuerrückstellung'))} />
-
-      {view === 'year' && (
-        <Card title="Ausgaben übers Jahr" className="mt-4">
-          <MonthlyOutflowChart items={model.budget} />
-        </Card>
-      )}
-
-      {view === 'actual' && (
-        <div className="mt-4">
-          <ActualsCard />
+    <div className="budget-page">
+      <header className="budget-heading">
+        <div><p>Finanzplan {model.plan.year}</p><h1>Budget</h1></div>
+        <Segmented value={period} onChange={setPeriod} ariaLabel="Budgetzeitraum"
+          options={[{ value: 'month', label: 'Monat' }, { value: 'year', label: 'Jahr' }]} />
+      </header>
+      <div className="budget-layout">
+        <div className="budget-plan-column">
+          <section className="budget-card budget-plan">
+            <h2 className="budget-card-heading">{annual ? 'Jahresplan' : 'Regulärer Monat'} <span>CHF</span></h2>
+            <div className="budget-money-grid">
+              <div><span>Einnahmen</span><Money value={income} /></div>
+              <div><span>Verplant</span><Money value={planned} /></div>
+              <div><span>Planrest</span><Money className={income >= planned ? 'text-accent' : 'text-danger'} value={income - planned} /></div>
+            </div>
+            <details className="budget-calculation">
+              <summary>Wie ergibt sich der Planrest?</summary>
+              <p>Nettolohn {annual && model.otherIncomeYearly !== 0 && <>und weitere Einnahmen </>}von CHF <Money value={income} /> abzüglich CHF <Money value={planned} /> verplant.
+              {' '}Darin enthalten sind CHF <Money value={annual ? provision : Math.round(provision / 12)} /> Steuerrückstellung. Spesen werden separat ausbezahlt.</p>
+            </details>
+            <BudgetAllocation categories={s.categories} />
+          </section>
+          <a className="budget-income budget-card" href="#salary">
+            <h2 className="budget-card-heading">Einnahmen <span>Lohn &amp; Spesen bearbeiten ›</span></h2>
+            <div className="budget-money-grid">
+              <div><span>Nettolohn</span><Money value={payout - allowance} /></div>
+              <div><span>+ Spesen</span><Money className="text-info" value={allowance} /></div>
+              <div><span>Auszahlung</span><Money value={payout} /></div>
+            </div>
+          </a>
+          <Warnings items={model.warnings.filter(w => w.includes('Steuerrückstellung'))} />
         </div>
-      )}
-
-      {view === 'plan' && (
-        <>
-          <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
-            <Stat label="Ausgaben" sub="pro Monat" value={<Money value={s.expensesMonthly} decimals={false} />} />
-            <Stat label="Einnahmen" sub="pro Monat" value={<Money value={s.incomeMonthly} decimals={false} />} />
-            <Stat label="Rest" sub="pro Monat" value={<Money value={s.saldoMonthly} decimals={false} />} tone={s.saldoMonthly >= 0 ? 'good' : 'bad'} />
+        <section className="budget-groups" aria-label="Budgetgruppen">
+          <div className="budget-groups-head"><div><h2>Budgetgruppen</h2><p>CHF pro {annual ? 'Jahr' : 'Monat'}</p></div>
+            <Select ariaLabel="Budgetgruppen nach Konto filtern" value={onlyAccount} onChange={setOnlyAccount} options={filterOptions} />
           </div>
-          <div className="mt-3 flex items-center justify-between gap-2 text-sm">
-            <span className="text-xs text-muted">Beträge pro Monat. Tippe auf einen Posten zum Bearbeiten.</span>
-            <Select value={onlyAccount} onChange={setOnlyAccount} options={[{ value: '', label: 'alle Konten' }, ...accountOptions.slice(1)]} ariaLabel="Nach Konto filtern" />
-          </div>
-
-          <div className="mt-3 space-y-4">
-            {s.categories.map((cat) => {
-              const items = cat.items.filter(visible);
-              if (onlyAccount && items.length === 0) return null;
-              return (
-                <Card
-                  key={cat.category}
-                  title={
-                    <span className="inline-flex items-center gap-2">
-                      <span aria-hidden className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: CATEGORY_COLORS[cat.category] }} />
-                      {CATEGORY_LABELS[cat.category]}
-                    </span>
-                  }
-                  action={
-                    <div className="num text-sm text-muted">
-                      <Money value={cat.monthly} decimals={false} /> / Mt
-                    </div>
-                  }
-                >
-                  <ul className="-mx-2">
-                    {items.map((item) => (
-                      <ItemRow
-                        key={item.id}
-                        item={item}
-                        open={openId === item.id}
-                        toggle={() => setOpenId(openId === item.id ? null : item.id)}
-                        edit={edit}
-                        accountOptions={accountOptions}
-                      />
-                    ))}
-                  </ul>
-                  <Button variant="ghost" className="mt-2" onClick={() => addItem(cat.category)}>
-                    + Posten
-                  </Button>
-                </Card>
-              );
-            })}
-          </div>
-          <p className="mt-3 text-xs text-muted">
-            Im Jahr: Ausgaben <Money value={s.expensesYearly} decimals={false} />, Einnahmen inkl. 13. Lohn <Money value={s.incomeYearly} decimals={false} />, Überschuss{' '}
-            <Money value={s.surplusYearly} decimals={false} />.
-          </p>
-        </>
-      )}
-    </>
+          {notice}
+          {groups.map(cat => (
+            <details className="budget-group" key={cat.category} open={cat.category === 'fixed' ? true : undefined}>
+              <summary>
+                <i aria-hidden style={{ backgroundColor: CATEGORY_COLORS[cat.category] }} />
+                <span>{CATEGORY_LABELS[cat.category]}</span>
+                <Money value={annual ? cat.yearly : cat.monthly} />
+                <span className="budget-chevron" aria-hidden>›</span>
+              </summary>
+              <div className="budget-group-body">
+                <ul>
+                  {cat.items.map(item => (
+                    <ItemRow key={item.id} item={item} annual={annual} open={openId === item.id}
+                      toggle={() => setOpenId(openId === item.id ? null : item.id)} edit={edit} remove={removeItem} accountOptions={accountOptions} />
+                  ))}
+                </ul>
+                <Button variant="ghost" className="budget-add" onClick={() => addItem(cat.category)}>+ Posten</Button>
+              </div>
+            </details>
+          ))}
+          <a className="budget-actuals" href="#expenses">Buchungen und Soll/Ist ansehen <span aria-hidden>↗</span></a>
+        </section>
+        <section className="budget-card budget-outflow">
+          <h2 className="budget-card-heading">Abflüsse pro Monat <span>{model.plan.year} · CHF</span></h2>
+          <MonthlyOutflowChart items={model.budget} />
+        </section>
+      </div>
+    </div>
   );
 }
 
 function ItemRow({
   item,
+  annual,
   open,
   toggle,
   edit,
+  remove,
   accountOptions,
 }: {
   item: BudgetItem;
+  annual: boolean;
   open: boolean;
   toggle: () => void;
   edit: (id: string, fn: (i: BudgetItem) => void) => void;
+  remove: (item: BudgetItem) => void;
   accountOptions: { value: string; label: string }[];
 }) {
-  const { updateYear, data, model } = useStore();
+  const { data, model } = useStore();
   const hasChildren = !!item.children && item.children.length > 0;
   const auto = item.autoFromTax && item.taxTag === 'taxProvision';
   const f = item.frequency;
@@ -199,7 +270,7 @@ function ItemRow({
             </span>
           )}
         </span>
-        <Money value={monthlyAmount(item)} decimals={false} className="shrink-0" />
+        <Money value={annual ? yearlyAmount(item) : monthlyAmount(item)} className="shrink-0" />
         <span aria-hidden className={cx('shrink-0 text-muted transition-transform', open && 'rotate-90')}>›</span>
       </button>
       {open && (
@@ -324,7 +395,7 @@ function ItemRow({
                   + Unterposten
                 </Button>
                 <div className="mt-6 text-right">
-                  <Button variant="danger" onClick={() => updateYear((p) => void (p.budget = p.budget.filter((b) => b.id !== item.id)))}>
+                  <Button variant="danger" onClick={() => remove(item)}>
                     Posten löschen
                   </Button>
                 </div>

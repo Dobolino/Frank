@@ -1,19 +1,18 @@
 import { useStore } from '../app/store';
-import { Badge, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, SectionHeader, cx } from './shared';
+import { Badge, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, cx } from './shared';
 import { frequencyLabel, monthlyAmount } from '../domain/budgetEngine';
 import { monthName } from '../domain/types';
 import { uid } from '../seed/builders';
 
 export function CashflowPage({ embedded = false }: { embedded?: boolean }) {
   const { model, updateYear } = useStore();
-  const Header = embedded ? SectionHeader : PageHeader;
+  const description = 'Wie viel du monatlich überweisen musst, damit alle Jahres- und Quartalsrechnungen gedeckt sind.';
 
   return (
     <>
-      <Header
-        title="Sparkonto & Daueraufträge"
-        subtitle="Wie viel du monatlich überweisen musst, damit alle Jahres- und Quartalsrechnungen gedeckt sind."
-      />
+      {embedded
+        ? <p className="mb-3 text-sm text-muted">{description}</p>
+        : <PageHeader title="Sparkonto & Daueraufträge" subtitle={description} />}
       {model.cashflow.length === 0 && (
         <Card>
           <p className="text-sm text-muted">Ordne im Budget Posten einem Sparkonto zu («Bezahlt von»), dann erscheint hier der Kontoverlauf.</p>

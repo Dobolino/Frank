@@ -1,4 +1,13 @@
 @import "tailwindcss";
+@import "./app/shell.css";
+
+@font-face {
+  font-family: "Inter";
+  src: url("./assets/fonts/inter-latin-wght-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
 
 @theme {
   --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -8,7 +17,7 @@
   --color-panel: #12151c;
   --color-panel-2: #181c25;
   --color-line: #252a36;
-  --color-muted: #8a93a6;
+  --color-muted: #a3adbf;
   --color-text: #e7eaf0;
   --color-accent: #4ade80;
   --color-accent-dim: #166534;
@@ -25,6 +34,7 @@ body,
 }
 
 body {
+  color-scheme: dark;
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -89,54 +99,18 @@ summary {
   }
 }
 
-/* A small directional fade connects both tab clicks and touch navigation. */
-.page-enter {
-  animation: page-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.page-drag {
-  transform: translateX(var(--page-drag, 0px));
-  opacity: var(--page-opacity, 1);
-  transition: transform 100ms ease-out, opacity 100ms ease-out;
-}
-
-.page-tabs {
-  scrollbar-width: none;
-}
-
-.page-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.tab-indicator {
-  animation: tab-indicator 200ms ease-out both;
-}
-
+/* Page motion stays on the content. The iPhone masthead remains on an opaque surface. */
+.page-enter { animation: page-enter 190ms ease-out; }
+.page-drag { opacity: var(--page-opacity, 1); transition: transform 95ms ease-out, opacity 95ms ease-out; }
+.page-drag.is-dragging { transform: translateX(var(--page-drag)); }
 @keyframes page-enter {
-  from { opacity: 0; transform: translateX(calc(var(--page-direction, 1) * 18px)); }
-  to { opacity: 1; transform: translateX(0); }
+  from { opacity: .55; transform: translateX(calc(var(--page-direction, 1) * 6px)); }
+  to { opacity: 1; transform: none; }
 }
-
-@keyframes tab-indicator {
-  from { opacity: 0; scale: 0.65; }
-  to { opacity: 1; scale: 1; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .page-enter,
-  .tab-indicator {
-    animation: none;
-  }
-
-  .page-drag {
-    transform: none;
-    opacity: 1;
-    transition: none;
-  }
+  .page-enter { animation: none; }
+  .page-drag, .page-drag.is-dragging { transform: none; opacity: 1; transition: none; }
 }
 
-/* Kein Zoomen wie in einer App: Scrollen ja, Pinch- und Doppeltipp-Zoom nein */
-html,
-body {
-  touch-action: pan-x pan-y;
-}
+html, body { touch-action: pan-x pan-y; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }

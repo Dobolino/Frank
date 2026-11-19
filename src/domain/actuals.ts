@@ -1,5 +1,5 @@
-import { sum, type Rappen } from './money';
-import { outflowsByMonth } from './budgetEngine';
+import type { Rappen } from './money';
+import { expensePeriod } from './expensePeriod';
 import type { BudgetCategory, BudgetItem, CategoryRule, Transaction } from './types';
 import type { ParsedTransaction } from './bankCsv';
 
@@ -90,37 +90,18 @@ export interface MonthComparison {
 
 /** Soll/Ist für einen Monat (YYYY-MM). Ausgaben sind positiv. */
 export function compareMonth(budget: BudgetItem[], transactions: Transaction[], ym: string): MonthComparison {
-  const m = Number(ym.slice(5, 7)) - 1;
-  const inMonth = transactions.filter((t) => !t.excludedFromSpend && t.date.startsWith(ym));
-  const spentBy = new Map<string, Rappen>();
-  let unassigned = 0;
-  let unassignedCount = 0;
-  let income = 0;
-  for (const t of inMonth) {
-    if (t.amount > 0) {
-      income += t.amount;
-      continue;
-    }
-    if (t.item) spentBy.set(t.item, (spentBy.get(t.item) ?? 0) - t.amount);
-    else {
-      unassigned -= t.amount;
-      unassignedCount++;
-    }
-  }
-  const rows: ActualRow[] = budget
-    .filter((b) => !b.taxTag || b.taxTag !== 'taxProvision' || spentBy.has(b.name))
-    .map((b) => ({ name: b.name, category: b.category, plan: outflowsByMonth(b)[m] ?? 0, actual: spentBy.get(b.name) ?? 0 }))
-    .filter((r) => r.plan > 0 || r.actual > 0);
-  // Zuordnungen zu Posten, die es im Budget nicht (mehr) gibt
-  for (const [name, actual] of spentBy) {
-    if (!rows.some((r) => r.name === name)) rows.push({ name, category: 'personal', plan: 0, actual });
-  }
+  const period = expensePeriod(budget, transactions, ym);
   return {
-    rows,
-    planTotal: sum(rows.map((r) => r.plan)),
-    actualTotal: sum(rows.map((r) => r.actual)) + unassigned,
-    unassigned,
-    unassignedCount,
-    income,
+    rows: period.rows.map(row => ({
+      name: row.name,
+      category: row.category === 'other' ? 'personal' : row.category,
+      plan: row.planned,
+      actual: row.spent,
+    })),
+    planTotal: period.planned,
+    actualTotal: period.spent,
+    unassigned: period.unassigned,
+    unassignedCount: period.entries.filter(t => !t.excludedFromSpend && t.amount <= 0 && !t.item).length,
+    income: period.income,
   };
 }

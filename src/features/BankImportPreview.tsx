@@ -5,8 +5,8 @@ import { movementType, sourceLabel } from '../domain/importAccounts';
 import { AccountTargetSelect } from './AccountTargetSelect';
 import { Button, Money, Select } from './shared';
 
-export function BankImportPreview({ table, cancel, confirm }: {
-  table: CsvTable; cancel: () => void; confirm: (rows: ParsedTransaction[]) => void;
+export function BankImportPreview({ table, cancel, confirm, hiddenAmounts = false }: {
+  table: CsvTable; hiddenAmounts?: boolean; cancel: () => void; confirm: (rows: ParsedTransaction[]) => void;
 }) {
   const [map, setMap] = useState(() => guessColumns(table.header));
   const parsed = useMemo(() => inspectBankRows(table, map), [table, map]);
@@ -68,7 +68,7 @@ export function BankImportPreview({ table, cancel, confirm }: {
     </fieldset>}
     {(parsed.invalid > 0 || parsed.foreign > 0) && <p className="text-xs text-warn">Übersprungen · {parsed.invalid} unlesbare oder leere Buchungen · {parsed.foreign} ohne CHF-Betrag</p>}
     <ul className="divide-y divide-line text-xs">{txs.slice(0, 4).map((t, i) => <li key={i} className="flex justify-between gap-2 py-1">
-      <span className="min-w-0 truncate text-muted">{t.date} · {t.text}</span><Money className="shrink-0" value={t.amount} signed />
+      <span className="min-w-0 truncate text-muted">{t.date} · {hiddenAmounts ? 'Buchung' : t.text}</span>{hiddenAmounts ? <span>••••</span> : <Money className="shrink-0" value={t.amount} signed />}
     </li>)}</ul>
     <div className="flex flex-wrap justify-end gap-2"><Button onClick={cancel} variant="ghost">Abbrechen</Button>
       <button type="button" disabled={!valid || txs.length === 0} onClick={() => confirm(txs)} className="rounded-lg bg-accent px-3 py-1.5 font-medium text-bg disabled:opacity-40">

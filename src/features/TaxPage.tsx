@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useStore } from '../app/store';
-import { Badge, Card, Collapsible, Money, MoneyInput, PageHeader, Row, Select, Toggle, Warnings, cx } from './shared';
+import { Badge, Card, Collapsible, Money, MoneyInput, PageHeader, Row, Select, Toggle, Warnings } from './shared';
 import { COMMUTE_LABELS, type CommuteMode, type MealDeduction, type Profile, type TaxProfile, type YearPlan } from '../domain/types';
 import { buildYearModel } from '../domain/yearModel';
-import { formatPercent, type Rappen } from '../domain/money';
+import { chf, formatChf, formatPercent, type Rappen } from '../domain/money';
 import { CONFESSION_LABELS } from '../params/taxData';
 import { LocationCard } from './LocationCard';
 import { Pillar3aCard } from './Pillar3aCard';
@@ -39,44 +39,59 @@ export function TaxPage() {
   const family = [data.profile.civilStatus === 'married' ? 'verheiratet' : 'ledig', kids > 0 ? `${kids} ${kids === 1 ? 'Kind' : 'Kinder'}` : ''].filter(Boolean).join(', ');
   const church = data.profile.church === 'none' ? 'ohne Konfession' : CONFESSION_LABELS[data.profile.church];
   const notes = model.warnings.filter((w) => !tax.warnings.includes(w) && /Steuer(füsse|daten)|Wohnort/.test(w));
+  const breakdown = [
+    { name: `Kanton ${params?.canton.code ?? ''}`, value: tax.canton.cantonTax, color: '#60a5fa' },
+    { name: 'Gemeinde', value: tax.canton.municipalTax, color: '#a78bfa' },
+    { name: 'Bund', value: tax.federal.tax, color: '#2dd4bf' },
+    { name: 'Vermögen', value: tax.wealthTaxTotal, color: '#fbbf24' },
+    { name: 'Kirche', value: tax.canton.churchTax, color: '#f472b6' },
+    { name: 'Personalsteuer', value: tax.canton.personalTax, color: '#94a3b8' },
+  ].filter((part, index) => index < 4 || part.value > 0);
+  const gap = model.taxProvisionSuggested - model.taxProvisionBudgeted;
   const setTax = (fn: (t: TaxProfile) => void) => updateYear((p) => fn(p.tax));
 
   return (
     <>
       <PageHeader
-        title={`Steuern ${plan.year}`}
-        subtitle={`Provisorische Berechnung für ${place} · ${family} · ${church}`}
+        title="Steuern"
+        subtitle={`${plan.year} · ${place} · ${family} · ${church}`}
         action={params && <Badge tone={model.taxParamsExact ? 'good' : 'warn'}>Tarif {params.year}</Badge>}
       />
       <Warnings items={[...notes, ...tax.warnings]} />
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        <Card title="Ergebnis" className="lg:col-span-2">
-          <div className="grid gap-3 sm:grid-cols-4">
-            <Mini label="Bund" value={tax.federal.tax} />
-            <Mini label={`Kanton ${params?.canton.code ?? ''}`} value={tax.canton.cantonTax} />
-            <Mini label={`Gemeinde${params ? ` (${Math.round(params.rates.incomeCity * 1000) / 10} %)` : ''}`} value={tax.canton.municipalTax} />
-            <Mini label="Total" value={tax.total} accent />
-          </div>
-          <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
-            <div className="rounded-xl bg-panel-2 p-3">
-              <div className="text-muted">Rückstellung pro Monat</div>
-              <div className="num text-lg font-semibold text-accent"><Money value={model.taxProvisionSuggested} /></div>
-              <div className="text-xs text-muted">budgetiert: <Money value={model.taxProvisionBudgeted} /></div>
+      {params && <>
+        <div className="grid items-start gap-3 lg:grid-cols-2">
+          <Card>
+            <h2 className="text-sm text-muted">Geschätzte Jahressteuer</h2>
+            <p className="mt-1 flex flex-wrap items-baseline gap-2">
+              <strong className="break-all text-4xl font-semibold tracking-tight"><Money value={tax.total} /></strong>
+              <span className="text-sm font-semibold text-muted">CHF</span>
+            </p>
+            <div className="mt-4 flex h-2.5 gap-px overflow-hidden rounded-full bg-panel-2" aria-hidden="true">
+              {breakdown.filter(part => part.value > 0).map(part =>
+                <span key={part.name} style={{ flex: part.value, background: part.color }} />)}
             </div>
-            <div className="rounded-xl bg-panel-2 p-3">
-              <div className="text-muted">Durchschnittssatz</div>
-              <div className="num text-lg font-semibold">{formatPercent(tax.effectiveRate)}</div>
-              <div className="text-xs text-muted">vom Nettoeinkommen</div>
+            <dl className="mt-3 grid gap-x-4 gap-y-1.5 text-sm sm:grid-cols-2">
+              {breakdown.map(part => <div key={part.name} className="flex items-baseline justify-between gap-2">
+                <dt className="text-muted"><span aria-hidden="true" className="mr-1.5 inline-block size-2 rounded-full" style={{background: part.color}} />{part.name}</dt>
+                <dd className="num"><Money value={part.value} /></dd>
+              </div>)}
+            </dl>
+          </Card>
+          <Card>
+            <h2 className="text-sm text-muted">Rückstellung pro Monat</h2>
+            <p className="mt-1 flex flex-wrap items-baseline gap-2 text-accent"><strong className="text-3xl font-semibold tracking-tight"><Money value={model.taxProvisionSuggested} decimals={false} /></strong><span className="text-sm font-semibold">CHF</span></p>
+            <Row label="Im Budget vorgesehen" value={<Money value={model.taxProvisionBudgeted} />} />
+            {gap > 0 && <p className="mb-1 text-sm text-warn">Zur Rückstellung fehlen monatlich CHF <Money value={gap} />.</p>}
+            <div className="mt-2 grid grid-cols-2 gap-2 border-t border-line pt-3">
+              <div><div className="text-xs text-muted">Durchschnittssatz</div><strong className="num">{formatPercent(tax.effectiveRate)}</strong></div>
+              <div><div className="text-xs text-muted">Grenzsteuersatz</div><strong className="num">{formatPercent(tax.marginalRate)}</strong></div>
             </div>
-            <div className="rounded-xl bg-panel-2 p-3">
-              <div className="text-muted">Grenzsteuersatz</div>
-              <div className="num text-lg font-semibold">{formatPercent(tax.marginalRate)}</div>
-              <div className="text-xs text-muted">von 100 CHF mehr gehen so viel an Steuern</div>
-            </div>
-          </div>
-
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
+          </Card>
+        </div>
+        <ScenarioCard plan={plan} accounts={data.accounts} profile={data.profile} depotChf={depot.totalChf} baseTotal={tax.total} baseExpenses={model.summary.expensesYearly} baseNet={model.salary.totals.net} />
+        <Card title="Abzüge und steuerbares Einkommen" className="mt-3">
+          <div className="grid gap-3 md:grid-cols-2">
             <Collapsible summary={<span>Bund – steuerbar <Money value={tax.federal.taxableIncome} decimals={false} /></span>}>
               <Row label="Einkünfte" value={<Money value={tax.federal.grossIncome} />} />
               <Deductions lines={tax.federal.deductions} />
@@ -100,8 +115,8 @@ export function TaxPage() {
             </Collapsible>
           </div>
         </Card>
-
-        <div className="space-y-4">
+      </>}
+      <div className="mt-3 grid items-start gap-3 md:grid-cols-2">
         <LocationCard />
         <Card title="Angaben">
           <label className="block text-xs text-muted">
@@ -170,10 +185,9 @@ export function TaxPage() {
             Säule 3a und Versicherungsprämien kommen aus dem Budget (Posten mit Steuer-Markierung). Dividenden: «Weitere Einkünfte» unten.
           </p>
         </Card>
-        </div>
       </div>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+      <div className="mt-3 grid items-start gap-3 md:grid-cols-2">
         <OtherIncomeCard />
         <ActualTaxCard />
       </div>
@@ -182,21 +196,10 @@ export function TaxPage() {
         <Pillar3aCard />
       </div>
 
-      <ScenarioCard plan={plan} accounts={data.accounts} profile={data.profile} depotChf={depot.totalChf} baseTotal={tax.total} baseExpenses={model.summary.expensesYearly} baseNet={model.salary.totals.net} />
-
       <p className="mt-6 text-xs text-muted">
         Quelle: ESTV-Steuerrechner (Tarife, Abzüge, Steuerfüsse). Die Berechnung ist für alle Kantonshauptorte gegen den ESTV-Rechner getestet. Provisorische Schätzung, massgebend ist die Veranlagung.
       </p>
     </>
-  );
-}
-
-function Mini({ label, value, accent }: { label: string; value: Rappen; accent?: boolean }) {
-  return (
-    <div className="rounded-xl border border-line p-3">
-      <div className="text-xs text-muted">{label}</div>
-      <div className={cx('num text-lg font-semibold', accent && 'text-accent')}><Money value={value} /></div>
-    </div>
   );
 }
 
@@ -276,25 +279,31 @@ function ScenarioCard({ plan, accounts, profile, depotChf, baseTotal, baseExpens
   const dAvailable = dNet - dTax - freed3a;
 
   return (
-    <Card title="Szenario-Simulator" className="mt-4">
+    <Card title="Was bleibt von mehr Lohn?" className="mt-3">
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-3 text-sm">
           <div className="flex items-center justify-between gap-3">
             <span className="text-muted">Lohnerhöhung brutto / Monat</span>
             <MoneyInput ariaLabel="Lohnerhöhung brutto pro Monat" value={raise} onChange={setRaise} />
           </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-muted">Zusätzlicher Bonus brutto</span>
-            <MoneyInput ariaLabel="Zusätzlicher Bonus brutto" value={bonus} onChange={setBonus} />
-          </div>
-          <Toggle checked={no3a} onChange={setNo3a} label="Ohne Säule-3a-Einzahlung" />
+          <input type="range" className="block h-6 w-full accent-accent" min={Math.min(0, raise)} max={Math.max(chf(2000), raise)} step={chf(10)}
+            aria-label="Lohnerhöhung pro Monat simulieren" aria-valuetext={formatChf(raise, { prefix: true })} value={raise}
+            onChange={e => setRaise(Number(e.target.value))} />
+          <details className="rounded-lg border border-line p-2">
+            <summary className="flex min-h-8 cursor-pointer items-center justify-between text-sm">Bonus und Säule 3a <span aria-hidden="true">⌄</span></summary>
+            <div className="flex items-center justify-between gap-3 py-2">
+              <span className="text-muted">Zusätzlicher Bonus brutto</span>
+              <MoneyInput ariaLabel="Zusätzlicher Bonus brutto" value={bonus} onChange={setBonus} />
+            </div>
+            <Toggle checked={no3a} onChange={setNo3a} label="Ohne Säule-3a-Einzahlung" />
+          </details>
         </div>
-        <div>
+        <div aria-live="polite">
           <Row label="Netto mehr pro Jahr" value={<Money value={dNet} signed />} />
           <Row label="Steuern mehr pro Jahr" value={<span className={dTax > 0 ? 'text-warn' : 'text-accent'}><Money value={dTax} signed /></span>} />
           <Row strong label="Bleibt dir effektiv mehr" value={<span className={dAvailable >= 0 ? 'text-accent' : 'text-danger'}><Money value={dAvailable} signed /></span>} />
           <p className="mt-2 text-xs text-muted">
-            Steuerrückstellung neu: <Money value={scenario.taxProvisionSuggested} /> / Monat
+            Neue Rückstellung <Money value={scenario.taxProvisionSuggested} /> / Monat
             {no3a && ' · ohne 3a fehlt dir das Geld später in der Vorsorge'}.
           </p>
         </div>

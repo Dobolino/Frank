@@ -1,8 +1,10 @@
 import { useState, type ReactNode } from 'react';
 import { useStore } from '../app/store';
+import { SavingsAreaHeader } from './SavingsArea';
+import { PortfolioOverview } from './PortfolioOverview';
 import { InvestmentImport } from './InvestmentImport';
 import { WealthCard } from './WealthCard';
-import { Badge, Button, Card, Money, MoneyInput, PageHeader, Row, Select, Stat, Warnings, cx } from './shared';
+import { Badge, Button, Card, Money, MoneyInput, Row, Select, Warnings, cx } from './shared';
 import { formatPercent } from '../domain/money';
 import { neededFx, summarizePortfolio, type HoldingValue } from '../domain/investEngine';
 import type { Holding, Investments } from '../domain/types';
@@ -46,7 +48,7 @@ export function InvestPage() {
     });
 
   const refresh = async () => {
-    if (!config) return;
+    if (!config || status.busy) return;
     const holdings = inv.holdings;
     const fxList = neededFx(inv);
     const total = holdings.length + fxList.length;
@@ -99,39 +101,19 @@ export function InvestPage() {
 
   return (
     <>
-      <PageHeader
-        title="Anlagen"
-        subtitle="Aktien, ETFs und Fonds mit aktuellem Kurs."
-        action={
-          config ? (
-            <Button variant="primary" onClick={() => void refresh()}>
-              {status.busy ? 'Lädt …' : 'Kurse aktualisieren'}
-            </Button>
-          ) : undefined
-        }
+      <SavingsAreaHeader
+        area="invest"
+        action={config && inv.holdings.length > 0 && (
+          <Button variant="primary" onClick={() => void refresh()}>
+            {status.busy ? 'Lädt …' : 'Kurse aktualisieren'}
+          </Button>
+        )}
       />
-      {status.text && <p className={cx('mb-3 text-xs', status.error ? 'text-warn' : 'text-muted')}>{status.text}</p>}
+      {status.text && <p role="status" className={cx('mb-3 text-xs', status.error ? 'text-warn' : 'text-muted')}>{status.text}</p>}
       <Warnings items={warnings} />
-
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="Depotwert" value={<Money value={summary.totalChf} decimals={false} />} sub="in CHF" />
-        <Stat
-          label="Heute"
-          tone={summary.dayChangeChf > 0 ? 'good' : summary.dayChangeChf < 0 ? 'bad' : 'default'}
-          value={<Money value={summary.dayChangeChf} decimals={false} signed />}
-        />
-        <Stat
-          label="Gewinn / Verlust"
-          tone={summary.gainChf > 0 ? 'good' : summary.gainChf < 0 ? 'bad' : 'default'}
-          value={<Money value={summary.gainChf} decimals={false} signed />}
-          sub={summary.gainPct !== null ? signedPct(summary.gainPct) : 'Einstand erfassen'}
-        />
-        <Stat label="Positionen" value={inv.holdings.length} sub={neededFx(inv).length ? `Währungen: CHF, ${neededFx(inv).join(', ')}` : 'CHF'} />
-      </div>
-
-      <InvestmentImport />
-      <div className="mt-4">
-        <WealthCard />
+      <div className="sa-columns">
+        <PortfolioOverview summary={summary}/>
+        <div className="min-w-0 [&>section]:mt-0"><InvestmentImport/></div>
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
@@ -163,8 +145,9 @@ export function InvestPage() {
         </div>
       </div>
 
+      <div className="mt-4"><WealthCard/></div>
       <p className="mt-6 text-xs text-muted">
-        Für die Vermögenssteuer zählt der Depotwert am 31.12. Trage ihn auf der Seite «Steuern» unter «Vermögen 31.12.» ein, zusammen mit deinen Konten.
+        Für die Vermögenssteuer zählt der Depotwert am 31.12. Trage ihn unter <a className="text-accent underline" href="#tax">Steuern → Vermögen 31.12.</a> ein, zusammen mit deinen Konten.
       </p>
     </>
   );
@@ -431,7 +414,8 @@ function ProviderCard({ config, onChange }: { config: QuoteConfig | null; onChan
   const info = PROVIDERS[provider];
 
   return (
-    <Card title="Kursdienst" action={config ? <Badge tone="good">aktiv</Badge> : <Badge>aus</Badge>}>
+    <details className="sa-surface sa-disclosure">
+      <summary><span>Kursdienst {config ? <Badge tone="good">aktiv</Badge> : <Badge>aus</Badge>}</span></summary>
       <label className="block text-xs text-muted">
         Anbieter
         <Select<QuoteProvider>
@@ -477,6 +461,6 @@ function ProviderCard({ config, onChange }: { config: QuoteConfig | null; onChan
       <p className="mt-2 text-xs text-muted">
         Der Key bleibt auf diesem Gerät und ist nicht im Backup. An den Kursdienst gehen nur Symbole und Währungen, keine Stückzahlen oder Beträge.
       </p>
-    </Card>
+    </details>
   );
 }

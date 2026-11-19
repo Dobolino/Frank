@@ -6,10 +6,10 @@ export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Bool
 
 export function Card({ title, action, children, className }: { title?: ReactNode; action?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={cx('min-w-0 rounded-2xl border border-line bg-panel p-5', className)}>
+    <section className={cx('min-w-0 rounded-[18px] border border-line bg-panel p-4 sm:p-5', className)}>
       {(title || action) && (
         <header className="mb-4 flex min-w-0 flex-wrap items-center justify-between gap-3">
-          {title && <h2 className="min-w-0 flex-auto text-sm font-semibold tracking-wide text-muted uppercase">{title}</h2>}
+          {title && <h2 className="min-w-0 flex-auto text-base font-semibold tracking-tight text-text">{title}</h2>}
           {action}
         </header>
       )}
@@ -220,7 +220,7 @@ export function PageHeader({ title, subtitle, action }: { title: string; subtitl
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">{title}</h1>
+        <h1 className="text-[1.85rem] leading-tight font-bold tracking-[-.05em] sm:text-[2.5rem]">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-muted">{subtitle}</p>}
       </div>
       {action}
@@ -252,9 +252,8 @@ export function Segmented<T extends string>({ value, options, onChange, ariaLabe
 }
 
 /** Merkt sich eine Ansicht-Auswahl auf diesem Gerät (nur Bedienkomfort, keine Daten). */
-export function usePref<T extends string>(key: string, fallback: T, allowed: readonly T[], initialView?: T): [T, (v: T) => void] {
+export function usePref<T extends string>(key: string, fallback: T, allowed: readonly T[]): [T, (v: T) => void] {
   const [value, setValue] = useState<T>(() => {
-    if (initialView !== undefined) return initialView;
     try {
       const v = localStorage.getItem(`frank.view.${key}`) as T | null;
       return v && allowed.includes(v) ? v : fallback;

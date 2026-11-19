@@ -271,12 +271,16 @@ export interface ImportAccount {
   bankId: string;
   name: string;
   type: 'bank' | 'card' | 'depot';
+  /** Display hint for the account, never its full number. */
+  lastFour?: string;
 }
 
 /** Buchung aus dem Bank-Import. */
 export interface Transaction {
   id: string;
   accountId?: string;
+  /** Local HMAC of the statement source, independent of its grouping in the UI. */
+  sourceFingerprint?: string;
   excludedFromSpend?: boolean;
   merchantId?: string;
   /** YYYY-MM-DD */

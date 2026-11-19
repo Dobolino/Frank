@@ -1,5 +1,8 @@
+import { yuhColumns } from './yuhCsv';
+
 /** These hints live only in the local import preview. */
 export interface StatementIdentity {
+  format?: 'yuh-activities';
   bankId?: string;
   source?: string;
   sourceType?: 'bank' | 'card' | 'depot';
@@ -51,6 +54,7 @@ const unique = <T,>(values: Set<T>) => values.size === 1 ? values.values().next(
 const bankKeys = new Set(['bank', 'institut', 'finanzinstitut', 'bank name', 'banque', 'banca', 'broker']);
 
 export function readStatementIdentity(preamble: string[][], header: string[]): StatementIdentity | undefined {
+  if (yuhColumns(header)) return { format: 'yuh-activities', bankId: 'yuh', sourceType: 'bank' };
   const banks = new Set<string>();
   const numbers = new Map<string, StatementIdentity['sourceType']>();
   const ibans = new Set<string>();

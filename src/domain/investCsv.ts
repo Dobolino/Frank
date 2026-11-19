@@ -1,4 +1,5 @@
-import { parseAmount, parseDate, type CsvTable } from './bankCsv';
+import { parseAmount, parseDate, yuhChfAmount, type CsvTable } from './bankCsv';
+import { yuhColumns, yuhTradeKind } from './yuhCsv';
 import type { Rappen } from './money';
 import { isSourceColumn, statementSource } from './statementIdentity';
 
@@ -47,6 +48,7 @@ function canonicalDepot(value: string): string {
 }
 
 export function investmentSources(table: CsvTable): string[] {
+  if (yuhColumns(table.header)) return [];
   const { source } = investColumns(table.header);
   if (source < 0) return table.statement?.source ? [canonicalDepot(table.statement.source)] : [];
   return [...new Set(table.rows.map(row => canonicalDepot(statementSource(row, source, table.statement))))];
@@ -57,8 +59,12 @@ export function investmentFingerprint(t: InvestmentTransaction): string {
 }
 
 export function parseInvestmentTable(table: CsvTable, accountId: string, existing: InvestmentTransaction[], source?: string) {
+  const yuh = yuhColumns(table.header);
   const cols = investColumns(table.header);
-  if (cols.date < 0 || cols.kind < 0 || Math.max(cols.name, cols.isin, cols.symbol) < 0 || Math.max(cols.amountChf, cols.amount) < 0) {
+  if (yuh) {
+    cols.source = -1;
+    cols.name = yuh.asset;
+  } else if (cols.date < 0 || cols.kind < 0 || Math.max(cols.name, cols.isin, cols.symbol) < 0 || Math.max(cols.amountChf, cols.amount) < 0) {
     throw new Error('Die CSV braucht Datum, Typ, Wertpapier (oder ISIN bzw. Symbol) und Betrag.');
   }
   if (source === undefined && investmentSources(table).length > 1) throw new Error('Wähle das Quelldepot aus der CSV.');
@@ -71,12 +77,20 @@ export function parseInvestmentTable(table: CsvTable, accountId: string, existin
     if (selectedSource !== undefined && canonicalDepot(statementSource(row, cols.source, table.statement)) !== selectedSource) continue;
     const date = parseDate(field('date'));
     const kindKey = norm(field('kind'));
-    const kind = Object.hasOwn(kindAliases, kindKey) ? kindAliases[kindKey] : undefined;
+    const kind = yuh ? yuhTradeKind(row, yuh) : (Object.hasOwn(kindAliases, kindKey) ? kindAliases[kindKey] : undefined);
     if (!kind) { skip('anderer Geschäftstyp'); continue; }
     const isin = field('isin'), symbol = field('symbol'), security = field('name') || isin || symbol;
-    const converted = field('amountChf');
-    if (!converted && cols.currency >= 0 && field('currency').toUpperCase() !== 'CHF') { skip('kein CHF-Betrag'); continue; }
-    const raw = parseAmount((converted || field('amount')).replace('−', '-'));
+    let raw: Rappen | null;
+    if (yuh) {
+      const cash = yuhChfAmount(row, yuh);
+      if ('skip' in cash) { skip(cash.skip === 'invalid' ? 'ungültige Angaben' : 'kein CHF-Betrag'); continue; }
+      if (kind === 'buy' && cash.amount > 0) { skip('abweichende Zahlungsrichtung'); continue; }
+      raw = cash.amount;
+    } else {
+      const converted = field('amountChf');
+      if (!converted && cols.currency >= 0 && field('currency').toUpperCase() !== 'CHF') { skip('kein CHF-Betrag'); continue; }
+      raw = parseAmount((converted || field('amount')).replace('−', '-'));
+    }
     const qtyRaw = field('quantity').replace(/[’'\s]/g, '').replace(',', '.');
     const qty = qtyRaw ? Number(qtyRaw) : undefined;
     if (!date || !security || raw === null || !Number.isSafeInteger(raw) || !raw ||

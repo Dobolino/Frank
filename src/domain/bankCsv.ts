@@ -1,3 +1,4 @@
+import { notBooked, yuhColumns, yuhMovement, type YuhColumns } from './yuhCsv';
 import type { Rappen } from './money';
 import { isSourceColumn, readStatementIdentity, statementSource, type StatementIdentity } from './statementIdentity';
 export { sourceTypeForColumn } from './statementIdentity';
@@ -37,6 +38,7 @@ export interface ParsedTransaction {
   amount: Rappen;
   category?: string;
   accountId?: string;
+  sourceFingerprint?: string;
   excludedFromSpend?: boolean;
 }
 
@@ -100,6 +102,8 @@ const find = (header: string[], keys: string[], exclude: number[] = []) => {
 
 /** Spalten anhand der Kopfzeile erraten. */
 export function guessColumns(header: string[]): ColumnMap {
+  const yuh = yuhColumns(header);
+  if (yuh) return { date: yuh.date, text: yuh.name, debit: yuh.debit, credit: yuh.credit };
   const map = guessAmountColumns(header);
   const category = find(header, KEYWORDS.category, [map.date, map.text]);
   const source = header.findIndex(isSourceColumn);
@@ -145,8 +149,49 @@ export function parseAmount(raw: string | undefined): Rappen | null {
   return Number.isSafeInteger(cents) ? cents : null;
 }
 
+/** Only the leg actually settled in CHF is usable in a CHF budget. The
+ * exchange/commission column is informational and must not be added twice. */
+export function yuhChfAmount(row: string[], cols: YuhColumns): { amount: Rappen } | { skip: 'foreign' | 'nonCash' | 'invalid' } {
+  const debit = row[cols.debit]?.trim(), credit = row[cols.credit]?.trim();
+  if (!debit && !credit) return { skip: 'nonCash' };
+  let chf = 0, hasChf = false;
+  for (const [raw, curCol, isDebit] of [[debit, cols.debitCurrency, true], [credit, cols.creditCurrency, false]] as const) {
+    if (!raw) continue;
+    const currency = row[curCol]?.trim().toUpperCase();
+    if (!currency) return { skip: 'invalid' };
+    if (currency !== 'CHF') continue;
+    const value = parseAmount(raw.replace('−', '-'));
+    if (value === null) return { skip: 'invalid' };
+    hasChf = true;
+    chf += isDebit ? -Math.abs(value) : value;
+  }
+  if (!hasChf) return { skip: 'foreign' };
+  return chf && Number.isSafeInteger(chf) ? { amount: chf } : { skip: 'nonCash' };
+}
+
+type BankEntry = { source: string; transaction: ParsedTransaction; movement?: string };
+
+function inspectYuhRows(table: CsvTable, cols: YuhColumns) {
+  const entries: BankEntry[] = [];
+  const skipped = { invalid: 0, foreign: 0, nonCash: 0, unbooked: 0 };
+  for (const row of table.rows) {
+    const activity = (row[cols.activity] ?? '').trim().toUpperCase();
+    if (notBooked(activity)) { skipped.unbooked++; continue; }
+    const date = parseDate(row[cols.date] ?? '');
+    if (!date) { skipped.invalid++; continue; }
+    const cash = yuhChfAmount(row, cols);
+    if ('skip' in cash) { skipped[cash.skip]++; continue; }
+    const movement = yuhMovement(row,cols);
+    const text = (row[cols.name] ?? '').replace(/\s+/g, ' ').trim();
+    entries.push({ source: '', movement, transaction: { date, text, amount: cash.amount, ...(movement && { category: movement }) } });
+  }
+  return { entries, ...skipped };
+}
+
 export function inspectBankRows(table: CsvTable, map: ColumnMap) {
-  const entries: { source: string; transaction: ParsedTransaction }[] = [];
+  const yuh = yuhColumns(table.header);
+  if (yuh) return inspectYuhRows(table, yuh);
+  const entries: BankEntry[] = [];
   let foreign = 0;
   let invalid = 0;
   for (const r of table.rows) {
@@ -174,7 +219,7 @@ export function inspectBankRows(table: CsvTable, map: ColumnMap) {
     const source = statementSource(r, map.source, table.statement).replace(/\s+/g, '').toUpperCase();
     entries.push({ source, transaction: { date, text: (r[map.text] ?? '').replace(/\s+/g, ' ').trim(), amount, ...(category ? { category } : {}) } });
   }
-  return { entries, invalid, foreign };
+  return { entries, invalid, foreign, nonCash: 0, unbooked: 0 };
 }
 
 export function toTransactions(table: CsvTable, map: ColumnMap): ParsedTransaction[] {

@@ -2,7 +2,7 @@ import { Fragment, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useStore } from '../app/store';
 import { merchantDirectory, merchantRanking, merchantText, type Merchant } from '../domain/merchants';
 import type { AppData, ImportAccount, Transaction } from '../domain/types';
-import { bankLabel } from '../domain/importAccounts';
+import { accountDisplayName, bankLabel } from '../domain/importAccounts';
 import { BankMark } from './AccountTargetSelect';
 import { Button, Money, Select } from './shared';
 
@@ -262,7 +262,7 @@ export function MerchantActivity({
                 <div className="ex-edit">
                   {account && (
                     <p className="ex-caption">
-                      {bankLabel(account.bankId)} · {account.name}
+                      {bankLabel(account.bankId)} · {accountDisplayName(account)}
                     </p>
                   )}
                   {t.amount < 0 && !t.excludedFromSpend && budgetNames.length > 0 && (

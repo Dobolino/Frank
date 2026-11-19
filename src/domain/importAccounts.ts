@@ -13,6 +13,10 @@ export function bankLogoPath(id: string): string | undefined {
 export const bankOptions = Object.entries(banks).map(([value, label]) => ({ value, label }));
 export const bankLabel = (id: string) => Object.hasOwn(banks, id) ? banks[id]! : id;
 export const accountTypeLabel = (type: ImportAccount['type']) => ({ bank: 'Bankkonto', card: 'Kartenkonto', depot: 'Depot' })[type];
+export function accountDisplayName(account: ImportAccount): string {
+  return account.lastFour ? `${account.name} · •••• ${account.lastFour}` : account.name;
+}
+
 export function sourceLabel(source: string, index: number) {
   const tail = source.replace(/\s+/g, '').match(/\d{4}$/)?.[0];
   return source ? `Quelle ${index + 1}${tail ? ' · •••• ' + tail : ''}` : 'Konto für diesen Auszug';

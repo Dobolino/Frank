@@ -8,7 +8,7 @@ import { GoalsPage } from './GoalsPage';
 import { RadarCard } from './RadarCard';
 import { BalanceCurve, SavingsAreaHeader } from './SavingsArea';
 import { BankMark } from './AccountTargetSelect';
-import { bankLabel } from '../domain/importAccounts';
+import { accountDisplayName, bankLabel } from '../domain/importAccounts';
 import { Card, Money, Select } from './shared';
 
 function SavingsProjection() {
@@ -84,7 +84,7 @@ function SavingsBookings() {
               {account && <BankMark bankId={account.bankId} />}
               <div className="min-w-0 flex-1">
                 <strong className="block truncate text-sm">{row.item}</strong>
-                <small className="block truncate text-muted">{row.date.split('-').reverse().join('.')}{account && ' · ' + bankLabel(account.bankId) + ' · ' + account.name}</small>
+                <small className="block truncate text-muted">{row.date.split('-').reverse().join('.')}{account && ' · ' + bankLabel(account.bankId) + ' · ' + accountDisplayName(account)}</small>
               </div>
               <span className="text-sm"><Money value={row.amount} signed /> CHF</span>
             </li>

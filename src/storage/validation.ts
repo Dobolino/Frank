@@ -189,6 +189,7 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
   for (const a of importAccounts) {
     for (const key of ['name', 'bankId']) if (!text(a[key], `importAccounts.${key}`).trim()) invalid(`importAccounts.${key}`);
     choice(a.type, ['bank', 'card', 'depot'], 'importAccounts.type');
+    optional(a, 'lastFour', (v, p) => /^[0-9]{4}$/.test(text(v,p)) || invalid(p), 'importAccounts');
   }
   optional(value, 'accountRecognition', (v, path) => {
     const recognition = object(v, path);
@@ -239,6 +240,7 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
       text(t.text, `${path}[${i}].text`);
       integer(t.amount, `${path}[${i}].amount`);
       optional(t, 'accountId', expenseAccount, `${path}[${i}]`);
+      optional(t, 'sourceFingerprint', (v, p) => /^[a-f0-9]{64}$/.test(text(v,p)) || invalid(p), `${path}[${i}]`);
       optional(t, 'merchantId', text, `${path}[${i}]`);
       optional(t, 'excludedFromSpend', boolean, `${path}[${i}]`);
       optional(t, 'item', text, `${path}[${i}]`);

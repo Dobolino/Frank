@@ -5,7 +5,7 @@ import { CONTRACT_KINDS, acceptContractSuggestion, plannedContracts, recurringSu
 import { frequencyLabel, itemAmount, yearlyAmount } from '../domain/budgetEngine';
 import { formatChf } from '../domain/money';
 import { merchantText } from '../domain/merchants';
-import { bankLabel } from '../domain/importAccounts';
+import { accountDisplayName, bankLabel } from '../domain/importAccounts';
 import { MONTH_NAMES } from '../domain/types';
 import { PageHeader, Select, TextInput } from './shared';
 import './planning.css';
@@ -27,7 +27,7 @@ function Suggestion({ entry, dismiss }: {entry: RecurringSuggestion; dismiss: ()
   return <article className="fr-contract-suggestion">
     <div className="fr-contract-pair"><b>{entry.name}</b><b className="num">CHF {formatChf(entry.amount)}</b></div>
     <p>{entry.count} gleiche monatliche Belastungen · {monthLabel(entry.first)} – {monthLabel(entry.last)}</p>
-    {account && <small>{bankLabel(account.bankId)} · {account.name}</small>}
+    {account && <small>{bankLabel(account.bankId)} · {accountDisplayName(account)}</small>}
     {review ? <div className="fr-contract-review">
       <label>Budgetposten <Select ariaLabel="Budgetposten für die Zahlungen" value={target} onChange={setTarget} options={[
         { value: 'new', label: 'Neuen Fixkostenposten anlegen' }, ...available.map(b => ({value: b.id, label: b.name})),

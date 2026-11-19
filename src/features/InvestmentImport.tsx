@@ -3,7 +3,7 @@ import { useStore } from '../app/store';
 import { parseCsv, type CsvTable } from '../domain/bankCsv';
 import { investmentKinds, investmentSources, parseInvestmentTable, type InvestmentTransaction } from '../domain/investCsv';
 import { AccountTargetSelect, BankMark } from './AccountTargetSelect';
-import { bankLabel, sourceLabel } from '../domain/importAccounts';
+import { accountDisplayName, bankLabel, sourceLabel } from '../domain/importAccounts';
 import { describeAccountSources } from '../domain/accountRecognition';
 import { useImportTargets, saveImportTargets, targetProblem } from './useImportTargets';
 import type { ImportAccount } from '../domain/types';
@@ -18,7 +18,7 @@ function Bookings({ entries, accounts }: { entries: InvestmentTransaction[]; acc
         <div className="min-w-0 flex-1">
           <div className="truncate font-medium">{entry.security}</div>
           <div className="text-xs text-muted">{entry.date.split('-').reverse().join('.')} · {investmentKinds[entry.kind]}{entry.quantity !== undefined && ` · ${entry.quantity.toLocaleString('de-CH', { maximumFractionDigits: 8 })} Stk.`}</div>
-          {account && <div className="truncate text-xs text-muted">{bankLabel(account.bankId)} · {account.name}</div>}
+          {account && <div className="truncate text-xs text-muted">{bankLabel(account.bankId)} · {accountDisplayName(account)}</div>}
         </div>
         <div className="shrink-0"><Money value={entry.amount} signed /></div>
       </li>;
@@ -38,7 +38,9 @@ function DepotPreview({ table, close, done }: {
   const { targets, select, recognition } = useImportTargets(data, descriptions, 'invest');
   const [omitted, setOmitted] = useState(new Set<string>());
   const enabled = targets.filter(t => !omitted.has(t.source));
-  const issue = targetProblem(enabled, data.importAccounts);
+  const selectedIds = enabled.flatMap(target => target.selected ? [target.selected.id] : []);
+  const issue = new Set(selectedIds).size !== selectedIds.length
+    ? 'Wähle für jede Depotquelle ein eigenes Depot.' : targetProblem(enabled, data.importAccounts);
   const valid = !issue && enabled.every(t => t.selected?.name.trim() && t.selected.bankId.trim());
   const previews = enabled.map(target => {
     try {
@@ -150,7 +152,7 @@ export function InvestmentImport() {
       }} /> : <div className="text-right"><Button variant="ghost" onClick={close}>Abbrechen</Button></div>}
     </div>}
     {depots.length > 0 && (data.investmentTransactions?.length ?? 0) > 0 &&
-      <Select ariaLabel="Depotbuchungen filtern" value={filter} onChange={setFilter} options={[{ value: '', label: 'Alle Depots' }, ...depots.map(a => ({ value: a.id, label: `${bankLabel(a.bankId)} · ${a.name}` }))]} />}
+      <Select ariaLabel="Depotbuchungen filtern" value={filter} onChange={setFilter} options={[{ value: '', label: 'Alle Depots' }, ...depots.map(a => ({ value: a.id, label: `${bankLabel(a.bankId)} · ${accountDisplayName(a)}` }))]} />}
     {entries.length > 0 ? <>
       <div className="my-3 grid grid-cols-3 gap-2 text-sm">{(Object.keys(investmentKinds) as (keyof typeof investmentKinds)[]).map(kind =>
         <div key={kind}><div className="text-xs text-muted">{({ buy: 'Käufe', sell: 'Verkäufe', dividend: 'Dividenden' })[kind]}</div><Money value={totals[kind]} /></div>)}</div>

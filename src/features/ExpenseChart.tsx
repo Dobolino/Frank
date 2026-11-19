@@ -18,14 +18,18 @@ const options = [
   { value: 'calendar', label: 'Kalender' },
 ] as const;
 export type ExpenseChartMode = (typeof options)[number]['value'];
+const mask = '••••';
+const dayLevels = ['Keine Ausgaben', 'Geringe Ausgaben', 'Mittlere Ausgaben', 'Hohe Ausgaben', 'Sehr hohe Ausgaben'];
 
 function SpendingCalendar({
   period,
   spending,
+  hidden,
   setPeriod,
 }: {
   period: string;
   spending: Transaction[];
+  hidden: boolean;
   setPeriod: (period: string) => void;
 }) {
   const [selectedDay, setSelectedDay] = useState<number>();
@@ -48,7 +52,7 @@ function SpendingCalendar({
           return (
             <button type="button" key={m} onClick={() => setPeriod(key)} aria-label={periodLabel(key) + ' öffnen'}>
               <span>{periodLabel(key).split(' ')[0]}</span>
-              <b>{sum ? formatChf(sum, { decimals: false }) : '–'}</b>
+              <b>{hidden ? mask : sum ? formatChf(sum, { decimals: false }) : '–'}</b>
               <i aria-hidden="true" style={{ width: (100 * sum) / max + '%' }} />
             </button>
           );
@@ -56,6 +60,12 @@ function SpendingCalendar({
       </div>
     );
   const offset = (new Date(Date.UTC(year, month - 1, 1)).getUTCDay() + 6) % 7;
+  const heatLevel = (sum: number) => Math.ceil(Math.sqrt(sum / max) * 4);
+  const dayDescription = (day: number) => {
+    const sum = sums[day]!;
+    const label = hidden ? dayLevels[heatLevel(sum)] : formatChf(sum, { prefix: true });
+    return (day + 1) + '. ' + periodLabel(period) + ' · ' + label;
+  };
   return (
     <>
       <div className="ex-calendar">
@@ -66,15 +76,14 @@ function SpendingCalendar({
           <span key={'space' + i} />
         ))}
         {sums.map((value, i) => {
-          const description = i + 1 + '. ' + periodLabel(period) + ' · ' + formatChf(value, { prefix: true });
           return (
             <button
               key={i}
               type="button"
-              aria-label={description}
+              aria-label={dayDescription(i)}
               aria-pressed={selectedDay === i}
               onClick={() => setSelectedDay(i)}
-              className={'ex-heat-' + (value ? Math.ceil(Math.sqrt(value / max) * 4) : 0)}
+              className={'ex-heat-' + heatLevel(value)}
             >
               <time dateTime={period + '-' + String(i + 1).padStart(2, '0')}>{i + 1}</time>
             </button>
@@ -84,7 +93,7 @@ function SpendingCalendar({
       <p className="ex-caption" aria-live="polite">
         {selectedDay === undefined
           ? 'Tippe auf einen Tag, um seine Ausgaben zu sehen.'
-          : selectedDay + 1 + '. ' + periodLabel(period) + ' · ' + formatChf(sums[selectedDay] ?? 0, { prefix: true })}
+          : dayDescription(selectedDay)}
       </p>
     </>
   );
@@ -148,10 +157,9 @@ export function ExpenseChart({
         <Select ariaLabel="Grafik auswählen" value={mode} onChange={setMode} options={[...options]} />
       </header>
       <div className="ex-graph-body" key={mode}>
-        {hidden ? (
-          <p className="ex-discreet">Beträge ausgeblendet</p>
-        ) : mode === 'calendar' ? (
-          <SpendingCalendar period={period} spending={summary.spending} setPeriod={setPeriod} />
+        {hidden && <span className="sr-only">Beträge ausgeblendet.</span>}
+        {mode === 'calendar' ? (
+          <SpendingCalendar key={period} period={period} spending={summary.spending} hidden={hidden} setPeriod={setPeriod} />
         ) : mode === 'flow' ? (
           groups.length ? (
             <>
@@ -168,7 +176,7 @@ export function ExpenseChart({
                   {groups.map((g) => (
                     <li key={g.name}>
                       <span>{g.name}</span>
-                      <b>{Math.round((100 * g.total) / spent)} %</b>
+                      <b>{hidden ? mask : Math.round((100 * g.total) / spent) + ' %'}</b>
                     </li>
                   ))}
                 </ul>
@@ -191,7 +199,7 @@ export function ExpenseChart({
                   <div>
                     <span>{r.name}</span>
                     <span>
-                      {formatChf(r.spent)} / {formatChf(r.planned)}
+                      {hidden ? mask : formatChf(r.spent) + ' / ' + formatChf(r.planned)}
                     </span>
                   </div>
                   <div aria-hidden="true" className="ex-rule">
@@ -208,7 +216,7 @@ export function ExpenseChart({
                 <li>
                   <div>
                     <span>Ohne Budgetposten</span>
-                    <span>{formatChf(unassigned)} / –</span>
+                    <span>{hidden ? mask : formatChf(unassigned) + ' / –'}</span>
                   </div>
                 </li>
               )}
@@ -220,12 +228,12 @@ export function ExpenseChart({
               <div>
                 <small>Erfasste Ausgaben</small>
                 <strong>
-                  {formatChf(spent)} <em>CHF</em>
+                  {hidden ? mask : <>{formatChf(spent)} <em>CHF</em></>}
                 </strong>
               </div>
               <div className="ex-limit">
                 <small>{singleAccount ? 'Plan aller Konten' : 'Laut Budgetplan'}</small>
-                <b>{hasPlan ? formatChf(planned, { decimals: false, prefix: true }) : 'Kein Plan'}</b>
+                <b>{hasPlan ? hidden ? mask : formatChf(planned, { decimals: false, prefix: true }) : 'Kein Plan'}</b>
               </div>
             </div>
             {hasPlan && (
@@ -235,12 +243,12 @@ export function ExpenseChart({
             )}
             <div className="ex-spentfoot">
               <span>Eingänge</span>
-              <b>{formatChf(income, { prefix: true })}</b>
+              <b>{hidden ? mask : formatChf(income, { prefix: true })}</b>
             </div>
             {hasPlan && (
               <div className="ex-balance">
                 <span>{spent > planned ? 'Über Plan' : 'Plan minus erfasste Ausgaben'}</span>
-                <b>{formatChf(Math.abs(planned - spent), { prefix: true })}</b>
+                <b>{hidden ? mask : formatChf(Math.abs(planned - spent), { prefix: true })}</b>
               </div>
             )}
           </>

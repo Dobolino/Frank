@@ -33,41 +33,88 @@ export function applyRules(text: string, rules: CategoryRule[], category?: strin
 }
 
 /** Neue Buchungen übernehmen: Duplikate weglassen, Regeln anwenden. Gibt Liste und Anzahl neu übernommener zurück. */
-export function mergeTransactions(existing: Transaction[], parsed: ParsedTransaction[], rules: CategoryRule[]): { list: Transaction[]; added: number } {
-  const identity = (t: ParsedTransaction) => JSON.stringify([t.date, t.amount, t.text]);
-  const key = (t: ParsedTransaction) => JSON.stringify([t.accountId ?? '', identity(t)]);
-  const storedCounts = new Map<string, number>();
-  const legacyRows = new Map<string, number[]>();
-  const ids = new Set(existing.map(t => t.id));
+export function mergeTransactions(
+  existing: Transaction[], parsed: ParsedTransaction[], rules: CategoryRule[],
+  previousAccounts: Readonly<Record<string, string>> = {},
+  reviewedMovements: ReadonlyMap<ParsedTransaction, boolean> = new Map(),
+): { list: Transaction[]; added: number } {
+  const content = (t: ParsedTransaction) => JSON.stringify([t.date, t.amount, t.text]);
+  const bySource = new Map<string, number[]>();
+  const olderByAccount = new Map<string, number[]>();
+  const byAccount = new Map<string, number[]>();
+  const bucketKey = (scope: string, row: ParsedTransaction) => JSON.stringify([scope, content(row)]);
+  const add = (pool: Map<string, number[]>, key: string, index: number) => {
+    const bucket = pool.get(key);
+    if (bucket) bucket.push(index);
+    else pool.set(key, [index]);
+  };
+  existing.forEach((row, index) => {
+    const key = bucketKey(row.accountId ?? '', row);
+    add(byAccount, key, index);
+    if (row.sourceFingerprint) add(bySource, bucketKey(row.sourceFingerprint, row), index);
+    else add(olderByAccount, key, index);
+  });
+
+  const consumed = new Set<number>();
+  const matched = new Map<number, number>();
+  const take = (inputIndex: number, bucket?: number[]) => {
+    if (matched.has(inputIndex)) return;
+    while (bucket?.length) {
+      const old = bucket.pop()!;
+      if (consumed.has(old)) continue;
+      consumed.add(old);
+      matched.set(inputIndex, old);
+      break;
+    }
+  };
+  // Reserve the same physical source first. Two cards may pay the same merchant
+  // the same amount on the same day, even when both belong to one logical account.
+  parsed.forEach((row, i) => {
+    if (row.sourceFingerprint) take(i, bySource.get(bucketKey(row.sourceFingerprint, row)));
+  });
+  parsed.forEach((row, i) => {
+    if (!row.sourceFingerprint) return;
+    const oldId = previousAccounts[row.sourceFingerprint] ?? row.accountId;
+    if (oldId) take(i, olderByAccount.get(bucketKey(oldId, row)));
+    if (row.accountId && row.accountId !== oldId) take(i, olderByAccount.get(bucketKey(row.accountId, row)));
+  });
+  parsed.forEach((row, i) => {
+    if (!row.sourceFingerprint) take(i, byAccount.get(bucketKey(row.accountId ?? '', row)));
+    if (row.accountId) take(i, olderByAccount.get(bucketKey('', row)));
+  });
+
+  const ids = new Set(existing.map(row => row.id));
   const list = [...existing];
-  for (const [index, t] of existing.entries()) {
-    storedCounts.set(key(t), (storedCounts.get(key(t)) ?? 0) + 1);
-    if (!t.accountId) {
-      const same = legacyRows.get(identity(t)) ?? [];
-      same.push(index);
-      legacyRows.set(identity(t), same);
-    }
-  }
-  const seen = new Map<string, number>();
+  const nextSuffix = new Map<string, number>();
   let added = 0;
-  for (const p of parsed) {
-    const k = key(p);
-    const count = (seen.get(k) ?? 0) + 1;
-    seen.set(k, count);
-    if (count <= (storedCounts.get(k) ?? 0)) continue;
-    const legacy = p.accountId ? legacyRows.get(identity(p))?.pop() : undefined;
-    if (legacy !== undefined) {
-      list[legacy] = { ...list[legacy]!, accountId: p.accountId, ...(p.excludedFromSpend && { excludedFromSpend: true }) };
-      continue;
+  parsed.forEach((row, i) => {
+    const oldIndex = matched.get(i);
+    if (oldIndex !== undefined) {
+      const old = list[oldIndex]!;
+      const freshCategory = !old.category && !old.item ? row.category : undefined;
+      const excluded = reviewedMovements.get(row);
+      const reclassify = excluded !== undefined && excluded !== Boolean(old.excludedFromSpend);
+      if (freshCategory || reclassify || (row.accountId && row.accountId !== old.accountId) || (row.sourceFingerprint && !old.sourceFingerprint)) {
+        const updated = { ...old, accountId: row.accountId ?? old.accountId,
+          ...(freshCategory && { category: freshCategory }),
+          ...(row.sourceFingerprint && { sourceFingerprint: row.sourceFingerprint }),
+          ...(row.excludedFromSpend && { excludedFromSpend: true }) };
+        if (excluded === false) delete updated.excludedFromSpend;
+        if (excluded === true) updated.excludedFromSpend = true;
+        list[oldIndex] = updated;
+      }
+      return;
     }
-    const base = transactionId(p) + (p.accountId ? '-' + p.accountId : '');
-    let id = base, suffix = count;
+    const scope = row.sourceFingerprint ?? row.accountId;
+    const base = transactionId(row) + (scope ? '-' + scope : '');
+    let id = base, suffix = nextSuffix.get(base) ?? 2;
     while (ids.has(id)) id = base + '-' + suffix++;
+    nextSuffix.set(base, suffix);
     ids.add(id);
-    const item = p.amount < 0 && !p.excludedFromSpend ? applyRules(p.text, rules, p.category) : undefined;
-    list.push({ id, ...p, ...(item ? { item } : {}) });
+    const item = row.amount < 0 && !row.excludedFromSpend ? applyRules(row.text, rules, row.category) : undefined;
+    list.push({ id, ...row, ...(item ? { item } : {}) });
     added++;
-  }
+  });
   return { list: list.sort((a, b) => a.date.localeCompare(b.date)), added };
 }
 

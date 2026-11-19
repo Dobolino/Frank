@@ -1,15 +1,16 @@
-import { useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useMemo, useRef, useState } from 'react';
 import { useStore } from '../app/store';
 import { applyRules, merchantKey } from '../domain/actuals';
 import { parseCsv, type ParsedTransaction, type CsvTable } from '../domain/bankCsv';
 import { expensePeriod } from '../domain/expensePeriod';
-import { bankLabel } from '../domain/importAccounts';
+import { accountDisplayName, bankLabel } from '../domain/importAccounts';
 import { MONTHS, type Transaction } from '../domain/types';
-import { BankImportPreview } from './BankImportPreview';
 import { ExpenseChart, periodLabel, type ExpenseChartMode } from './ExpenseChart';
 import { MerchantActivity } from './MerchantActivity';
-import { Select, usePref } from './shared';
+import { Select, todayYm, usePref } from './shared';
 import './expenses.css';
+
+const BankImportPreview = lazy(() => import('./BankImportPreview').then(m => ({ default: m.BankImportPreview })));
 
 function ExpenseIcon({ type }: { type: 'visible' | 'hidden' | 'import' }) {
   return (
@@ -45,8 +46,9 @@ export function ExpensesPage() {
 function ExpensePeriodView() {
   const { data, update, modelFor } = useStore();
   const all = data.transactions ?? empty;
-  const years = [...new Set([...Object.keys(data.years), ...all.map((t) => t.date.slice(0, 4))])].sort().reverse();
-  const today = new Date();
+  const currentMonth = todayYm();
+  const calendarYear = currentMonth.slice(0, 4);
+  const years = [...new Set([calendarYear, ...Object.keys(data.years), ...all.map((t) => t.date.slice(0, 4))])].sort().reverse();
   const currentYear = String(data.activeYear);
   const latest = all
     .filter((t) => !t.excludedFromSpend && t.date.startsWith(currentYear))
@@ -54,10 +56,7 @@ function ExpensePeriodView() {
     .sort()
     .at(-1);
   const [period, setPeriod] = useState(
-    latest ||
-      (today.getFullYear() === data.activeYear
-        ? currentYear + '-' + String(today.getMonth() + 1).padStart(2, '0')
-        : currentYear),
+    latest || (calendarYear === currentYear ? currentMonth : currentYear),
   );
   const [account, setAccount] = useState('');
   const [mask, setMask] = usePref('expenses.mask', 'show', ['show', 'hide'] as const);
@@ -175,16 +174,22 @@ function ExpensePeriodView() {
         </p>
       )}
       {table && (
-        <BankImportPreview
-          key={revision.current}
-          table={table}
-          hiddenAmounts={hidden}
-          confirm={confirmImport}
-          cancel={() => setTable(null)}
-        />
+        <Suspense fallback={<p role="status" className="text-sm text-muted">Importvorschau wird geladen …</p>}>
+          <BankImportPreview
+            key={revision.current}
+            table={table}
+            hiddenAmounts={hidden}
+            confirm={confirmImport}
+            cancel={() => setTable(null)}
+          />
+        </Suspense>
       )}
       <div className="ex-filters">
-        <Select ariaLabel="Zeitraum der Ausgaben" value={period} onChange={setPeriod} options={periods} />
+        <div className="ex-period-controls">
+          <Select ariaLabel="Zeitraum der Ausgaben" value={period} onChange={setPeriod} options={periods} />
+          <button type="button" className="ex-current-month" aria-pressed={period === currentMonth}
+            onClick={() => setPeriod(todayYm())}>Diesen Monat</button>
+        </div>
         {(data.importAccounts?.some((a) => a.type !== 'depot') || all.length > 0) && (
           <Select
             ariaLabel="Buchungen nach Konto filtern"
@@ -194,7 +199,7 @@ function ExpensePeriodView() {
               { value: '', label: 'Alle Konten' },
               ...(data.importAccounts ?? [])
                 .filter((a) => a.type !== 'depot')
-                .map((a) => ({ value: a.id, label: bankLabel(a.bankId) + ' · ' + a.name })),
+                .map((a) => ({ value: a.id, label: bankLabel(a.bankId) + ' · ' + accountDisplayName(a) })),
               ...(all.some((t) => !t.accountId) ? [{ value: 'legacy', label: 'Ohne Kontozuordnung' }] : []),
             ]}
           />

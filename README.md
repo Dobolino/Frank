@@ -30,11 +30,13 @@ npm run build      # Produktions-Build nach dist/
 - Buchungen ohne Posten einmal zuordnen, Frank merkt sich den Händler und die Kategorie der Bank
   (z. B. UBS-App: «Lebensmittel»). Konto- und Kartennummern übernimmt Frank nicht.
 - iPhone: Öffnet sich der Export in Numbers, dort «Teilen» → «Exportieren» → «CSV» wählen.
+- Mit «Diesen Monat» öffnest du den laufenden Kalendermonat. Das Auge blendet Beträge und Prozentwerte aus. Farben, Balken, Geldfluss und Kalender bleiben sichtbar.
+- Yuh-Aktivitäten werden einem benannten Konto zugeordnet. Der Auszug unterscheidet Belastungs- und Gutschriftswährung. Frank übernimmt die ausgewiesene CHF-Seite. Abgelehnte Aufträge, Aktivitäten ohne Geldbetrag und reine Fremdwährungsbuchungen erscheinen in der Importvorschau als übersprungen.
 - Die Datei verlässt das Gerät nicht.
 
 ### Automatische Kontozuordnung
 
-Die CSV-Vorschau zeigt für jede erkennbare Quelle das Konto und das Bild der Bank. Ein neues Konto wird zusammen mit den ausgewählten Buchungen angelegt. Beim nächsten Auszug erkennt Frank die bestätigte Quelle anhand eines lokal erzeugten Prüfwerts. Bei fehlenden oder mehrdeutigen Kennungen wählst du das Konto selbst. Ein Bankname allein reicht bei mehreren Konten derselben Bank nicht für die Zuordnung.
+Die CSV-Vorschau zeigt für jede erkennbare Quelle das Konto und das Bild der Bank. Ein neues Konto wird zusammen mit den ausgewählten Buchungen angelegt. Beim nächsten Auszug erkennt Frank die bestätigte Quelle anhand eines lokal erzeugten Prüfwerts. Bei fehlenden oder mehrdeutigen Kennungen wählst du das Konto selbst. Mehrere Quellen eines Auszugs lassen sich auch auf einem gemeinsamen Konto verbuchen. Unter «Mehr → Konten & Karten» kannst du vorhandene Konten umbenennen, ihre letzten vier Ziffern ergänzen und getrennte Einträge mit einer Vorschau zusammenführen. Bei Yuh bleibt die Kontoendung leer, sofern du sie nicht selbst einträgst.
 
 ## PC und iPhone abgleichen
 

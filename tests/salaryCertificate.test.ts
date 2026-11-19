@@ -105,6 +105,8 @@ describe('Jahresausweis als Scan', () => {
     expect(() => parseSalaryCertificateText([withAnnualCropAmount(crop,"7X’000.00")])).toThrow(/Keine eindeutigen/);
     const ambiguousSeparator = { ...crop, pageAmount:'2300.75' };
     expect(withAnnualCropAmount(ambiguousSeparator,'2 30075')).toContain(' = 2300.75');
+    expect(withAnnualCropAmount(ambiguousSeparator,'2°‘300.75')).toContain(" = 2'300.75");
+    expect(withAnnualCropAmount(ambiguousSeparator,'23°‘00.75')).toContain('[Betrag unlesbar]');
     expect(withAnnualCropAmount(ambiguousSeparator,'2 39075')).toContain('[Betrag unlesbar]');
     expect(withAnnualCropAmount(ambiguousSeparator,'-2 30075')).toContain('[Betrag unlesbar]');
     expect(annualAmountCrops(lines.slice(1),1000)).toHaveLength(0);

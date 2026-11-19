@@ -42,7 +42,13 @@ export function annualAmountCrops(lines: readonly OcrLine[], pageWidth: number):
 // Replacing the entire amount suffix prevents partial matches, e.g. the 200
 // in an uncertain OCR result "X'200". Blank fields remain editable for review.
 export function withAnnualCropAmount(crop: AnnualAmountCrop, ocrText: string): string {
-  const normalize = (value: string) => value.trim().replace(/[’‘ʼ′°]/g, "'").replace(/\s*'\s*/g, "'").replace(/([.,])\s+(?=\d{2}$)/, '$1');
+  const normalize = (value: string) => value.trim()
+    .replace(/[’‘ʼ′°]/g, "'")
+    .replace(/\s*'\s*/g, "'")
+    // One speckled raised separator can produce two glyphs. The second must
+    // occupy the separator position before a complete Swiss thousands group.
+    .replace(/(\d)''(?=\d{3}(?:[.,']|$))/g, "$1'")
+    .replace(/([.,])\s+(?=\d{2}$)/, '$1');
   const money = /^[+-]?(?:\d{1,3}(?:[' ]\d{3})+|\d+)(?:[.,](?:\d{2}|[-–]))?$/;
   let raw = normalize(ocrText);
   const page = normalize(crop.pageAmount);

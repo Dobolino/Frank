@@ -24,6 +24,7 @@ const sections: { title: string; links: Destination[] }[] = [
   { title: 'Daten', links: [
     { page: 'accounts', name: 'Konten & Karten', hint: 'Bankkonten, Kartenkonten und Depots', icon: 'cards', color: '#8ebcff' },
     { page: 'expenses', name: 'Buchungen & Händler', hint: 'Ausgaben, Firmenlogos und Bank-CSV', icon: 'expenses', color: '#89dacd' },
+    { page: 'sync', name: 'Geräte verbinden', hint: 'Frank auf PC und iPhone abgleichen', icon: 'devices', color: '#91d5db' },
     { page: 'data', name: 'Daten & Sicherung', hint: 'Backup, Wiederherstellung und KI-Zusammenfassung', icon: 'archive', color: '#aab3c9' },
   ] },
 ];

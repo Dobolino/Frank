@@ -69,6 +69,7 @@ export function emptyYear(year: number, template?: YearPlan): YearPlan {
       ...structuredClone(template),
       year,
       actualTax: undefined,
+      salaryCertificate: undefined,
       note: `Kopie von ${template.year}`,
       budget: template.budget.map((b) => ({ ...structuredClone(b), id: uid('b') })),
     };

@@ -2,7 +2,7 @@
 
 Lokale Web-App für die persönliche Finanzplanung in der Schweiz:
 Budget mit Sparkonto-Routing, Brutto-Netto-Lohnrechner und provisorische Steuerberechnung
-für alle 26 Kantone und rund 2100 Gemeinden. Keine Cloud, kein Login – die Daten bleiben im Browser.
+für alle 26 Kantone und rund 2100 Gemeinden. Die Daten liegen im Browser. Ein zweites Gerät lässt sich auf Wunsch direkt koppeln.
 
 ## Starten
 
@@ -31,6 +31,25 @@ npm run build      # Produktions-Build nach dist/
   (z. B. UBS-App: «Lebensmittel»). Konto- und Kartennummern übernimmt Frank nicht.
 - iPhone: Öffnet sich der Export in Numbers, dort «Teilen» → «Exportieren» → «CSV» wählen.
 - Die Datei verlässt das Gerät nicht.
+
+### Automatische Kontozuordnung
+
+Die CSV-Vorschau zeigt für jede erkennbare Quelle das Konto und das Bild der Bank. Ein neues Konto wird zusammen mit den ausgewählten Buchungen angelegt. Beim nächsten Auszug erkennt Frank die bestätigte Quelle anhand eines lokal erzeugten Prüfwerts. Bei fehlenden oder mehrdeutigen Kennungen wählst du das Konto selbst. Ein Bankname allein reicht bei mehreren Konten derselben Bank nicht für die Zuordnung.
+
+## PC und iPhone abgleichen
+
+1. Beide Geräte ins gleiche lokale Netzwerk bringen und Frank öffnen. Unter «Mehr → Geräte verbinden» am PC «Verbindung starten» und am iPhone «Verbindung beitreten» wählen. Beim ersten Start am PC führt «Vorhandenen Frank-Datenstand von einem Gerät übernehmen» direkt dorthin.
+2. Einladungscode und Antwortcode per QR oder Kopieren austauschen. Kontrollcode auf beiden Geräten vergleichen. Beide Fenster offen lassen.
+3. «Daten vergleichen» am PC wählen und am iPhone freigeben. Beim ersten Abgleich den gewünschten Ausgangsstand auswählen und am zweiten Gerät bestätigen. Bei späteren Vergleichen kann Frank Änderungen zum letzten gemeinsamen Stand zusammenführen. Bei widersprüchlichen Änderungen zeigt Frank die betroffenen Bereiche.
+4. Am PC unter «Ausgaben → CSV» oder «Sparen → Anlagen» importieren. Solange beide Fenster verbunden bleiben, genügt danach «Erneut vergleichen». Bei einer neuen Sitzung die Geräte erneut koppeln.
+
+Der Geräteabgleich überträgt den Frank-Datenstand direkt über eine verschlüsselte WebRTC-Verbindung. CSV- und PDF-Originaldateien, Kursschlüssel und gerätespezifische Anzeigeoptionen bleiben auf ihrem Gerät.
+
+## Schweizer Lohnausweis importieren
+
+Unter «Mehr → Einnahmen & Lohn» in der Karte «Lohnausweis» ein PDF oder eine CSV auswählen. Frank liest Text-PDFs und ausgefüllte PDF-Formulare lokal. Für einen Bildscan braucht es zuerst eine PDF-Texterkennung. Eine CSV kann beispielsweise die Spalten `Ziffer;Betrag;Jahr` enthalten.
+
+Vor dem Speichern lassen sich Brutto- und Nettolohn, Sozialabzüge, Pensionskassenbeiträge und bezifferte Spesen prüfen. Effektive Spesen (Ziffer 13.1) und Pauschalspesen (13.2) erscheinen getrennt. Eine vereinbarte Monatspauschale lässt sich mit ihrer steuerlichen Behandlung ausdrücklich in den Lohnplan übernehmen.
 
 ## Bedienung auf dem Handy
 

@@ -1,0 +1,19 @@
+.device-sync { max-width: 46rem; margin: 0 auto; display: grid; gap: .85rem; }
+.device-sync p { font-size: .91rem; line-height: 1.55; color: var(--color-muted); }
+.device-sync h2 { font-size: 1.1rem; font-weight: 650; }
+.device-sync p + button, .device-sync h2 + .sync-summaries { margin-top: .85rem; }
+.sync-intro { display: flex; align-items: center; gap: 1rem; }
+.sync-intro svg { color: var(--color-accent); flex: none; }
+.sync-buttons, .sync-summaries { display: flex; flex-wrap: wrap; gap: .6rem; margin: .8rem 0 .2rem; }
+.sync-buttons button, .device-sync .sync-primary, .sync-cancel { border: 1px solid var(--color-line); background: var(--color-panel-2); padding: .55rem .85rem; border-radius: .7rem; min-height: 44px; font-size: .88rem; font-weight: 600; }
+.device-sync .sync-primary { background: var(--color-accent); color: var(--color-bg); }
+.device-sync button:disabled { opacity: .55; }
+.sync-cancel { justify-self: start; }
+.sync-summary { min-width: 0; flex: 1 1 12rem; background: var(--color-panel-2); border: 1px solid var(--color-line); padding: .8rem; border-radius: 12px; margin-bottom: .7rem; }
+.sync-summary strong { font-size: .9rem; }
+.sync-summary p { font-size: .8rem; }
+.sync-badge { font-size: .78rem; color: var(--color-muted); margin-bottom: 1rem; }
+.sync-badge span { width: 8px; height: 8px; display: inline-block; background: var(--color-accent); border-radius: 100%; }
+.sync-badge b { color: var(--color-text); display: block; font-size: 1.5rem; letter-spacing: .12em; }
+.sync-import-link { display: block; margin: .8rem 0; color: var(--color-accent); }
+.device-sync p.sync-warning { color: var(--color-warn); }

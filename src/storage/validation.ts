@@ -1,4 +1,5 @@
 import type { AppData } from '../domain/types';
+import { validSalaryCertificateRecord } from '../domain/salaryCertificateRecord';
 
 const invalid = (path: string): never => { throw new Error(`Ungültiges Feld im Backup: ${path}.`); };
 const object = (value: unknown, path: string): Record<string, unknown> => {
@@ -100,6 +101,7 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     const plan = object(rawPlan, p);
     const year = integer(plan.year, `${p}.year`);
     if (year < 1 || year > 9999 || key !== String(year)) invalid(`${p}.year`);
+    optional(plan, 'salaryCertificate', (v, path) => validSalaryCertificateRecord(v) || invalid(path), p);
     const salary = object(plan.salary, `${p}.salary`);
     integer(salary.grossMonthly, `${p}.salary.grossMonthly`);
     integer(salary.bvgMonthly, `${p}.salary.bvgMonthly`);
@@ -188,6 +190,16 @@ export function validateAppData(value: Record<string, unknown>): asserts value i
     for (const key of ['name', 'bankId']) if (!text(a[key], `importAccounts.${key}`).trim()) invalid(`importAccounts.${key}`);
     choice(a.type, ['bank', 'card', 'depot'], 'importAccounts.type');
   }
+  optional(value, 'accountRecognition', (v, path) => {
+    const recognition = object(v, path);
+    const hexKey = /^[0-9a-f]{64}$/;
+    if (!hexKey.test(text(recognition.key, path + '.key'))) invalid(path + '.key');
+    const bindingAccount = reference(new Set(importAccounts.map(a => a.id)));
+    for (const [fingerprint, target] of Object.entries(object(recognition.bindings, path + '.bindings'))) {
+      if (!hexKey.test(fingerprint)) invalid(path + '.bindings');
+      bindingAccount(target, path + '.bindings');
+    }
+  }, 'data');
   const expenseAccount = reference(new Set(importAccounts.filter(a => a.type !== 'depot').map(a => a.id)));
   const depot = reference(new Set(importAccounts.filter(a => a.type === 'depot').map(a => a.id)));
   optional(value, 'investmentTransactions', (v, path) => {

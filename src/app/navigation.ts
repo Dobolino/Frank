@@ -7,10 +7,10 @@ export const tabs = [
 ] as const;
 
 export type TabId = (typeof tabs)[number]['id'];
-export type PageId = TabId | 'salary' | 'tax' | 'data' | 'accounts' | 'invest' | 'contracts';
+export type PageId = TabId | 'salary' | 'tax' | 'data' | 'accounts' | 'invest' | 'contracts' | 'sync';
 
 const secondaryTabs: Record<Exclude<PageId, TabId>, TabId> = {
-  salary: 'more', tax: 'more', data: 'more', accounts: 'more', invest: 'savings', contracts: 'more',
+  salary: 'more', tax: 'more', data: 'more', accounts: 'more', invest: 'savings', contracts: 'more', sync: 'more',
 };
 
 const legacy: Record<string, PageId> = {

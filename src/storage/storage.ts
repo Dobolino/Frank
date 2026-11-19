@@ -30,7 +30,7 @@ export type SaveResult =
 export async function saveData(
   data: AppData,
   expectedRaw: string | null,
-  options: { stillCurrent?: () => boolean; preservePrevious?: boolean } = {},
+  options: { stillCurrent?: () => boolean; preservePrevious?: boolean | 'sync' } = {},
 ): Promise<SaveResult> {
   try {
     if (typeof navigator === 'undefined' || !navigator.locks) {
@@ -43,7 +43,13 @@ export async function saveData(
       const raw = JSON.stringify(data);
       if (options.preservePrevious && current !== null) {
         // Preserve the original before an explicitly requested recovery import.
-        localStorage.setItem(`frank.recovery.${Date.now()}.${crypto.randomUUID()}`, current);
+        const suffix = options.preservePrevious === 'sync' ? 'sync' : crypto.randomUUID();
+        const key = `frank.recovery.${Date.now()}.${suffix}`;
+        localStorage.setItem(key, current);
+        if (suffix === 'sync') {
+          const old = Object.keys(localStorage).filter(k => k.startsWith('frank.recovery.') && k.endsWith('.sync') && k !== key);
+          for (const previous of old) localStorage.removeItem(previous);
+        }
       }
       localStorage.setItem(STORAGE_KEY, raw);
       return { status: 'saved', raw } as const;

@@ -76,6 +76,7 @@ export function DataPage() {
       )}
       <div className="grid gap-4 md:grid-cols-2">
         <AccountsCard />
+        <a className="rounded-2xl border border-line bg-panel px-4 py-3 text-sm text-accent md:col-span-2" href="#sync">Geräte verbinden und Daten abgleichen ›</a>
 
         <Card title="Backup">
           <p className="mb-2 text-sm text-muted">

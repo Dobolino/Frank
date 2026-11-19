@@ -1,4 +1,5 @@
 import type { Rappen } from './money';
+import type { SalaryCertificateRecord } from './salaryCertificateRecord';
 
 export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export const MONTHS: readonly Month[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -168,6 +169,8 @@ export interface ExtrasAllocation {
 
 export interface YearPlan {
   year: number;
+  /** Geprüfte Jahreswerte des Lohnausweises zum Vergleich mit dem Lohnplan. */
+  salaryCertificate?: SalaryCertificateRecord;
   salary: SalaryInput;
   otherIncome: OtherIncome[];
   budget: BudgetItem[];
@@ -305,6 +308,8 @@ export interface AppData {
   /** Importierte Bankbuchungen für den Soll/Ist-Vergleich. */
   transactions?: Transaction[];
   importAccounts?: ImportAccount[];
+  /** Geräteeigene HMAC-Zuordnung der CSV-Quellen, über Backups übertragbar. */
+  accountRecognition?: { key: string; bindings: Record<string, string> };
   customMerchants?: { id: string; name: string; logo?: string }[];
   merchantRules?: { match: string; merchantId: string }[];
   investmentTransactions?: import('./investCsv').InvestmentTransaction[];

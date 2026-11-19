@@ -1,5 +1,6 @@
 import { parseAmount, parseDate, type CsvTable } from './bankCsv';
 import type { Rappen } from './money';
+import { isSourceColumn, statementSource } from './statementIdentity';
 
 export const investmentKinds = { buy: 'Kauf', sell: 'Verkauf', dividend: 'Dividende' } as const;
 type Kind = keyof typeof investmentKinds;
@@ -36,13 +37,19 @@ function investColumns(header: string[]) {
     currency: find('wahrung', 'waehrung', 'abrechnungswahrung', 'currency', 'settlement currency', 'ccy'),
     quantity: find('anzahl', 'menge', 'stuck', 'stuckzahl', 'quantity', 'shares', 'units', 'qty'),
     brokerId: find('transaktions id', 'transaktionsid', 'transaction id', 'transactionid', 'broker id', 'referenz', 'reference', 'id'),
-    source: find('konto', 'depot', 'depotnummer', 'kontonummer', 'konto oder kartennummer', 'account', 'account id', 'account number'),
+    source: header.findIndex(isSourceColumn),
   };
+}
+
+function canonicalDepot(value: string): string {
+  const compact = value.trim().replace(/\s/g, '').toUpperCase();
+  return /^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(compact) ? compact : value.trim();
 }
 
 export function investmentSources(table: CsvTable): string[] {
   const { source } = investColumns(table.header);
-  return source < 0 ? [] : [...new Set(table.rows.map(row => row[source]?.trim() ?? ''))];
+  if (source < 0) return table.statement?.source ? [canonicalDepot(table.statement.source)] : [];
+  return [...new Set(table.rows.map(row => canonicalDepot(statementSource(row, source, table.statement))))];
 }
 
 export function investmentFingerprint(t: InvestmentTransaction): string {
@@ -58,9 +65,10 @@ export function parseInvestmentTable(table: CsvTable, accountId: string, existin
   const valid: InvestmentTransaction[] = [];
   const skipped = new Map<string, number>();
   const skip = (reason: string) => skipped.set(reason, (skipped.get(reason) ?? 0) + 1);
+  const selectedSource = source === undefined ? undefined : canonicalDepot(source);
   for (const row of table.rows) {
     const field = (key: keyof typeof cols) => row[cols[key]]?.trim() ?? '';
-    if (source !== undefined && field('source') !== source) continue;
+    if (selectedSource !== undefined && canonicalDepot(statementSource(row, cols.source, table.statement)) !== selectedSource) continue;
     const date = parseDate(field('date'));
     const kindKey = norm(field('kind'));
     const kind = Object.hasOwn(kindAliases, kindKey) ? kindAliases[kindKey] : undefined;

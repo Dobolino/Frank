@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
 import { useStore } from '../app/store';
 import { Badge, Button, Card, Collapsible, Money, MoneyInput, NumberInput, PageHeader, Row, Segmented, Select, Toggle, cx } from './shared';
 import { MONTHS, monthName, type Month, type SalaryInput } from '../domain/types';
 import { totalRate, lohnausweisNet } from '../domain/salaryEngine';
 import { formatChf, formatPercent } from '../domain/money';
+const SalaryCertificateImport = lazy(() => import('./SalaryCertificateImport').then(m => ({ default: m.SalaryCertificateImport })));
 
 const monthOptions = MONTHS.map((m) => ({ value: m, label: monthName(m) }));
 
@@ -88,6 +89,9 @@ export function SalaryPage() {
           </div>
         </Card>
       </div>
+      <Suspense fallback={<p role="status" className="py-3 text-sm text-muted">Lohnausweis wird geöffnet …</p>}>
+        <SalaryCertificateImport key={model.plan.year} />
+      </Suspense>
       <details ref={editor} className="mt-4 scroll-mt-24 rounded-2xl border border-line bg-panel">
         <summary className="flex min-h-12 cursor-pointer items-center justify-between px-4 py-3 text-sm font-semibold">
           Lohn, Spesen und Abzüge bearbeiten <span aria-hidden="true" className="text-muted">⌄</span>
@@ -138,13 +142,13 @@ export function SalaryPage() {
                 <Toggle
                   checked={!s.expenseAllowance!.taxable}
                   onChange={(v) => set((x) => void (x.expenseAllowance = { ...x.expenseAllowance!, taxable: !v }))}
-                  label={<span className="text-sm">Spesenreglement genehmigt (steuerfrei)</span>}
+                  label={<span className="text-sm">Pauschalspesen in der Steuerprognose als steuerfrei behandeln</span>}
                 />
               </div>
             )}
             <p className="mt-2 text-xs text-muted">
-              Pauschalspesen sind ohne AHV, ALV und BVG und stehen im Lohnausweis unter Ziffer 13.2. Ohne genehmigtes Spesenreglement zählen sie zum steuerbaren Einkommen.
-              Effektive Rückerstattungen mit Belegen nicht erfassen, sie gleichen nur Auslagen aus.
+              Frank führt Pauschalspesen separat vom Monatslohn. Die steuerliche Behandlung richtet sich nach deiner Abrechnung und den geltenden Spesenregeln.
+              Effektive Rückerstattungen mit Belegen siehst du im importierten Lohnausweis unter Ziffer 13.1.
             </p>
           </Card>
           <Card title="Sozialabzüge">

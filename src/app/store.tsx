@@ -11,6 +11,8 @@ interface Store {
   update: (fn: (draft: AppData) => void) => void;
   /** Ändert das aktuell gewählte Jahr. */
   updateYear: (fn: (plan: YearPlan) => void) => void;
+  getSyncSnapshot: () => AppData | null;
+  applySync: (expected: AppData | null, next: AppData) => Promise<void>;
   replaceAll: (data: AppData) => Promise<boolean>;
   plan: YearPlan;
   model: YearModel;
@@ -61,6 +63,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const next = snapshot.status === 'loaded' ? snapshot.data : initialData();
     rawRef.current = snapshot.raw;
     dataRef.current = next;
+    setFirstRun(snapshot.status === 'empty');
     problemRef.current = null;
     setProblem(null);
     setImportError('');
@@ -94,7 +97,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     };
   }, [acceptSnapshot, stopSaving]);
 
-  const commit = useCallback((next: AppData, preservePrevious = false): Promise<boolean> => {
+  const commit = useCallback((next: AppData, preservePrevious: boolean | 'sync' = false): Promise<boolean> => {
     if (problemRef.current) return Promise.resolve(false);
     const revision = generation.current;
     dataRef.current = next;
@@ -175,6 +178,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     data,
     update,
     updateYear,
+    getSyncSnapshot: () => firstRun ? null : dataRef.current,
+    applySync: async (expected, next) => {
+      if ((firstRun ? null : dataRef.current) !== expected) {
+        throw new Error('Auf diesem Gerät wurden Daten geändert. Starte den Vergleich erneut.');
+      }
+      const validated = parseAppData(JSON.stringify(next));
+      if (expected !== null && JSON.stringify(expected) === JSON.stringify(validated)) {
+        await queue.current;
+        if (!problemRef.current && dataRef.current === expected) return;
+        throw new Error('Der aktuelle Datenstand hat sich geändert.');
+      }
+      if (!await commit(validated, 'sync')) throw new Error('Der Datenstand konnte nicht gespeichert werden.');
+      setFirstRun(false);
+    },
     replaceAll,
     plan,
     model,

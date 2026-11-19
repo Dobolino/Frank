@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type TouchEvent } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type TouchEvent } from 'react';
 import { useStore } from './store';
 import { Button } from '../components/ui';
 import { FrankIcon } from '../components/FrankIcon';
@@ -18,10 +18,12 @@ import { Onboarding } from '../features/Onboarding';
 import { haptic } from './haptics';
 import { applyUpdate, useUpdateAvailable } from './pwaUpdate';
 
+const DeviceSyncPage = lazy(() => import('../features/DeviceSyncPage'));
+
 const pages = {
   overview: Dashboard, budget: BudgetPage, expenses: ExpensesPage, savings: SavingsPage, more: MorePage,
   invest: InvestPage, salary: SalaryPage, tax: TaxPage, data: DataPage, accounts: AccountsPage, contracts: ContractsPage,
-} satisfies Record<PageId, React.ComponentType>;
+} satisfies Record<Exclude<PageId, 'sync'>, React.ComponentType>;
 
 const tabIndex = (page: PageId) => tabs.findIndex(tab => tab.id === activeTab(page));
 
@@ -140,8 +142,10 @@ export function App() {
     }
   };
 
-  const Current = pages[page];
-  if (firstRun) return <Onboarding />;
+  const hasVisitedSync = useRef(false);
+  if (page === 'sync') hasVisitedSync.current = true;
+  const Current = page === 'sync' ? null : pages[page];
+  if (firstRun && page !== 'sync') return <Onboarding />;
 
   return (
     <div className="frank-shell">
@@ -150,7 +154,7 @@ export function App() {
           <a href="#overview" className="frank-logo" aria-label="Frank – Übersicht">Frank<span>.</span></a>
           {page === 'overview'
             ? <span className="frank-location">{data.profile.municipality}</span>
-            : <YearPicker />}
+            : page === 'sync' ? null : <YearPicker />}
         </div>
       </header>
       <main
@@ -176,10 +180,13 @@ export function App() {
               {section === 'more' && page !== 'more' && (
                 <a className="frank-back" href="#more"><FrankIcon name="back" size={15} />Mehr</a>
               )}
-              <Current />
+              {Current && <Current />}
             </div>
           </div>
         </div>
+        {hasVisitedSync.current && <div hidden={page !== 'sync'}>
+          <Suspense fallback={<p role="status">Geräteabgleich wird geöffnet …</p>}><DeviceSyncPage /></Suspense>
+        </div>}
       </main>
 
       <nav className="frank-dock" aria-label="Hauptnavigation">

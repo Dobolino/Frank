@@ -11,7 +11,7 @@ describe('Navigation', () => {
 
   it('ordnet die Unterseiten dem sichtbaren Tab zu', () => {
     expect(activeTab(pageFromHash('#invest'))).toBe('savings');
-    for (const hash of ['#salary', '#tax', '#contracts', '#accounts', '#data']) {
+    for (const hash of ['#salary', '#tax', '#contracts', '#accounts', '#data', '#sync']) {
       expect(activeTab(pageFromHash(hash))).toBe('more');
     }
   });

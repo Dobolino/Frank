@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { useStore } from '../app/store';
-import { applyRules, merchantKey, mergeTransactions } from '../domain/actuals';
+import { applyRules, merchantKey } from '../domain/actuals';
 import { parseCsv, type ParsedTransaction, type CsvTable } from '../domain/bankCsv';
 import { expensePeriod } from '../domain/expensePeriod';
 import { bankLabel } from '../domain/importAccounts';
@@ -78,6 +78,7 @@ function ExpensePeriodView() {
   async function loadFile(file: File) {
     const version = ++revision.current;
     setMessage('');
+    setTable(null);
     try {
       const bytes = await file.arrayBuffer();
       if (version !== revision.current) return;
@@ -97,11 +98,7 @@ function ExpensePeriodView() {
       }
     }
   }
-  function confirmImport(preview: ParsedTransaction[]) {
-    const { added } = mergeTransactions(all, preview, data.rules ?? []);
-    update((d) => {
-      d.transactions = mergeTransactions(d.transactions ?? [], preview, d.rules ?? []).list;
-    });
+  function confirmImport(preview: ParsedTransaction[], added: number) {
     const importedYears = preview.map((t) => t.date.slice(0, 4)).sort();
     setPeriod(importedYears.includes(currentYear) ? currentYear : (importedYears.at(-1) ?? currentYear));
     setTable(null);
@@ -109,7 +106,7 @@ function ExpensePeriodView() {
     setMessage(
       added === 0
         ? 'Keine neuen Buchungen. Vorhandene Kontozuordnungen wurden geprüft.'
-        : added + ' Buchungen übernommen.',
+        : added + (added === 1 ? ' Buchung übernommen.' : ' Buchungen übernommen.'),
     );
   }
   function assign(t: Transaction, item: string) {

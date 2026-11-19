@@ -1,4 +1,6 @@
 import type { Rappen } from './money';
+import { isSourceColumn, readStatementIdentity, statementSource, type StatementIdentity } from './statementIdentity';
+export { sourceTypeForColumn } from './statementIdentity';
 
 /**
  * CSV-Export einer Bank einlesen. Erkennt Trennzeichen, Kopfzeile und Spalten
@@ -9,6 +11,7 @@ import type { Rappen } from './money';
 export interface CsvTable {
   header: string[];
   rows: string[][];
+  statement?: StatementIdentity;
 }
 
 export interface ColumnMap {
@@ -38,7 +41,7 @@ export interface ParsedTransaction {
 }
 
 /** Liest auch Zeilenumbrüche und Trennzeichen in einem zitierten Feld. */
-function records(content: string, separator: string): string[][] {
+export function csvRecords(content: string, separator: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [], value = '', quoted = false;
   for (let i = 0; i < content.length; i++) {
@@ -62,7 +65,7 @@ function records(content: string, separator: string): string[][] {
 }
 
 const KEYWORDS = {
-  date: ['buchungsdatum', 'datum', 'date', 'booked at', 'abschlussdatum', 'valuta', 'transaktionsdatum', 'booking date'],
+  date: ['buchungsdatum', 'datum', 'date', 'booked at', 'abschlussdatum', 'valuta', 'transaktionsdatum', 'booking date', 'buchungstag', 'handelsdatum', 'trade date', 'transaction date'],
   text: ['buchungstext', 'beschreibung', 'avisierungstext', 'text', 'description', 'activity name', 'details', 'mitteilung', 'empfänger', 'zahlungsempfänger'],
   amount: ['betrag', 'amount', 'credit/debit amount', 'umsatz'],
   debit: ['belastung', 'lastschrift', 'debit', 'soll', 'ausgang'],
@@ -76,13 +79,15 @@ const norm = (s: string) => s.toLowerCase().replace(/["']/g, '').trim();
 export function parseCsv(content: string): CsvTable {
   const clean = content.replace(/^\uFEFF/, '');
   const candidates = [';', ',', '\t'].map(separator => {
-    const rows = records(clean, separator);
+    const rows = csvRecords(clean, separator);
     const index = rows.findIndex(row => row.length >= 3 && row.some(cell => KEYWORDS.date.some(k => norm(cell).startsWith(k))) && !row.some(cell => parseDate(cell)));
     return { rows, index, score: index >= 0 ? rows[index]!.length : 0 };
   });
   const { rows, index } = candidates.sort((a, b) => b.score - a.score || (b.rows[0]?.length ?? 0) - (a.rows[0]?.length ?? 0))[0]!;
   const head = Math.max(0, index);
-  return { header: rows[head] ?? [], rows: rows.slice(head + 1).filter(row => row.length >= 2) };
+  const header = rows[head] ?? [];
+  const statement = readStatementIdentity(rows.slice(0, head), header);
+  return { header, rows: rows.slice(head + 1).filter(row => row.length >= 2), ...(statement && { statement }) };
 }
 
 const find = (header: string[], keys: string[], exclude: number[] = []) => {
@@ -97,7 +102,7 @@ const find = (header: string[], keys: string[], exclude: number[] = []) => {
 export function guessColumns(header: string[]): ColumnMap {
   const map = guessAmountColumns(header);
   const category = find(header, KEYWORDS.category, [map.date, map.text]);
-  const source = header.findIndex(h => ['konto- oder kartennummer', 'kontonummer', 'kartennummer', 'account number', 'card number', 'konto-iban', 'iban'].includes(norm(h)));
+  const source = header.findIndex(isSourceColumn);
   const currency = find(header, ['währung', 'waehrung', 'currency']);
   const direction = find(header, ['einnahmen oder ausgaben', 'income or expense']);
   return { ...map, ...(category >= 0 && { category }), ...(source >= 0 && { source }), ...(currency >= 0 && { currency }), ...(direction >= 0 && { direction }) };
@@ -166,7 +171,7 @@ export function inspectBankRows(table: CsvTable, map: ColumnMap) {
       else { invalid++; continue; }
     }
     const category = map.category !== undefined ? (r[map.category] ?? '').trim() : '';
-    const source = map.source === undefined ? '' : (r[map.source] ?? '').replace(/\s+/g, '').toUpperCase();
+    const source = statementSource(r, map.source, table.statement).replace(/\s+/g, '').toUpperCase();
     entries.push({ source, transaction: { date, text: (r[map.text] ?? '').replace(/\s+/g, ' ').trim(), amount, ...(category ? { category } : {}) } });
   }
   return { entries, invalid, foreign };

@@ -6,6 +6,7 @@ const shapes = {
   expenses: <><path d="m5 3 2.2 1.4L9.6 3 12 4.4 14.4 3l2.4 1.4L19 3v18l-2.2-1.4-2.4 1.4-2.4-1.4L9.6 21l-2.4-1.4L5 21Z" /><path d="M8.5 9h7M8.5 13h5" /></>,
   savings: <><path d="m3 16 6-6 4 4 8-9M15 5h6v6" /></>,
   more: <><circle cx="4.5" cy="12" r="1.2" /><circle cx="12" cy="12" r="1.2" /><circle cx="19.5" cy="12" r="1.2" /></>,
+  devices: <><path d="M13 17H5a2 2 0 0 1-2-2V5h16v3M6 20h7m-4-3v3"/><rect x="15" y="9" width="7" height="12" rx="1.5"/><path d="M18 18.5h1"/></>,
   calendar: <><rect x="3.5" y="5" width="17" height="16" rx="3" /><path d="M7.5 3v4m9-4v4m-13 3.5h17" /></>,
   calculator: <><rect x="5" y="2.5" width="14" height="19" rx="2" /><path d="M8 7h8M8.5 12h1m4 0h1m-6 4h1m4 0h1" /></>,
   repeat: <path d="m16 2 4 4-4 4M4 11V9a3 3 0 0 1 3-3h13M8 22l-4-4 4-4m12-1v2a3 3 0 0 1-3 3H4" />,

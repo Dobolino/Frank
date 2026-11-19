@@ -116,6 +116,7 @@ export function Onboarding() {
         <button className="block w-full py-2 text-center text-sm text-muted" onClick={() => void finishSetup(demoData())}>
           Erst mit Beispieldaten ansehen
         </button>
+        <a className="block py-2 text-center text-sm text-accent" href="#sync">Vorhandenen Frank-Datenstand von einem Gerät übernehmen</a>
       </div>
     </main>
   );

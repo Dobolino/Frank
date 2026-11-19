@@ -1,32 +1,64 @@
 import { useState } from 'react';
 import { useStore } from '../app/store';
-import { bankLabel, bankOptions, accountTypeLabel } from '../domain/importAccounts';
+import { bankLabel, bankOptions, accountTypeLabel, bankLogoPath } from '../domain/importAccounts';
 import type { ImportAccount } from '../domain/types';
 import { Button, Select, TextInput } from './shared';
+import { compatibleAccount, unknownBank, type ImportKind, type ImportTarget } from './useImportTargets';
 
 export function BankMark({ bankId, size = 28 }: { bankId: string; size?: number }) {
   const style = { width: size, height: size };
-  if (bankOptions.some(bank => bank.value === bankId)) {
-    return <img alt="" style={style} className="inline-block shrink-0 rounded-lg bg-white object-contain" src={`${import.meta.env.BASE_URL}banks/${bankId}.png`} />;
+  const path = bankLogoPath(bankId);
+  if (path) {
+    return <img alt="" style={style} className="inline-block shrink-0 rounded-lg bg-white object-contain" src={`${import.meta.env.BASE_URL}${path}`} />;
   }
-  return <span aria-hidden style={style} className="inline-grid shrink-0 place-items-center rounded-lg bg-panel-2 text-xs font-semibold">{bankLabel(bankId).slice(0, 2).toLocaleUpperCase()}</span>;
+  return <span aria-hidden style={style} className="inline-grid shrink-0 place-items-center rounded-lg bg-panel-2 text-xs font-semibold">{bankId && bankId !== unknownBank ? bankLabel(bankId).slice(0, 2).toLocaleUpperCase() : '?'}</span>;
 }
-export function AccountTargetSelect({ kind, value, onChange, label = 'Importkonto' }: {
-  kind: 'expenses' | 'invest'; value: string; onChange: (id: string) => void; label?: string;
+export function AccountTargetSelect({ kind, target, onChange, label }: {
+  kind: ImportKind; target: ImportTarget; onChange: (account?: ImportAccount) => void; label: string;
 }) {
   const { data } = useStore();
-  const accounts = (data.importAccounts ?? []).filter(a => kind === 'invest' ? a.type === 'depot' : a.type !== 'depot');
-  const [creating, setCreating] = useState(false);
-  const selected = accounts.find(a => a.id === value);
+  const accounts = (data.importAccounts ?? []).filter(a => compatibleAccount(a, kind));
+  const { proposed, selected } = target;
+  const [editing, setEditing] = useState(false);
+  const isNew = selected?.id === proposed.id;
+  const bank = selected?.bankId;
+  const registeredBank = bankOptions.some(option => option.value === bank);
+  const bankChoice = registeredBank ? bank! : bank === unknownBank ? 'unknown' : 'other';
+  const change = (fields: Partial<ImportAccount>) => onChange({ ...proposed, ...fields });
   return <div className="space-y-2 text-sm">
     <div className="flex flex-wrap items-center gap-2">
-      <span>{label}</span>
-      {selected && <BankMark bankId={selected.bankId} />}
-      <Select ariaLabel={label} value={value} className="max-w-full" onChange={id => {
-        if (id === 'new') setCreating(true); else { setCreating(false); onChange(id); }
-      }} options={[{ value: '', label: 'Konto wählen …' }, ...accounts.map(a => ({ value: a.id, label: `${bankLabel(a.bankId)} · ${a.name} (${accountTypeLabel(a.type)})` })), { value: 'new', label: '+ Konto anlegen' }]} />
+      {bank && <BankMark bankId={bank} />}
+      <span className="font-medium">{label}</span>
+      <Select ariaLabel={label} value={isNew ? 'new' : selected?.id ?? ''} className="max-w-full" onChange={id => {
+        setEditing(id === 'new');
+        onChange(id === 'new' ? proposed : accounts.find(a => a.id === id));
+      }} options={[
+        { value: '', label: 'Konto wählen …' },
+        ...accounts.map(a => ({ value: a.id, label: `${bankLabel(a.bankId)} · ${a.name} (${accountTypeLabel(a.type)})` })),
+        { value: 'new', label: '+ Beim Import neu anlegen' },
+      ]} />
     </div>
-    {creating && <AccountEditor kind={kind} onCancel={() => setCreating(false)} onCreated={id => {setCreating(false); onChange(id);}} />}
+    {!selected && <p className="text-xs text-muted">{target.manualReason ?? 'Wähle ein Zielkonto für die Buchungen.'}</p>}
+    {selected && !isNew && <p className="text-xs text-muted">{selected.id === target.matchedId ? 'Aus früherem Import wiedererkannt.' : 'Die Buchungen werden diesem Konto zugeordnet.'}</p>}
+    {isNew && selected && <details open={editing} onToggle={e => setEditing(e.currentTarget.open)} className="rounded-lg border border-line p-2">
+      <summary className="flex cursor-pointer flex-wrap justify-between gap-1 text-xs">
+        <strong>{bankLabel(selected.bankId || unknownBank)} · {selected.name || accountTypeLabel(selected.type)}</strong>
+        <span className="text-accent">Bearbeiten</span>
+      </summary>
+      <div className="mt-2 space-y-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <Select ariaLabel="Institut" value={bankChoice} onChange={value => change({ bankId: value === 'unknown' ? unknownBank : value === 'other' ? '' : value })}
+          options={[{value: 'unknown', label: 'Institut unbekannt'}, ...bankOptions, {value: 'other', label: 'Anderes Institut'}]} />
+        {kind === 'expenses' && <Select ariaLabel="Kontoart" value={selected.type} onChange={value => change({ type: value })}
+          options={(['bank', 'card'] as const).map(value => ({ value, label: accountTypeLabel(value) }))} />}
+      </div>
+      {bankChoice === 'other' && <TextInput ariaLabel="Name des Instituts" className="w-full" placeholder="Name des Instituts" value={bank ?? ''} onChange={bankId => change({bankId})} />}
+      <label className="block text-xs text-muted">Kontoname
+        <TextInput ariaLabel="Kontoname" className="mt-1 w-full" value={selected.name} onChange={name => change({name})} />
+      </label>
+      </div>
+    </details>}
+    {target.masked && <p className="text-xs text-warn">Die Kennung ist teilweise verdeckt. Bitte die Zuordnung prüfen.</p>}
   </div>;
 }
 

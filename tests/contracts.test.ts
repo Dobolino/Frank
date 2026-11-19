@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { acceptContractSuggestion, plannedContracts, recurringSuggestions } from '../src/domain/contracts';
+import { FIXED_COST_PRESETS, hasFixedCost } from '../src/domain/fixedCostPresets';
 import { demoData } from '../src/seed/demo';
 import { item } from '../src/seed/builders';
 import type { Transaction } from '../src/domain/types';
@@ -50,5 +51,26 @@ describe('Vertragsvorschläge', () => {
     expect(acceptContractSuggestion(data,2026,proposal,streaming.id,'')).toBe(true);
     data.transactions.push(payment('2026-02-15',{text:'Music',item:streaming.name,amount:-410}));
     expect(plannedContracts([streaming],data.transactions,2026)[0]).toMatchObject({latest:'2026-02',paid:2200,expected:2200});
+  });
+});
+
+describe('Einstellhallenmiete und Zusatzversicherung in bestehenden Budgets', () => {
+  it('ordnet die Beträge auch mit eigenen Bezeichnungen getrennten Vertragsgruppen zu', () => {
+    const parking = item('fixed', 'Einstellhallenmiete', 100);
+    const insurance = item('fixed', 'Zusatzversicherung', 30);
+    const result = plannedContracts([parking, insurance], [], 2026);
+    expect(result.map(row => [row.item.id, row.group])).toEqual([
+      [parking.id, 'Wohnen'], [insurance.id, 'Versicherungen'],
+    ]);
+    expect(hasFixedCost([parking], FIXED_COST_PRESETS.parkingRent)).toBe(true);
+    expect(hasFixedCost([insurance], FIXED_COST_PRESETS.supplementaryInsurance)).toBe(true);
+  });
+
+  it('berücksichtigt bereits eingetragene Unterposten beim Anbieten der Vorlagen', () => {
+    const rent = item('fixed', 'Miete inkl. NK', 1400);
+    expect(hasFixedCost([rent], FIXED_COST_PRESETS.parkingRent)).toBe(false);
+    rent.children = [{ id: 'space', name: ' Garagenmiete ', amount: 9000 }];
+    expect(hasFixedCost([rent], FIXED_COST_PRESETS.parkingRent)).toBe(true);
+    expect(hasFixedCost([rent], FIXED_COST_PRESETS.supplementaryInsurance)).toBe(false);
   });
 });

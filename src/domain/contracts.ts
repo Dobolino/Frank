@@ -9,7 +9,7 @@ export type ContractKind = typeof CONTRACT_KINDS[number];
 
 function kindFromLabel(label: string): ContractKind | undefined {
   const value = merchantText(label);
-  if (/\b(miet(?:e|zins|vertrag)|wohnungsmiete|hausverwaltung|regimo)\b/.test(value)) return 'Wohnen';
+  if (/\b(miet(?:e|zins|vertrag)|wohnungsmiete|einstellhallenmiete|garagenmiete|autoeinstellhalle|hausverwaltung|regimo)\b/.test(value)) return 'Wohnen';
   if (/versicherung|krankenkasse|haftpflicht|\b(sanitas|helsana|swica|css versicherung|groupe mutuel)\b/.test(value)) return 'Versicherungen';
   if (/leasing|kreditrate|darlehen|hypothek/.test(value)) return 'Kredite';
   if (/\b(abo|abos|abonnement|mitgliedschaft|fitnesscenter|streaming|handy|internet|mobilfunk|netflix|spotify|swisscom|yallo|sunrise)\b/.test(value)) return 'Abos';

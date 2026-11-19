@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useStore } from '../app/store';
 import { Badge, Button, Money, MoneyInput, Segmented, Select, TextInput, Toggle, Warnings, cx, usePref } from './shared';
 import { CATEGORY_COLORS, MonthlyOutflowChart } from './charts';
@@ -7,6 +7,7 @@ import './budgetPage.css';
 import { CATEGORY_LABELS, MONTHS, monthName, type BudgetCategory, type BudgetItem, type Frequency, type Month, type TaxTag } from '../domain/types';
 import { frequencyLabel, itemAmount, monthlyAmount, totalsByCategory, yearlyAmount, yearlyByTaxTag, type CategoryTotal } from '../domain/budgetEngine';
 import { uid } from '../seed/builders';
+import { FIXED_COST_PRESETS, hasFixedCost, type FixedCostPreset } from '../domain/fixedCostPresets';
 import { useDeletionNotice } from './DeletionNotice';
 
 type FreqKind = Frequency['kind'];
@@ -122,13 +123,29 @@ export function BudgetPage() {
       if (item) fn(item);
     });
 
-  const addItem = (category: BudgetCategory) => {
+  const visibleFixed = visibleItems.filter(item => item.category === 'fixed');
+  const missingCosts = Object.values(FIXED_COST_PRESETS)
+    .filter(preset => !hasFixedCost(model.budget, preset))
+    .map(preset => ({ preset, afterId: visibleFixed.find(item => item.name === preset.baseName)?.id }));
+
+  const addItem = (category: BudgetCategory, preset?: FixedCostPreset, afterId?: string) => {
     const id = uid('b');
     updateYear(plan => {
-      plan.budget.push({ id, category, name: 'Neuer Posten', amount: 0, frequency: { kind: 'monthly' }, ...(defaultAccount && { accountId: defaultAccount }) });
+      if (preset && hasFixedCost(plan.budget, preset)) return;
+      const added: BudgetItem = { id, category, name: preset?.name ?? 'Neuer Posten', amount: 0, frequency: { kind: 'monthly' } };
+      if (defaultAccount) added.accountId = defaultAccount;
+      if (preset?.taxTag) added.taxTag = preset.taxTag;
+      const anchor = afterId ? plan.budget.findIndex(item => item.id === afterId) : -1;
+      plan.budget.splice(anchor < 0 ? plan.budget.length : anchor + 1, 0, added);
+      setOpenId(id);
     });
-    setOpenId(id);
   };
+
+  const costButtons = (afterId?: string) => missingCosts.filter(cost => cost.afterId === afterId).map(({ preset }) => (
+    <li key={preset.name}>
+      <Button variant="ghost" className="budget-add" onClick={() => addItem('fixed', preset, afterId)}>+ {preset.name}</Button>
+    </li>
+  ));
 
   const removeItem = (item: BudgetItem) => {
     updateYear(plan => {
@@ -200,9 +217,13 @@ export function BudgetPage() {
               <div className="budget-group-body">
                 <ul>
                   {cat.items.map(item => (
-                    <ItemRow key={item.id} item={item} annual={annual} open={openId === item.id}
-                      toggle={() => setOpenId(openId === item.id ? null : item.id)} edit={edit} remove={removeItem} accountOptions={accountOptions} />
+                    <Fragment key={item.id}>
+                      <ItemRow item={item} annual={annual} open={openId === item.id}
+                        toggle={() => setOpenId(openId === item.id ? null : item.id)} edit={edit} remove={removeItem} accountOptions={accountOptions} />
+                      {cat.category === 'fixed' && costButtons(item.id)}
+                    </Fragment>
                   ))}
+                  {cat.category === 'fixed' && costButtons()}
                 </ul>
                 <Button variant="ghost" className="budget-add" onClick={() => addItem(cat.category)}>+ Posten</Button>
               </div>

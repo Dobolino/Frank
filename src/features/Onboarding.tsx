@@ -29,29 +29,36 @@ function NumberField({ label, hint, value, onChange }: { label: string; hint?: s
   );
 }
 
-/** Erster Start: fünf Fragen statt Demo-Daten. */
 export function Onboarding() {
   const { finishSetup } = useStore();
   const [query, setQuery] = useState('');
   const [bfsId, setBfsId] = useState<number | null>(null);
   const [gross, setGross] = useState('');
   const [rent, setRent] = useState('');
+  const [parkingRent, setParkingRent] = useState('');
   const [health, setHealth] = useState('');
+  const [supplementaryInsurance, setSupplementaryInsurance] = useState('');
   const [p3a, setP3a] = useState('');
   const [bvg, setBvg] = useState('');
   const [busy, setBusy] = useState(false);
   const muni = bfsId === null ? undefined : findMunicipality(bfsId);
   const hits = muni ? [] : searchMunicipalities(query, 8);
 
-  const values = { gross: parse(gross), rent: parse(rent || '0'), health: parse(health || '0'), p3a: parse(p3a || '0'), bvg: parse(bvg || '0') };
-  const valid = !!muni && values.gross > 0 && Object.values(values).every((v) => !Number.isNaN(v));
+  const values = {
+    grossMonthly: parse(gross),
+    rent: parse(rent),
+    parkingRent: parse(parkingRent),
+    healthInsurance: parse(health),
+    supplementaryInsurance: parse(supplementaryInsurance),
+    pillar3a: parse(p3a),
+    bvg: parse(bvg),
+  };
+  const valid = !!muni && values.grossMonthly > 0 && Object.values(values).every((v) => !Number.isNaN(v));
 
   const start = async () => {
     if (!valid || !muni) return;
     setBusy(true);
-    await finishSetup(
-      buildStartData({ bfsId: muni.bfsId, grossMonthly: values.gross, rent: values.rent, healthInsurance: values.health, pillar3a: values.p3a, bvg: values.bvg }),
-    );
+    await finishSetup(buildStartData({ bfsId: muni.bfsId, ...values }));
     setBusy(false);
   };
 
@@ -60,7 +67,7 @@ export function Onboarding() {
       <div className="text-2xl font-semibold tracking-tight">
         Frank<span className="text-accent">.</span>
       </div>
-      <p className="mt-2 text-muted">Fünf Angaben, dann rechnet Frank Budget, Lohn und Steuern mit deinen Zahlen. Alles bleibt auf diesem Gerät.</p>
+      <p className="mt-2 text-muted">Frank berechnet Budget, Lohn und Steuern mit deinen Zahlen. Alles bleibt auf diesem Gerät.</p>
 
       <div className="mt-6 space-y-5">
         <div>
@@ -102,8 +109,14 @@ export function Onboarding() {
           )}
         </div>
         <NumberField label="2. Bruttolohn pro Monat" hint="ohne 13. Monatslohn" value={gross} onChange={setGross} />
-        <NumberField label="3. Miete pro Monat" hint="inkl. Nebenkosten" value={rent} onChange={setRent} />
-        <NumberField label="4. Krankenkasse pro Monat" hint="Grundversicherung" value={health} onChange={setHealth} />
+        <div className="space-y-2">
+          <NumberField label="3. Wohnungsmiete pro Monat" hint="Inkl. Nebenkosten. Erfasse den Mietanteil der Einstellhalle nur einmal." value={rent} onChange={setRent} />
+          <NumberField label="Miete Autoeinstellhalle pro Monat (optional)" value={parkingRent} onChange={setParkingRent} />
+        </div>
+        <div className="space-y-2">
+          <NumberField label="4. Krankenkasse pro Monat" hint="Prämie der Grundversicherung (KVG)" value={health} onChange={setHealth} />
+          <NumberField label="Zusatzversicherung pro Monat (optional)" hint="Prämie der Zusatzversicherung (VVG)" value={supplementaryInsurance} onChange={setSupplementaryInsurance} />
+        </div>
         <NumberField label="5. Säule 3a pro Monat" hint="0, wenn du nicht einzahlst" value={p3a} onChange={setP3a} />
         <NumberField label="Pensionskasse pro Monat (optional)" hint="Abzug «BVG» auf deiner Lohnabrechnung" value={bvg} onChange={setBvg} />
       </div>
@@ -112,7 +125,9 @@ export function Onboarding() {
         <Button variant="primary" className={cx('w-full justify-center py-3', !valid && 'opacity-50')} onClick={() => void start()}>
           {busy ? 'Speichere …' : 'Los geht’s'}
         </Button>
-        {!valid && <p className="text-center text-xs text-muted">Wohnort und Bruttolohn sind nötig.</p>}
+        {!valid && <p className="text-center text-xs text-muted">
+          {!muni || !(values.grossMonthly > 0) ? 'Wohnort und Bruttolohn sind nötig.' : 'Gib die Monatsbeträge als Zahl ab 0 ein.'}
+        </p>}
         <button className="block w-full py-2 text-center text-sm text-muted" onClick={() => void finishSetup(demoData())}>
           Erst mit Beispieldaten ansehen
         </button>

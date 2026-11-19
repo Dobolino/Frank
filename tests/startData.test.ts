@@ -5,7 +5,8 @@ import { buildYearModel } from '../src/domain/yearModel';
 import { chf } from '../src/domain/money';
 
 describe('Startdaten aus dem Einstieg', () => {
-  const data = buildStartData({ bfsId: 230, grossMonthly: 7000, rent: 1800, healthInsurance: 420, pillar3a: 600, bvg: 250, year: 2026 });
+  const answers = { bfsId: 230, grossMonthly: 7000, rent: 1800, healthInsurance: 420, pillar3a: 600, bvg: 250, year: 2026 };
+  const data = buildStartData(answers);
 
   it('ergibt gültige Daten mit Wohnort und Budget', () => {
     expect(parseAppData(JSON.stringify(data))).toEqual(data);
@@ -19,6 +20,21 @@ describe('Startdaten aus dem Einstieg', () => {
     expect(m.tax.total).toBeGreaterThan(chf(5000));
     expect(m.taxProvisionSuggested).toBeGreaterThan(0);
     expect(m.taxInput.pillar3a).toBe(chf(7200));
+  });
+
+  it.each([
+    [0, 0], [120, 0], [0, 47.35], [120, 47.35],
+  ])('plant Einstellhalle (%s CHF) und Zusatzversicherung (%s CHF) unabhängig', (parkingRent, supplementaryInsurance) => {
+    const d = buildStartData({ ...answers, parkingRent, supplementaryInsurance });
+    const plan = d.years['2026']!;
+    const extras = plan.budget.filter(b => ['Miete Autoeinstellhalle', 'Zusatzversicherung (VVG)'].includes(b.name));
+    expect(extras.map(b => [b.name, b.category, b.frequency.kind, b.amount, b.taxTag])).toEqual([
+      ...(parkingRent ? [['Miete Autoeinstellhalle', 'fixed', 'monthly', chf(parkingRent), undefined]] : []),
+      ...(supplementaryInsurance ? [['Zusatzversicherung (VVG)', 'fixed', 'monthly', chf(supplementaryInsurance), 'insurance']] : []),
+    ]);
+    const model = buildYearModel(plan, d.accounts, d.profile);
+    expect(model.taxInput.insurancePremiums).toBe(12 * chf(answers.healthInsurance + supplementaryInsurance));
+    expect(model.taxInput.rentDeduction).toBe(0);
   });
 
   it('lässt die Säule 3a weg, wenn nichts eingezahlt wird', () => {
